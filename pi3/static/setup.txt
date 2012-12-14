@@ -1,0 +1,79 @@
+plugin.tx_wecmap_pi3 {
+
+	height = 500
+	width = 500
+	controls.mapControlSize = 
+	controls.showOverviewMap = 
+	controls.showMapType = 
+	controls.showScale = 
+	pid = 
+	
+	zoomLevel = 
+	centerLat = 
+	centerLong = 
+	mapName =
+	maxAutoZoom =
+	
+	# example for tables configuration
+	#
+	# tables {
+	# 	10 {
+	# 		table = tt_address
+	# 		
+	# 		# this is just an example for how to add a new icon
+	# 		icon {
+	# 			iconID       = default
+	# 			imagepath    = typo3conf/ext/wec_map/images/mm_20_red.png
+	# 			shadowpath   = typo3conf/ext/wec_map/images/mm_20_shadow.png
+	# 			width        = 12
+	# 			height       = 20
+	# 			shadowWidth  = 22
+	# 			shadowHeight = 20
+	# 			anchorX      = 6
+	# 			anchorY      = 20
+	# 			infoAnchorX  = 5
+	# 			infoAnchorY  = 1
+	# 		}
+	# 		
+	# 		# config for title
+	# 		title {
+	# 			title = TEXT
+	# 			title.field = name
+	# 			title.wrap = <h1>|</h1>
+	# 		}
+	# 		
+	# 		# config for description
+	# 		description = COA
+	# 		description {
+	# 			10 = COA
+	# 			10 {
+	# 				10 = TEXT
+	# 				10.field = name
+	# 		
+	# 				20 = TEXT
+	# 				20.field = table
+	# 				20.wrap = (|) 
+	# 			}
+	# 			10.wrap = <p>|</p>
+	# 		}
+	# 	}
+	# 	20 {
+	# 		table = fe_users
+	#		join  = INNER JOIN some_mm_table
+	# 		where = pid=95 and deleted=0 and disable=0
+	# 	}
+	# }
+	
+	defaulttitle 		< tx_wecmap_api.defaulttitle
+	defaultdescription 	< tx_wecmap_api.defaultdescription
+	homeicon    		< tx_wecmap_api.homeicon
+	sidebar 			< tx_wecmap_api.sidebar
+	directions 			< tx_wecmap_api.directions
+	sidebarItem 		< tx_wecmap_api.sidebarItem
+	addressForm 		< tx_wecmap_api.addressForm
+	output 				< tx_wecmap_api.output
+	_CSS_DEFAULT_STYLE 	< tx_wecmap_api._CSS_DEFAULT_STYLE
+	
+	# this is simply to check if this template is included
+	templateIncluded = 1
+}

@@ -1,0 +1,88 @@
+plugin.tx_wecmap_pi1 {
+	height = 500
+	width = 500
+	controls.mapControlSize = 
+	controls.showOverviewMap =
+	controls.showMapType = 
+	controls.showScale = 
+
+	zoomLevel = 
+	centerLat = 
+	centerLong = 
+	mapName =
+	maxAutoZoom =
+
+	# this is just an example for how to add a new icon
+	# icons.1 {
+	# 	iconID       = default
+	# 	imagepath    = typo3conf/ext/wec_map/images/mm_20_red.png
+	# 	shadowpath   = typo3conf/ext/wec_map/images/mm_20_shadow.png
+	# 	width        = 12
+	# 	height       = 20
+	# 	shadowWidth  = 22
+	# 	shadowHeight = 20
+	# 	anchorX      = 6
+	# 	anchorY      = 20
+	# 	infoAnchorX  = 5
+	# 	infoAnchorY  = 1
+	# }
+	
+	marker {
+		title = COA
+		title {
+			10 = TEXT
+			10.field = title
+			10.wrap = <div class="infotitle">|</div>
+		}
+		
+		description = COA
+		description {
+			10 = TEXT
+			10.field = description
+			10.wrap = <div>|</div>		
+      10.if.isTrue.field = description
+
+			20 = TEXT
+			20.field = street
+			20.wrap = <br /> | <br/>
+      20.if.isTrue.field = street
+
+			30 = TEXT
+			30.field = city
+			30.wrap = | ,&nbsp;
+      30.if.isTrue.field = city
+      
+			40 = TEXT
+			40.field = state
+			40.wrap = | &nbsp;
+      40.if.isTrue.field = state
+      
+			50 = TEXT
+			50.field = zip
+			50.wrap = | <br/>
+      50.if.isTrue.field = zip
+			      
+			60 = TEXT
+			60.field = country
+		}
+	}
+	
+	sidebar 	< tx_wecmap_api.sidebar
+	directions 	< tx_wecmap_api.directions
+	sidebarItem < tx_wecmap_api.sidebarItem
+	sidebarItem.10.field = title
+	sidebarItem.10.if.isTrue.field = title
+	addressForm < tx_wecmap_api.addressForm
+	output 		< tx_wecmap_api.output
+	_CSS_DEFAULT_STYLE < tx_wecmap_api._CSS_DEFAULT_STYLE
+	
+	markers.1 {
+		title = 
+		description = 
+		street = 
+		city = 
+		zip = 
+		state = 
+		country =		
+	}
+}

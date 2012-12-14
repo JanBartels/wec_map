@@ -1,0 +1,127 @@
+tx_wecmap_api {
+	addressForm = COA_INT
+	addressForm {
+		10 = TEXT
+		10.value = <table id="{field:map_id}_radiusform" class="radiusform" style="display: none;">
+		10.insertData = true
+		20 = FORM
+		20.layout = <tr><td>###LABEL###</td><td> ###FIELD### </td></tr>
+		20.data (
+			{LLL:EXT:wec_map/locallang_db.xml:radius} | {field:map_id}_radius=select | 10=10, 25=25, 50=50, 100=100, 250=250
+			{LLL:EXT:wec_map/locallang_db.xml:unit} | {field:map_id}_kilometers=select | *miles=0, kilometers=1
+			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.street}: | {field:map_id}_address=input
+			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.city}: | {field:map_id}_city=input
+			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.state}: | {field:map_id}_state=input
+			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.zip}: | {field:map_id}_zip=input
+			| {field:map_id}_submit=submit | Submit
+		) 
+		20.data.insertData = 1
+		20.noValueInsert = 0
+		30 = HTML 
+		30.value = </table>
+	}
+	
+	directions = COA
+	directions {
+		10 = TEXT
+		10.value = <div id="{field:map_id}_directions"></div>	
+		10.insertData = true
+	}
+	
+	sidebar = COA
+	sidebar {
+		10 = TEXT
+		10.field = content
+		10.wrap = <div id="{field:map_id}_sidebar" class="sidebar" style="height:{field:map_height}px; display: none;">|</div>
+		10.insertData = true
+    10.if.isTrue.field = content
+	}
+	
+	sidebarItem = COA
+	sidebarItem {
+	  10 = TEXT
+	  10.field = info_title
+	  10.wrap = <a href="#" style="display:block;" onclick="return {field:onclickLink};">|</a>
+	  10.insertData = true
+	  10.if.isTrue.field = info_title
+	}
+	
+	output = COA
+	output {
+		20       = HTML
+		20.value  = <table><tr>
+		30       = TEXT
+		30.field = map
+		30.wrap  = <td>|</td>
+		40       = TEXT
+		40.field = sidebar
+		40.wrap  = <td style="vertical-align: top;">|</td>
+		50       = HTML
+		50.value = </tr></table>
+		60       = TEXT
+		60.field = directions
+		60.wrap  = |
+		70       = TEXT
+		70.field = addressForm
+		70.wrap  = |
+	}
+	
+	homeicon {
+		iconID       = homeicon
+		imagepath    = typo3conf/ext/wec_map/images/icon_home.gif
+		shadowpath   = typo3conf/ext/wec_map/images/icon_home_shadow.png
+		width        = 16
+		height       = 16
+		shadowWidth  = 25
+		shadowHeight = 25
+		anchorX      = 0
+		anchorY      = 0
+		infoAnchorX  = 5
+		infoAnchorY  = 1
+	}
+	
+	# config for title
+  defaulttitle = COA
+	defaulttitle {
+		10 = TEXT
+		10.field = name
+		10.wrap = <div class="infotitle">|</div>
+	}
+	
+	# config for description
+	defaultdescription = COA
+	defaultdescription {
+		10 = COA
+		10 {
+			10 = TEXT
+			10.field = street
+			10.wrap = |<br />
+	    10.if.isTrue.field = street
+	
+			20 = TEXT
+			20.field = city
+			20.wrap = |,&nbsp;
+	    20.if.isTrue.field = city
+	    			
+			30 = TEXT
+			30.field = state
+			30.wrap = |&nbsp;
+	    30.if.isTrue.field = state
+			
+			40 = TEXT
+			40.field = zip
+		}
+		10.wrap = <div>|</div>
+	}
+	
+	_CSS_DEFAULT_STYLE (
+		.tx-wecmap_map .sidebar {display:block; overflow: auto;}
+		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%;}
+		.tx-wecmap-map .infotitle { font-weight: bold; font-size: 110%;}
+		.tx-wecmap-map #copyright-control a:link,
+		.tx-wecmap-map #copyright-control a:visited,
+		.tx-wecmap-map #copyright-control a:focus,
+		.tx-wecmap-map #copyright-control a:hover,
+		.tx-wecmap-map #copyright-control a:active { color: #7878CC; }
+	)
+}

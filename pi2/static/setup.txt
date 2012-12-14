@@ -1,0 +1,96 @@
+plugin.tx_wecmap_pi2 {
+
+	height = 500
+	width = 500
+	controls.mapControlSize = 
+	controls.showOverviewMap = 
+	controls.showMapType = 
+	controls.showScale = 
+	userGroups =
+	pid = 
+	
+	zoomLevel = 
+	centerLat = 
+	centerLong = 
+	mapName =
+	maxAutoZoom =
+
+	groups.country {
+		# this is just an example for how to add a new icon
+		# icon {
+		# 	iconID       = blue
+		# 	imagepath    = typo3conf/ext/wec_map/images/mm_20_blue.png
+		# 	shadowpath   = typo3conf/ext/wec_map/images/mm_20_shadow.png
+		# 	width        = 12
+		# 	height       = 20
+		# 	shadowWidth  = 22
+		# 	shadowHeight = 20
+		# 	anchorX      = 6
+		# 	anchorY      = 20
+		# 	infoAnchorX  = 5
+		# 	infoAnchorY  = 1
+		# }
+		zoom.min = 0
+		zoom.max = 2
+	}
+	
+	groups.city {
+		zoom.min = 3
+		zoom.max = 7
+	}
+	
+	groups.single {
+		zoom.min = 8
+		zoom.max = 17
+	}
+	
+	marker {
+		title = COA
+		title {
+			10 = TEXT
+			10.field = name
+			10.wrap = <div class="infotitle">|</div>
+      10.if.isTrue.field = name
+		}
+
+		description = COA
+		description {
+			10 = COA
+			10 {
+				10 = TEXT
+				10.field = address
+				10.wrap = | <br/>
+        10.if.isTrue.field = address
+      
+				20 = TEXT
+				20.field = city
+				20.wrap = | &nbsp;, 
+        20.if.isTrue.field = city
+        
+				30 = TEXT
+				30.field = zone
+				30.wrap = | &nbsp;
+        30.if.isTrue.field = zone
+        
+				40 = TEXT
+				40.field = zip
+			}
+			10.wrap = <div>|</div>
+	
+			20 = TEXT
+			20.field = phone
+			20.wrap = <div>|</div>
+      20.if.isTrue.field = phone
+		}
+	}
+	
+	defaulttitle 		< tx_wecmap_api.defaulttitle
+	defaultdescription 	< tx_wecmap_api.defaultdescription
+	homeicon			< tx_wecmap_api.homeicon
+	sidebar 			< tx_wecmap_api.sidebar
+	directions 			< tx_wecmap_api.directions
+	sidebarItem 		< tx_wecmap_api.sidebarItem
+	addressForm 		< tx_wecmap_api.addressForm
+	output 				< tx_wecmap_api.output
+	_CSS_DEFAULT_STYLE  < tx_wecmap_api._CSS_DEFAULT_STYLE
+}
