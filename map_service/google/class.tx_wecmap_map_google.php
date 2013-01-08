@@ -4,6 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
+* (c) 2011-2013 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
 * (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
@@ -51,7 +52,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 	var $js;
 	var $key;
-	var $controls;
+	var $control;
 	var $type;
 	var $directions;
 	var $kml;
@@ -92,7 +93,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$this->key = $key;
 		}
 
-		$this->controls = array();
+		$this->options = array();
 		$this->directions = false;
 		$this->directionsDivID = null;
 		$this->prefillAddress = false;
@@ -144,34 +145,43 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		switch ($name)
 		{
 			case 'largeMap':
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GLargeMapControl()');
+				$this->controls[] .= $this->js_addControl('new GLargeMapControl()');
 				break;
 
 			case 'smallMap':
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GSmallMapControl()');
+				$this->controls[] .= $this->js_addControl('new GSmallMapControl()');
 				break;
 
 			case 'scale':
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GScaleControl()');
+				$this->controls[] .= $this->js_addControl('new GScaleControl()');
 				break;
 
 			case 'smallZoom':
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GSmallZoomControl()');
+				$this->controls[] .= $this->js_addControl('new GSmallZoomControl()');
 				break;
 
 			case 'overviewMap':
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GOverviewMapControl()');
+				$this->controls[] .= $this->js_addControl('new GOverviewMapControl()');
 				break;
 
 			case 'mapType':
-				$this->controls[] .= 'WecMap.get("' . $this->mapName . '").addMapType(G_PHYSICAL_MAP);';
-				$this->controls[] .= $this->js_addControl($this->mapName, 'new GHierarchicalMapTypeControl()');
+				$this->controls[] .= $this->js_addMapType('G_PHYSICAL_MAP');
+				$this->controls[] .= $this->js_addMapType('G_SATELLITE_MAP');
+				$this->controls[] .= $this->js_addMapType('G_HYBRID_MAP');
+				$this->controls[] .= $this->js_addMapType('G_OSM_MAP');
+				$this->controls[] .= $this->js_addMapType('G_OCM_MAP');
+
+				$this->controls[] .= $this->js_addControl('new GHierarchicalMapTypeControl()');
 				break;
 
-			case 'googleEarth':
-				$this->controls[] .= 'WecMap.get("' . $this->mapName . '").addMapType(G_SATELLITE_3D_MAP);';
-				break;
+//			case 'googleEarth':
+//				$this->controls[] .= 'WecMap.get("' . $this->mapName . '").addMapType(G_SATELLITE_3D_MAP);';
+//				break;
+
 			default:
+				if(TYPO3_DLOG) {
+					t3lib_div::devLog($this->mapName.': ' . $name . '  not supported for addControl()', 'wec_map_api');
+				}
 				break;
 		}
 	}
@@ -182,6 +192,8 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 *   G_SATELLITE_MAP: This map type shows Google Earth satellite images.
 	 *   G_HYBRID_MAP: This map type shows transparent street maps over Google Earth satellite images.
 	 *	 G_PHYSICAL_MAP: displays physical map tiles based on terrain information.
+	 *   G_OSM_MAP: displays OpenStreetMap
+	 *   G_OCM_MAP: displays OpenCycleMap
 	 */
 	function setType($type) {
 		$this->type = $type;
@@ -218,12 +230,11 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 		}
 		$LANG->includeLLFile('EXT:wec_map/map_service/google/locallang.xml');
-		$hasKey = $this->hasKey();
 		$hasThingsToDisplay = $this->hasThingsToDisplay();
 		$hasHeightWidth = $this->hasHeightWidth();
 
 		// make sure we have markers to display and an API key
-		if ($hasThingsToDisplay && $hasKey && $hasHeightWidth) {
+		if ($hasThingsToDisplay && $hasHeightWidth) {
 
 			// auto center and zoom if necessary
 			$this->autoCenterAndZoom();
@@ -237,25 +248,35 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				return $htmlContent;
 			}
 
-			// get desired Google Maps API version
-			$apiVersion = tx_wecmap_backend::getExtConf('apiVersion');
-
 			// get the correct API URL
-			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
-			$apiURL = sprintf($apiURL, $apiVersion, $this->key, $this->lang);
+//			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
+//			$apiURL = sprintf($apiURL, $this->lang);
+			$apiURL = "http://maps.googleapis.com/maps/api/js?sensor=false&language=" . $this->lang;
+			$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
+			$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
 
 			if (TYPO3_DLOG) {
 				t3lib_div::devLog($this->mapName.': loading API from URL: '.$apiURL, 'wec_map_api');
 			}
 
 			/* If we're in the frontend, use TSFE.  Otherwise, include JS manually. */
-			$jsFile = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap.js';
+			$jsFile  = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap.js';
+//			$jsFile2 = t3lib_extMgm::siteRelPath('wec_map') . 'res/copyrights.js';
 			if (TYPO3_MODE == 'FE') {
-				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>';
-				$GLOBALS['TSFE']->additionalHeaderData['wec_map'] = '<script src="' . $jsFile . '" type="text/javascript"></script>';
+				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>'
+				                                                             . '<script src="'.$mmURL .'" type="text/javascript"></script>'
+				                                                             . '<script src="'.$ibURL .'" type="text/javascript"></script>'
+				                                                             ;
+				$GLOBALS['TSFE']->additionalHeaderData['wec_map'] = ( $jsFile  ? '<script src="' . $jsFile  . '" type="text/javascript"></script>' : '' )
+				                                                  . ( $jsFile2 ? '<script src="' . $jsFile2 . '" type="text/javascript"></script>' : '' )
+				                                                  ;
 			} else {
 				$htmlContent .= '<script src="'.$apiURL.'" type="text/javascript"></script>';
-				$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile . '" type="text/javascript"></script>';
+				$htmlContent .= '<script src="'.$mmURL .'" type="text/javascript"></script>';
+				$htmlContent .= '<script src="'.$ibURL .'" type="text/javascript"></script>';
+				$htmlContent .= ( $jsFile  ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
+				              . ( $jsFile2 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )
+				              ;
 			}
 
 			$jsContent = array();
@@ -263,26 +284,30 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$jsContent[] = $this->js_errorHandler();
 			$jsContent[] = '';
 			$jsContent[] = $this->js_drawMapStart();
-			$jsContent[] = $this->js_newGMap2();
-			$jsContent[] = $this->js_newGDirections();
-			$jsContent[] = $this->js_addKMLOverlay();
-			$jsContent[] = $this->js_setCenter($this->mapName, $this->lat, $this->long, $this->zoom, $this->type);
-			$jsContent = array_merge($jsContent, $this->controls);
+//			$jsContent[] = $this->js_newGDirections();
+			$jsContent[] = $this->js_setCenter($this->lat, $this->long, $this->zoom, $this->type);
+			if ( is_array( $this->controls ) )
+				$jsContent = array_merge($jsContent, $this->controls);
 			$jsContent[] = $this->js_icons();
-
-			foreach ($this->groups as $key => $group ) {
-				// TODO: devlog start
-				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': adding '. $group->getMarkerCount() .' markers from group '.$group->id, 'wec_map_api');
+			if ( is_array( $this->groups ) )
+			{
+				foreach ($this->groups as $key => $group ) {
+					// TODO: devlog start
+					if(TYPO3_DLOG) {
+						t3lib_div::devLog($this->mapName.': adding '. $group->getMarkerCount() .' markers from group '.$group->id, 'wec_map_api');
+					}
+					// devlog end
+					$jsContent = array_merge($jsContent, $group->drawMarkerJS());
+					$jsContent[] = '';
 				}
-				// devlog end
-				$jsContent = array_merge($jsContent, $group->drawMarkerJS());
-				$jsContent[] = '';
 			}
 
 			$jsContent[] = $this->js_initialOpenInfoWindow();
-			$jsContent[] = $this->js_drawMapEnd();
+			$jsContent[] = $this->js_addKMLOverlay();
 			$jsContent[] = $this->js_loadCalls();
+			$jsContent[] = $this->js_drawMapEnd();
+
+//echo t3lib_div::debug( $jsContent );
 
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
@@ -296,11 +321,6 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			// then return it
 			return $htmlContent.t3lib_div::wrapJS($jsContentString);
 
-		} else if (!$hasKey) {
-			$error = '<p>'.$LANG->getLL('error_noApiKey').'</p>';
-			// syslog start
-				t3lib_div::sysLog('No API key set for domain: '.t3lib_div::getIndpEnv('HTTP_HOST').' & page id: '.$GLOBALS['TSFE']->id, 'wec_map', 3);
-			// syslog end
 		} else if (!$hasThingsToDisplay) {
 			$error = '<p>'.$LANG->getLL('error_nothingToDisplay').'</p>';
 		} else if (!$hasHeightWidth) {
@@ -325,13 +345,13 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 		$index = 0;
 		if($this->staticExtent == 'all') {
-			$markerString = '';
+			$markerString = 'size:small';
 			if($this->staticLimit > 50) $this->staticLimit = 50;
 			foreach( $this->groups as $key => $group ) {
 				foreach( $group->markers as $marker ) {
 					if($index >= $this->staticLimit) break 2;
 					$index++;
-					$markerString .= $marker->latitude.','.$marker->longitude.',small%7C';
+					$markerString .= '|' . $marker->latitude.','.$marker->longitude;
 				}
 			}
 			$img = $this->generateStaticMap($markerString);
@@ -340,7 +360,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			foreach( $this->groups as $key => $group ) {
 				foreach( $group->markers as $marker ) {
 					if($index >= $this->staticLimit) break 2;
-					$markerString = $marker->latitude.','.$marker->longitude.',small';
+					$markerString = 'size:small|' . $marker->latitude.','.$marker->longitude;
 					$img .= $this->generateStaticMap($markerString, false);
 					$index++;
 				}
@@ -358,9 +378,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 **/
 	function generateStaticMap($markers, $center = true, $alt = '') {
 		if($center) {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&key='.$this->key.'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		} else {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&key='.$this->key.'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		}
 
 	}
@@ -528,7 +548,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		if (empty($dataArray)) {
 			return false;
 		} else {
-		  	$this->icons[] = 'WecMap.addIcon("' . $this->mapName . '", "' . $dataArray['iconID'] . '", "' . $dataArray['imagepath'] . '", "' . $dataArray['shadowpath'] . '", new GSize(' . $dataArray['width'] . ', ' . $dataArray['height'] . '), new GSize(' . $dataArray['shadowWidth'] . ', ' . $dataArray['shadowHeight'] . '), new GPoint(' . $dataArray['anchorX'] . ', ' . $dataArray['anchorY'] . '), new GPoint(' . $dataArray['infoAnchorX'] . ', ' . $dataArray['infoAnchorY'] . '));
+		  	$this->icons[] = 'WecMap.addIcon("'. $this->mapName . '", "' . $dataArray['iconID'] . '", "' . $dataArray['imagepath'] . '", "' . $dataArray['shadowpath'] . '", new google.maps.Size(' . $dataArray['width'] . ', ' . $dataArray['height'] . '), new google.maps.Size(' . $dataArray['shadowWidth'] . ', ' . $dataArray['shadowHeight'] . '), new google.maps.Point(' . $dataArray['anchorX'] . ', ' . $dataArray['anchorY'] . '), new google.maps.Point(' . $dataArray['infoAnchorX'] . ', ' . $dataArray['infoAnchorY'] . '));
 			';
 			return true;
 		}
@@ -582,8 +602,20 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	string		The Javascript code for the labels.
 	 */
 	function js_createLabels() {
-		return 'WecMap.labels = { startaddress: "' . $GLOBALS['LANG']->getLL('startaddress') . '", endaddress: "' . $GLOBALS['LANG']->getLL('endaddress') . '" };
-WecMap.locale = "' . $this->lang . '";';
+		return '
+function InitWecMapGoogleV3Labels() {
+	WecMap.labels.startaddress = "' . $GLOBALS['LANG']->getLL('startaddress') .'";
+	WecMap.labels.endaddress = "'   . $GLOBALS['LANG']->getLL('endaddress')   .'";
+	WecMap.labels.OSM = "'          . $GLOBALS['LANG']->getLL('OSM')          .'";
+	WecMap.labels.OSM_alt = "'      . $GLOBALS['LANG']->getLL('OSM-alt')      .'";
+	WecMap.labels.OSM_bike = "'     . $GLOBALS['LANG']->getLL('OSM-bike')     .'";
+	WecMap.labels.OSM_bike_alt = "' . $GLOBALS['LANG']->getLL('OSM-bike-alt') .'";
+	WecMap.labels.locale =  "'       . $this->lang . '";
+	WecMap.osmMapType.name = WecMap.labels.OSM;
+	WecMap.osmMapType.alt = WecMap.labels.OSM_alt;
+	WecMap.osmCycleMapType.name = WecMap.labels.OSM_bike;
+	WecMap.osmCycleMapType.alt = WecMap.labels.OSM_bike_alt;
+}';
 	}
 
 
@@ -594,8 +626,7 @@ WecMap.locale = "' . $this->lang . '";';
 	 * @return	string	The beginning of the drawMap function in Javascript.
 	 */
 	function js_drawMapStart() {
-		return 'function drawMap_'. $this->mapName .'() {'.chr(10).
-			'if (GBrowserIsCompatible()) {';
+		return 'google.maps.event.addDomListener(window,"load", function () { WecMap.init();InitWecMapGoogleV3Labels(); WecMap.createMap("'. $this->mapName . '" );';
 	}
 
 	/**
@@ -605,16 +636,7 @@ WecMap.locale = "' . $this->lang . '";';
 	 * @return	string	The end of the drawMap function in Javascript.
 	 */
 	function js_drawMapEnd() {
-		return '} }';
-	}
-
-	/**
-	 * Creates the Google Maps Javascript object.
-	 * @access	private
-	 * @return	string		Javascript for the Google Maps object.
-	 */
-	function js_newGMap2() {
-		return 'WecMap.init("' . $this->mapName . '");';
+		return '	WecMap.drawMap( "'. $this->mapName . '" );	} );';
 	}
 
 	/**
@@ -675,8 +697,12 @@ GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->ma
 }';
 	}
 
-	function js_setMapType($name, $type) {
-		return 'WecMap.get("' . $name . '").setMapType(' . $type . ');';
+	function js_setMapType($type) {
+		return 'WecMap.setMapType("'. $this->mapName . '", ' . $type . ');';
+	}
+
+	function js_addMapType($type) {
+		return 'WecMap.addMapType("'. $this->mapName . '", ' . $type . ');';
 	}
 
 
@@ -685,17 +711,16 @@ GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->ma
 	 * Creates the map's center point in Javascript.
 	 *
 	 * @access	private
-	 * @param	string		Name of the map to center.
 	 * @param	float		Center latitude.
 	 * @param	float		Center longitude.
 	 * @param	integer		Initial zoom level.
 	 * @return	string		Javascript to center and zoom the specified map.
 	 */
-	function js_setCenter($name, $lat, $long, $zoom, $type) {
+	function js_setCenter($lat, $long, $zoom, $type) {
 		if ($type) {
-			return 'WecMap.get("' . $name . '").setCenter(new GLatLng('.$lat.', '.$long.'), '.$zoom.', '.$type.');';
+			return 'WecMap.setCenter("'. $this->mapName . '", new google.maps.LatLng('.$lat.', '.$long.'), '.$zoom.', '.$type.');';
 		} else {
-			return 'WecMap.get("' . $name . '").setCenter(new GLatLng('.$lat.', '.$long.'), '.$zoom.');';
+			return 'WecMap.setCenter("'. $this->mapName . '", new google.maps.LatLng('.$lat.', '.$long.'), '.$zoom.');';
 		}
 	}
 
@@ -704,12 +729,10 @@ GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->ma
 	 * Creates Javascript to add map controls.
 	 *
 	 * @access	private
-	 * @param	string		Name of the map.
-	 * @param	string		Name of the control.
 	 * @param	string		Javascript to add a control to the map.
 	 */
-	function js_addControl($name, $control) {
-		return 'WecMap.get("' . $name . '").addControl('.$control.');';
+	function js_addControl($control) {
+		return 'WecMap.addControl("'. $this->mapName . '", '.$control.');';
 	}
 
 	/**
@@ -720,7 +743,7 @@ GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->ma
 	function js_addKMLOverlay() {
 		$out = array();
 		foreach ($this->kml as $url) {
-			$out[] = 'WecMap.get("' . $this->mapName . '").addOverlay(new GGeoXml("' . $url . '"));';
+			$out[] = 'WecMap.addKML("'. $this->mapName . '", "' . $url . '");';
 		}
 		return implode("\n", $out);
 	}
@@ -738,11 +761,20 @@ GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->ma
 		} else {
 			$path = t3lib_extMgm::siteRelPath('wec_map');
 		}
-
-		// add default icon set
-		$this->icons[] = '
-WecMap.addIcon("' . $this->mapName .'", "default", "'.$path.'images/mm_20_red.png", "'.$path.'images/mm_20_shadow.png", new GSize(12, 20), new GSize(22, 20), new GPoint(6, 20), new GPoint(5, 1));
-			';
+		// add default-icon
+		$this->addMarkerIcon(array(
+		  	'iconID'        => 'default',
+		  	'imagepath'     => $path.'images/mm_20_red.png',
+		  	'shadowpath'    => $path.'images/mm_20_shadow.png',
+		  	'width'         => 12,
+		  	'height'        => 20,
+		  	'shadowWidth'   => 22,
+		  	'shadowHeight'  => 20,
+		  	'anchorX'       => 6,
+		  	'anchorY'       => 20,
+		  	'infoAnchorX'   => 5,
+		  	'infoAnchorY'   => 1,
+		) );
 		return implode("\n", $this->icons);
 	}
 
@@ -754,8 +786,13 @@ WecMap.addIcon("' . $this->mapName .'", "default", "'.$path.'images/mm_20_red.pn
 	function js_initialOpenInfoWindow() {
 		$markers = reset($this->markers);
 		if (count($markers) == 1 && $this->showInfoOnLoad) {
-			return 'window.setTimeout(function() { GEvent.trigger(WecMap.markers["'. $this->mapName .'"][0][0], "click");}, 1000);';
+			foreach($this->groups as $key => $group) {
+				foreach( $group->markers as $marker ) {
+					return $marker->getOpenInfoWindowJS();  // return 1st marker
+				}
+			}
 		}
+		return '';
 	}
 
 
@@ -766,14 +803,9 @@ WecMap.addIcon("' . $this->mapName .'", "default", "'.$path.'images/mm_20_red.pn
 	 * @return string The javascript output
 	 **/
 	function js_loadCalls() {
-		$loadCalls = 'GEvent.addDomListener(window, "load", function() {';
 		$loadCalls .= 'if(document.getElementById("'.$this->mapName.'_radiusform") != null) document.getElementById("'.$this->mapName.'_radiusform").style.display = "";';
 		$loadCalls .= 'if(document.getElementById("'.$this->mapName.'_sidebar") != null) document.getElementById("'.$this->mapName.'_sidebar").style.display = "";';
-
 		$loadCalls .= 'document.getElementById("'.$this->mapName.'").style.height="'.$this->height.'px";';
-		$loadCalls .= 'drawMap_' . $this->mapName . '();});';
-		$loadCalls .= 'GEvent.addDomListener(window, "unload", function() { GUnload(); });';
-
 		return $loadCalls;
 	}
 
@@ -883,6 +915,10 @@ WecMap.addIcon("' . $this->mapName .'", "default", "'.$path.'images/mm_20_red.pn
         if($validMarkers or $validCenter) {
             $valid = true;
         }
+
+		if (count($this->kml) ) {
+			$valid = true;
+		}
 
         return $valid;
     }

@@ -51,7 +51,7 @@ t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_yahoo',
 );
 
 /* Add the Google geocoding service */
-t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_google_v3',
+t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_google',
 	array(
 
 		'title' => 'Google Maps Address Lookup API V3',
@@ -66,31 +66,11 @@ t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_google_v3',
 		'os' => '',
 		'exec' => '',
 
-		'classFile' => t3lib_extMgm::extPath($_EXTKEY).'geocode_service/class.tx_wecmap_geocode_google_v3.php',
-		'className' => 'tx_wecmap_geocode_google_v3',
-	)
-);
-
-/* Add the Google geocoding service */
-t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_google',
-	array(
-
-		'title' => 'Google Maps Address Lookup API V2',
-		'description' => '',
-
-		'subtype' => '',
-
-		'available' => TRUE,
-		'priority' => 90,
-		'quality' => 90,
-
-		'os' => '',
-		'exec' => '',
-
 		'classFile' => t3lib_extMgm::extPath($_EXTKEY).'geocode_service/class.tx_wecmap_geocode_google.php',
 		'className' => 'tx_wecmap_geocode_google',
 	)
 );
+
 
 /* Add the Worldkit geocoding service. */
 t3lib_extMgm::addService($_EXTKEY,'geocode','tx_wecmap_geocode_worldkit',

@@ -4,9 +4,10 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
+* (c) 2011-2013 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
-* (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries 
+* (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
 * International (http://CTMIinc.org). The WEC is developing TYPO3-based
 * (http://typo3.org) free software for churches around the world. Our desire
 * is to use the Internet to help offer new life through Jesus Christ. Please
@@ -51,7 +52,7 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 	var $prefillAddress;
 	var $tabLabels;
 	var $iconID;
-	
+
 	/**
 	 * Constructor for the Google Maps marker class.
 	 *
@@ -73,7 +74,7 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 		if(!is_object($LANG)) {
 			require_once(t3lib_extMgm::extPath('lang').'lang.php');
 			$LANG = t3lib_div::makeInstance('language');
-			
+
 			if(TYPO3_MODE == 'BE') {
 				$LANG->init($BE_USER->uc['lang']);
 			} else {
@@ -81,7 +82,7 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 			}
 		}
 		$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
-		
+
 		$this->index = $index;
 		$this->tabLabels = array($LANG->getLL('info'));
 		if(is_array($tabLabels)) {
@@ -114,7 +115,7 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 
 		$this->latitude = $latitude;
 		$this->longitude = $longitude;
-		
+
 		$this->iconID = $iconID;
 	}
 
@@ -158,7 +159,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 		if (empty($this->title[0]) && $this->directions) {
 			$this->title[0] = 'Address';
 		}
-		return 'WecMap.addMarker("' . $this->mapName. '", ' . $this->index . ', [' . $this->latitude . ',' . $this->longitude . '], "' . $this->iconID . '", \''. htmlspecialchars(strip_tags($this->title[0])) .'\', '.$this->groupId.', \''.$this->getUserAddress().'\');';
+		return 'WecMap.addMarker("'. $this->mapName . '", "' . $this->index . '", [' . $this->latitude . ',' . $this->longitude . '], "' . $this->iconID . '", \''. htmlspecialchars(strip_tags($this->title[0])) .'\', '.$this->groupId.', \''.$this->getUserAddress().'\');';
 	}
 
 	/**
@@ -171,12 +172,12 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 			$temp = $this->title;
 			$this->title = array($temp);
 		}
-		
+
 		if(!is_array($this->description)) {
 			$temp = $this->description;
 			$this->description = array($temp);
 		}
-		
+
 		if(!is_array($this->tabLabels)) {
 			$this->tabLabels = array($GLOBALS['LANG']->getLL('info'));
 		}
@@ -239,6 +240,10 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 		return 'WecMap.jumpTo(\'' . $this->mapName . '\', ' . $this->groupId . ', ' . $this->index . ', ' . $this->calculateClickZoom() . ');';
 	}
 
+	function getOpenInfoWindowJS() {
+		return 'WecMap.openInfoWindow("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->index . ');';
+	}
+
 	/**
 	 * calculates the optimal zoom level for the click
 	 * we want to keep the zoom level around $zoom, but will
@@ -255,7 +260,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 		}
 		return $zoom;
 	}
-	
+
 	/**
 	 * Converts newlines to <br/> tags.
 	 *

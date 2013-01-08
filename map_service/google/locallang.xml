@@ -31,6 +31,20 @@
 			<label index="G_GEO_UNKNOWN_DIRECTIONS">We could not compute directions between the addresses. This is usually because there is no route available between the two points, or because we do not have data for routing in that region. \n Error code: </label>
 			<label index="G_GEO_BAD_REQUEST">A directions request could not be successfully parsed.\n Error code: </label>
 			<label index="UKNOWN_ERROR">An unknown error occurred. Error code: </label>
+			
+			<label index="OSM">OSM</label>
+			<label index="OSM-alt">OpenStreetmap layer</label>
+			<label index="OSM-bike">OSM-bike</label>
+			<label index="OSM-bike-alt">OpenCycleMap layer</label>
+			
 		</languageKey>
+		
+	    <languageKey index="de" type="array">
+	      <label index="OSM">OSM</label>
+	      <label index="OSM-bike">OSM-Rad</label>
+	      <label index="OSM-alt">OpenStreetmap Layer</label>
+	      <label index="OSM-bike-alt">OpenCycleMap Layer</label>
+	</languageKey>
+		
 	</data>
 </T3locallang>
