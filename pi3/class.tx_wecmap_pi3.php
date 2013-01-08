@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2013 Jan Bartels, j.bartels@arcor.de
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -281,9 +282,12 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		} else {
 			foreach( $conf['tables.'] as $table => $tconf ) {
 
-				$select = $tconf['select'];
-				$table = $tconf['table'];
-				$join  = $tconf['join'];
+				$select  = $tconf['select'];
+				$table   = $tconf['table'];
+				$join    = $tconf['join'];
+				$orderBy = $tconf['orderBy'];
+				$groupBy = $tconf['groupBy'];
+				$limit   = $tconf['limit'];
 
 				if(!empty($tconf['where'])) {
 					$where = $this->cObj->stdWrap($tconf['where'], $tconf['where.']);
@@ -303,7 +307,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 
 				$where .= $this->cObj->enableFields($table);
 
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where);
+				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy, $limit);
 
 				// add icon if configured, else see if we just have an iconID
 				// and use that. We assume the icon is added somewhere else.
