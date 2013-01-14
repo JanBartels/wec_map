@@ -206,7 +206,7 @@ function WecMapGoogleV3( mapId )
 		zoom: 8,
 		center: new google.maps.LatLng(51.2245379, 6.7918158),
 		mapTypeControlOptions: {
-			mapTypeIds: [google.maps.MapTypeId.ROADMAP],
+			mapTypeIds: [google.maps.MapTypeId.ROADMAP]
 		},
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		mapTypeControl: false,
@@ -352,7 +352,7 @@ WecMapGoogleV3.prototype.addMarker = function( markerId, latlng, iconId, dirTitl
 		{
     			position: new google.maps.LatLng(latlng[0], latlng[1]),
     			icon: icon.image,
-    			shadow: icon.shadow,
+    			shadow: icon.shadow
 		} 
 	);
 	
