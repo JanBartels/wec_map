@@ -647,14 +647,10 @@ function InitWecMapGoogleV3Labels() {
 	 * @return	string		Javascript for the Google Directions object.
 	 */
 	function js_newGDirections() {
-		if($this->directionsDivID == null) {
-			return 'gdir_'. $this->mapName .' = new GDirections(WecMap.get("' . $this->mapName . '"));
-GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->mapName .');';
-		} else {
-			return 'gdir_'. $this->mapName .' = new GDirections(WecMap.get("' . $this->mapName . '"), document.getElementById("'. $this->directionsDivID .'"));
-GEvent.addListener(gdir_'. $this->mapName .', "error", handleErrors_'. $this->mapName .');';
-		}
-
+		if($this->directionsDivID == null)
+			return '    WecMap.createDirections( "' . $this->mapName . '" );';
+		else
+			return '    WecMap.createDirections( "' . $this->mapName . '", "' . $this->directionsDivID . '" );';
 	}
 
 	/**

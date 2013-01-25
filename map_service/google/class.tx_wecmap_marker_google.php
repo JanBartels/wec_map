@@ -133,7 +133,7 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 		}
 
 		if ($this->directions) {
-			$markerContent[0] .= '<br /><div id="'.$this->mapName.'_dirmenu_'.$this->groupId.'_'. $this->index .'" class="dirmenu" style="white-space: nowrap;">'. $GLOBALS['LANG']->getLL('directions') .': <a href="#" onclick="return WecMap.openDirectionsToHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');">' . $GLOBALS['LANG']->getLL('toHereFrom') . '</a> - <a href="#" onclick="return WecMap.openDirectionsFromHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');">'. $GLOBALS['LANG']->getLL('fromHereTo') .'</a></div>';
+			$markerContent[0] .= '<br /><div id="'.$this->mapName.'_dirmenu_'.$this->groupId.'_'. $this->index .'" class="dirmenu" style="white-space: nowrap;">'. $GLOBALS['LANG']->getLL('directions') .': <a href="#" onclick="WecMap.openDirectionsToHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">' . $GLOBALS['LANG']->getLL('toHereFrom') . '</a> - <a href="#" onclick=\"WecMap.openDirectionsFromHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">'. $GLOBALS['LANG']->getLL('fromHereTo') .'</a></div>';
 		}
 
 		return '

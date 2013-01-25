@@ -111,39 +111,29 @@ var WecMap = {
 	},
 	
 	// loads directions on a map
+	directionsService: null,
+
+	createDirections: function(mapId, directionsDivId ) {
+		var map = this.get( mapId );
+		return map.createDirections( directionsDivId );
+	},
+	
 	setDirections: function(mapId, fromAddr, toAddr) {
 		var map = this.get( mapId );
-		if ( !map.directionsDisplay )
-		{
-  			map.directionsDisplay = new google.maps.DirectionsRenderer();
-  			map.directionsDisplay.setMap(map);
-			map.directionsDisplay.setPanel(document.getElementById("directionsPanel"));
-  		}
-	
-		var request = {
-			origin:start,
-			destination:end,
-			travelMode: google.maps.TravelMode.DRIVING
-		};
-		map.directionsService.route(request, function(response, status) {
-			if (status == google.maps.DirectionsStatus.OK) {
-				map.directionsDisplay.setDirections(response);
-			}
-		});
-		return false;
+		return map.setDirections( fromAddr, toAddr );
 	},
 
 	// opens up the directions tab window to a marker
-//	openDirectionsToHere: function(map, groupId, markerId) {
-//		var map = this.get( mapId );
-//		return false;
-//	},
+	openDirectionsToHere: function(mapId, groupId, markerId) {
+		var map = this.get( mapId );
+		return map.openDirectionsToHere(groupId, markerId);
+	},
 	
 	// opens up the directions tab window from a marker
-//	openDirectionsFromHere: function(map, groupId, markerId) {
-//		var map = this.get( mapId );
-//		return false;
-//	},
+	openDirectionsFromHere: function(mapId, groupId, markerId) {
+		var map = this.get( mapId );
+		return map.openDirectionsFromHere(groupId, markerId);
+	},
 
 	labels: {
 		startaddress: 'startaddress: ',
@@ -190,12 +180,11 @@ var WecMap = {
 			});
 		}
 
-	}
+	},
+	// Layer definitions for OSM and OSM-bike
+	osmMapTypeId: 'OpenStreetMap',
+	osmCycleMapTypeId: 'OpenCycleMap'
 }
-
-// Layer definitions for OSM and OSM-bike
-var osmMapTypeId = 'OpenStreetMap';
-var osmCycleMapTypeId = 'OpenCycleMap';
 
 // WecMapGoogleV3 is the central map-wrapper for each Google-map.on a page
 // Its methods provide maximum compatibility to the old API.
@@ -229,6 +218,9 @@ function WecMapGoogleV3( mapId )
 	this.bubbleData = [];
 	this.markerManager = null;
 	this.mmGroupZoom = [];
+	this.directionsFromData = [];
+	this.directionsToData = [];
+
 	return this;
 }
 
@@ -236,8 +228,8 @@ WecMapGoogleV3.prototype.drawMap = function( strID )
 {
 	this.map = new google.maps.Map(document.getElementById(strID), this.Options);
 	this.copyrights = { };
-	this.addMapLayer( osmMapTypeId,      WecMap.osmMapType,      WecMap.labels.OSM_Copyright );
-	this.addMapLayer( osmCycleMapTypeId, WecMap.osmCycleMapType, WecMap.labels.OSM_bike_Copyright);
+	this.addMapLayer( WecMap.osmMapTypeId,      WecMap.osmMapType,      WecMap.labels.OSM_Copyright );
+	this.addMapLayer( WecMap.osmCycleMapTypeId, WecMap.osmCycleMapType, WecMap.labels.OSM_bike_Copyright);
 
 	// Create div for showing copyrights.
 	var copyrightNode = document.createElement('div');
@@ -361,6 +353,29 @@ WecMapGoogleV3.prototype.addMarker = function( markerId, latlng, iconId, dirTitl
 	this.markers[groupId][markerId] = marker;
 	this.markerArray.push(marker);
 
+
+	if (dirTitle && this.bubbleData[groupId] && this.bubbleData[groupId][markerId] ) {
+		if (!(this.directionsFromData[groupId] instanceof Array)) {
+			this.directionsFromData[groupId] = [];
+		}
+		if (!(this.directionsToData[groupId] instanceof Array)) {
+			this.directionsToData[groupId] = [];
+		}
+
+		var dirText = '<div id="' + this.mapId + '_todirform_' + groupId + '_' + markerId + '" class="todirform" style="display:none"><br /><form action="#" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', [' + point.toUrlValue() + '], document.getElementById(\'tx-wecmap-directions-to-' + this.mapId + '\').value, \'' + dirTitle + '\');return false;">';
+		dirText += '<label class="startendaddress" for="tx-wecmap-directions-to-' + this.mapId + '">' + WecMap.labels.endaddress + '</label><input type="text" name="daddr" value="' + address + '" id="tx-wecmap-directions-to-' + this.mapId + '" />';
+		dirText += '<input type="submit" name="submit" value="Go" /></form></div>';
+		this.directionsFromData[groupId][markerId] = dirText;
+
+		dirText = '<div id="' + this.mapId + '_fromdirform_' + groupId + '_' + markerId + '" class="fromdirform" style="display:none"><br /><form action="#" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', document.getElementById(\'tx-wecmap-directions-from-' + this.mapId + '\').value, [' + point.toUrlValue() + '], \'' + dirTitle + '\');return false;">';
+		dirText += '<label class="startendaddress" for="tx-wecmap-directions-from-' + this.mapId + '">' + WecMap.labels.startaddress + '</label><input type="text" name="saddr" value="' + address + '" id="tx-wecmap-directions-from-' + this.mapId + '" />';
+		dirText += '<input type="submit" name="submit" value="Go" /></form></div>';
+		this.directionsToData[groupId][markerId] = dirText;
+		
+		this.bubbleData[groupId][markerId].content[0] += this.directionsToData[groupId][markerId] + this.directionsFromData[groupId][markerId];
+	}
+
+
 	if ( this.bubbleData[groupId] && this.bubbleData[groupId][markerId] )
 	{
 		var thisMap = this;
@@ -444,10 +459,67 @@ WecMapGoogleV3.prototype.openInfoWindow = function( groupId, markerId ) {
 			}
 		}
 		else
-			this.infoWindow.setContent(this.bubbleData[groupId][markerId].content[0]);
+			this.infoWindow.setContent(this.bubbleData[groupId][markerId].content[0] );
 		this.infoWindow.open(this.map, marker );
 	}
 }
+
+WecMapGoogleV3.prototype.createDirections = function( directionsDivId ) {
+	if ( !this.directionsDisplay )
+	{
+		if ( !directionsDivId )
+			directionsDivId = this.mapId + '_directions';
+		this.directionsDisplay = new google.maps.DirectionsRenderer();
+		this.directionsDisplay.setMap( this.map );
+		this.directionsDisplay.setPanel( document.getElementById( directionsDivId) );
+	}
+	return true;
+}
+	
+WecMapGoogleV3.prototype.setDirections = function( fromAddr, toAddr) {
+	if ( !this.directionsDisplay )
+		this.createDirections();
+
+	var request = {
+		origin: (fromAddr instanceof Array) ? new google.maps.LatLng( fromAddr[ 0 ], fromAddr[ 1 ] ) : fromAddr,
+		destination: (toAddr instanceof Array) ? new google.maps.LatLng( toAddr[ 0 ], toAddr[ 1 ] ) : toAddr,
+		travelMode: google.maps.TravelMode.DRIVING
+	};
+	if ( !this.directionsService )
+	{
+		var that = this.directionsDisplay;
+		this.directionsService = new google.maps.DirectionsService();
+		this.directionsService.route(request, function(response, status) 
+		{
+			if (status == google.maps.DirectionsStatus.OK) 
+			{
+				that.setDirections(response);
+			}
+		});
+	}
+	return true;
+}
+
+// opens up the directions tab window to a marker
+WecMapGoogleV3.prototype.openDirectionsToHere = function( groupId, markerId ) {
+	var form = document.getElementById( this.mapId + '_todirform_' + groupId + '_' + markerId );
+	form.style.display = "none";
+	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
+	form.style.display = "block";
+	this.infoWindow.draw();
+	return false;
+}
+
+// opens up the directions tab window from a marker
+WecMapGoogleV3.prototype.openDirectionsFromHere = function( groupId, markerId ) {
+	var form = document.getElementById( this.mapId + '_todirform_' + groupId + '_' + markerId );
+	form.style.display = "block";
+	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
+	form.style.display = "none";
+	this.infoWindow.draw();
+	return false;
+}
+
 
 // compatibility functions for V2->V3
 
@@ -455,8 +527,8 @@ var G_PHYSICAL_MAP = google.maps.MapTypeId.TERRAIN;
 var G_NORMAL_MAP = google.maps.MapTypeId.ROADMAP;
 var G_SATELLITE_MAP = google.maps.MapTypeId.SATELLITE;
 var G_HYBRID_MAP = google.maps.MapTypeId.HYBRID;
-var G_OSM_MAP = osmMapTypeId;
-var G_OCM_MAP = osmCycleMapTypeId;
+var G_OSM_MAP = WecMap.osmMapTypeId;
+var G_OCM_MAP = WecMap.osmCycleMapTypeId;
 
 WecMapGoogleV3.prototype.addMapType = function( MapTypeId )
 {
