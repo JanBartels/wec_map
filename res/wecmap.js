@@ -31,7 +31,8 @@
 // and can be used multiple times on the page
 // It serves as a dispatcher for the WecMapGoogleV3-instances
 
-var WecMap = {
+function createWecMap() {
+return( {
 	maps: [],
 
 	// fetches the WecMapGoogleV3 object
@@ -105,9 +106,19 @@ var WecMap = {
 		return map.addMarker( markerId, latlng, iconId, dirTitle, groupId, address);
 	},
 
+	setDraggable: function( mapId, groupId, markerId, flag ) {
+		var map = this.get( mapId );
+		map.setDraggable( groupId, markerId, flag );
+	},
+	
 	openInfoWindow: function( mapId, groupId, markerId ) {
 		var map = this.get( mapId );
 		return map.openInfoWindow( groupId, markerId );
+	},
+	
+	openInitialInfoWindow: function( mapId, groupId, markerId ) {
+		var map = this.get( mapId );
+		return map.openInitialInfoWindow( groupId, markerId );
 	},
 	
 	// loads directions on a map
@@ -185,6 +196,7 @@ var WecMap = {
 	osmMapTypeId: 'OpenStreetMap',
 	osmCycleMapTypeId: 'OpenCycleMap'
 }
+); }
 
 // WecMapGoogleV3 is the central map-wrapper for each Google-map.on a page
 // Its methods provide maximum compatibility to the old API.
@@ -215,11 +227,14 @@ function WecMapGoogleV3( mapId )
 	this.icons = [];
 //	this.infoWindow = new google.maps.InfoWindow();
 	this.infoWindow = new InfoBubble({ maxWidth: 300 });
+	this.openInitialInfoWindowMarker = null;
 	this.bubbleData = [];
 	this.markerManager = null;
 	this.mmGroupZoom = [];
 	this.directionsFromData = [];
 	this.directionsToData = [];
+	this.directionsRenderer = null;
+	this.directionsDivId = "";
 
 	return this;
 }
@@ -272,9 +287,6 @@ WecMapGoogleV3.prototype.drawMap = function( strID )
 	for ( var layer = 0; layer < this.kmlArray.length; ++layer )
 		this.kmlArray[ layer ].setMap( this.map );
 	// add marker through MarkerManager; don't add them directly		
-//	for ( var marker = 0; marker < this.markerArray.length; ++marker )
-//		this.markerArray[ marker ].setMap( this.map );
-	// Markermanager
 	var that = this;
 	var listener = google.maps.event.addListener(this.map, 'bounds_changed', function(){
 		WecMapGoogleV3_setupMarkers( that );
@@ -294,6 +306,8 @@ function WecMapGoogleV3_setupMarkers( mapObj)
 			mapObj.markerManager.addMarkers( mapObj.markers[ groupId ], minZoom, maxZoom );
 		}
 		mapObj.markerManager.refresh();
+		if ( mapObj.openInitialInfoWindowMarker )
+			mapObj.openInfoWindow( mapObj.openInitialInfoWindowMarker.groupId, mapObj.openInitialInfoWindowMarker.markerId );
   	});
 }
 
@@ -391,6 +405,27 @@ WecMapGoogleV3.prototype.addMarker = function( markerId, latlng, iconId, dirTitl
 		
 }
 
+
+WecMapGoogleV3.prototype.setDraggable = function( groupId, markerId, flag ) 
+{
+	var marker = this.markers[groupId][markerId];
+	marker.setDraggable(flag);
+	if ( flag )
+	{
+		var map = this;
+		google.maps.event.addListener(marker, 'drag', function( mouseEvent ) {
+			if ( map.onDragMarker )
+				map.onDragMarker( marker, mouseEvent );
+			
+		} );
+		google.maps.event.addListener(marker, 'dragend', function( mouseEvent ) {
+			if ( map.onDragMarkerEnd )
+				map.onDragMarkerEnd( marker, mouseEvent );	
+		} );
+	}
+}
+
+
 // http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/docs/reference.html
 WecMapGoogleV3.prototype.addMarkersToManager = function( groupId, minZoom, maxZoom ) 
 {
@@ -464,39 +499,65 @@ WecMapGoogleV3.prototype.openInfoWindow = function( groupId, markerId ) {
 	}
 }
 
-WecMapGoogleV3.prototype.createDirections = function( directionsDivId ) {
-	if ( !this.directionsDisplay )
-	{
-		if ( !directionsDivId )
-			directionsDivId = this.mapId + '_directions';
-		this.directionsDisplay = new google.maps.DirectionsRenderer();
-		this.directionsDisplay.setMap( this.map );
-		this.directionsDisplay.setPanel( document.getElementById( directionsDivId) );
-	}
+WecMapGoogleV3.prototype.openInitialInfoWindow = function( groupId, markerId ) {
+	this.openInitialInfoWindowMarker = new Array();
+	this.openInitialInfoWindowMarker['groupId'] = groupId;
+	this.openInitialInfoWindowMarker['markerId'] = markerId;
 	return true;
 }
 	
+	
+WecMapGoogleV3.prototype.createDirections = function( directionsDivId ) {
+	if ( !this.directionsRenderer )
+	{
+		this.directionsDivId = directionsDivId;
+		return true;
+	}
+	return false;
+}
+	
 WecMapGoogleV3.prototype.setDirections = function( fromAddr, toAddr) {
-	if ( !this.directionsDisplay )
-		this.createDirections();
+
+	if ( !this.directionsRenderer )
+	{
+		if ( !this.directionsDivId )
+			this.directionsDivId = this.mapId + '_directions';
+		this.directionsRenderer = new google.maps.DirectionsRenderer();
+		this.directionsRenderer.setMap( this.map );
+		this.directionsRenderer.setPanel( document.getElementById( this.directionsDivId ) );
+	}
 
 	var request = {
 		origin: (fromAddr instanceof Array) ? new google.maps.LatLng( fromAddr[ 0 ], fromAddr[ 1 ] ) : fromAddr,
 		destination: (toAddr instanceof Array) ? new google.maps.LatLng( toAddr[ 0 ], toAddr[ 1 ] ) : toAddr,
 		travelMode: google.maps.TravelMode.DRIVING
 	};
-	if ( !this.directionsService )
+	if ( !WecMap.directionsService )
+		WecMap.directionsService = new google.maps.DirectionsService();
+
+	var that = this;
+	WecMap.directionsService.route(request, function(response, status) 
 	{
-		var that = this.directionsDisplay;
-		this.directionsService = new google.maps.DirectionsService();
-		this.directionsService.route(request, function(response, status) 
+		if (status == google.maps.DirectionsStatus.OK) 
 		{
-			if (status == google.maps.DirectionsStatus.OK) 
-			{
-				that.setDirections(response);
-			}
-		});
-	}
+			that.directionsRenderer.setDirections(response);
+		}
+		else if (  status == google.maps.DirectionsStatus.INVALID_REQUEST
+		        || status == google.maps.DirectionsStatus.MAX_WAYPOINTS_EXCEEDED
+		        || status == google.maps.DirectionsStatus.NOT_FOUND
+		        || status == google.maps.DirectionsStatus.OVER_QUERY_LIMIT
+		        || status == google.maps.DirectionsStatus.REQUEST_DENIED
+		        || status == google.maps.DirectionsStatus.UNKNOWN_ERROR
+		        || status == google.maps.DirectionsStatus.ZERO_RESULTS
+		        )
+		{
+			alert( WecMap.labels[ status ] );
+		}
+		else
+		{
+			alert( WecMap.labels.UNKNOWN_ERROR );
+		}
+	});
 	return true;
 }
 
@@ -527,8 +588,8 @@ var G_PHYSICAL_MAP = google.maps.MapTypeId.TERRAIN;
 var G_NORMAL_MAP = google.maps.MapTypeId.ROADMAP;
 var G_SATELLITE_MAP = google.maps.MapTypeId.SATELLITE;
 var G_HYBRID_MAP = google.maps.MapTypeId.HYBRID;
-var G_OSM_MAP = WecMap.osmMapTypeId;
-var G_OCM_MAP = WecMap.osmCycleMapTypeId;
+var G_OSM_MAP = 'OpenStreetMap';
+var G_OCM_MAP = 'OpenCycleMap';
 
 WecMapGoogleV3.prototype.addMapType = function( MapTypeId )
 {

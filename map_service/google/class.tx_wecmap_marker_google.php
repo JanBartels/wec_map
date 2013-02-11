@@ -117,6 +117,8 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 		$this->longitude = $longitude;
 
 		$this->iconID = $iconID;
+
+		$this->isDraggable = false;
 	}
 
 
@@ -159,7 +161,19 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 		if (empty($this->title[0]) && $this->directions) {
 			$this->title[0] = 'Address';
 		}
-		return 'WecMap.addMarker("'. $this->mapName . '", "' . $this->index . '", [' . $this->latitude . ',' . $this->longitude . '], "' . $this->iconID . '", \''. htmlspecialchars(strip_tags($this->title[0])) .'\', '.$this->groupId.', \''.$this->getUserAddress().'\');';
+		$js = 'WecMap.addMarker("'. $this->mapName . '", "' . $this->index . '", [' . $this->latitude . ',' . $this->longitude . '], "' . $this->iconID . '", \''. htmlspecialchars(strip_tags($this->title[0])) .'\', '.$this->groupId.', \''.$this->getUserAddress().'\');';
+		if ( $this->isDraggable )
+			$js .= 'WecMap.setDraggable("'. $this->mapName . '", ' . $this->groupId . ', "' . $this->index . '", true);';
+		return $js;
+	}
+
+	/**
+	 * undocumented function
+	 *
+	 * @return void
+	 **/
+	function setDraggable( $flag ) {
+		$this->isDraggable = flag;
 	}
 
 	/**
@@ -242,6 +256,10 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 
 	function getOpenInfoWindowJS() {
 		return 'WecMap.openInfoWindow("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->index . ');';
+	}
+
+	function getInitialOpenInfoWindowJS() {
+		return 'WecMap.openInitialInfoWindow("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->index . ');';
 	}
 
 	/**

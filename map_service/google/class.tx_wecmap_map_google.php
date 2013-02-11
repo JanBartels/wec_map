@@ -223,11 +223,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		if(!is_object($LANG)) {
 			require_once(t3lib_extMgm::extPath('lang').'lang.php');
 			$LANG = t3lib_div::makeInstance('language');
-			if(TYPO3_MODE == 'BE') {
-				$LANG->init($BE_USER->uc['lang']);
-			} else {
-				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
-			}
+			$LANG->init($this->lang);
 		}
 		$LANG->includeLLFile('EXT:wec_map/map_service/google/locallang.xml');
 		$hasThingsToDisplay = $this->hasThingsToDisplay();
@@ -252,8 +248,18 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 //			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
 //			$apiURL = sprintf($apiURL, $this->lang);
 			$apiURL = "http://maps.googleapis.com/maps/api/js?sensor=false&language=" . $this->lang;
-			$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
-			$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+
+
+			if(tx_wecmap_backend::getExtConf('useOwnJS'))
+			{
+				$mmURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/markermanager.js';
+				$ibURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/infobubble.js';
+			}
+			else
+			{
+				$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
+				$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+			}
 
 			if (TYPO3_DLOG) {
 				t3lib_div::devLog($this->mapName.': loading API from URL: '.$apiURL, 'wec_map_api');
@@ -261,7 +267,8 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 			/* If we're in the frontend, use TSFE.  Otherwise, include JS manually. */
 			$jsFile  = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap.js';
-//			$jsFile2 = t3lib_extMgm::siteRelPath('wec_map') . 'res/copyrights.js';
+			$jsFile2 = t3lib_extMgm::siteRelPath('wec_map') . 'res/copyrights.js';
+			$jsFile3 = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap_backend.js';
 			if (TYPO3_MODE == 'FE') {
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$mmURL .'" type="text/javascript"></script>'
@@ -272,19 +279,27 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				                                                  ;
 			} else {
 				$htmlContent .= '<script src="'.$apiURL.'" type="text/javascript"></script>';
-				$htmlContent .= '<script src="'.$mmURL .'" type="text/javascript"></script>';
-				$htmlContent .= '<script src="'.$ibURL .'" type="text/javascript"></script>';
+				if(tx_wecmap_backend::getExtConf('useOwnJS'))
+				{
+					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $mmURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $ibURL . '" type="text/javascript"></script>';
+				}
+				else
+				{
+					$htmlContent .= '<script src="' . $mmURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . $ibURL . '" type="text/javascript"></script>';
+				}
 				$htmlContent .= ( $jsFile  ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
 				              . ( $jsFile2 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )
+				              . ( $jsFile3 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile3 . '" type="text/javascript"></script>' : '' )
 				              ;
 			}
 
 			$jsContent = array();
-			$jsContent[] = $this->js_createLabels();
-			$jsContent[] = $this->js_errorHandler();
+			$jsContent[] = $this->js_createLabels( $LANG );
 			$jsContent[] = '';
 			$jsContent[] = $this->js_drawMapStart();
-//			$jsContent[] = $this->js_newGDirections();
+			$jsContent[] = $this->js_newGDirections();
 			$jsContent[] = $this->js_setCenter($this->lat, $this->long, $this->zoom, $this->type);
 			if ( is_array( $this->controls ) )
 				$jsContent = array_merge($jsContent, $this->controls);
@@ -601,16 +616,26 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @access	private
 	 * @return	string		The Javascript code for the labels.
 	 */
-	function js_createLabels() {
+	function js_createLabels( $LANG ) {
 		return '
 function InitWecMapGoogleV3Labels() {
-	WecMap.labels.startaddress = "' . $GLOBALS['LANG']->getLL('startaddress') .'";
-	WecMap.labels.endaddress = "'   . $GLOBALS['LANG']->getLL('endaddress')   .'";
-	WecMap.labels.OSM = "'          . $GLOBALS['LANG']->getLL('OSM')          .'";
-	WecMap.labels.OSM_alt = "'      . $GLOBALS['LANG']->getLL('OSM-alt')      .'";
-	WecMap.labels.OSM_bike = "'     . $GLOBALS['LANG']->getLL('OSM-bike')     .'";
-	WecMap.labels.OSM_bike_alt = "' . $GLOBALS['LANG']->getLL('OSM-bike-alt') .'";
-	WecMap.labels.locale =  "'       . $this->lang . '";
+	WecMap.labels.startaddress = "' . $LANG->getLL('startaddress') .'";
+	WecMap.labels.endaddress = "'   . $LANG->getLL('endaddress')   .'";
+	WecMap.labels.OSM = "'          . $LANG->getLL('OSM')          .'";
+	WecMap.labels.OSM_alt = "'      . $LANG->getLL('OSM-alt')      .'";
+	WecMap.labels.OSM_bike = "'     . $LANG->getLL('OSM-bike')     .'";
+	WecMap.labels.OSM_bike_alt = "' . $LANG->getLL('OSM-bike-alt') .'";
+	WecMap.labels.locale =  "'      . $LANG->lang . '";
+	// error messages
+	WecMap.labels.INVALID_REQUEST = "'        . $LANG->getLL('INVALID_REQUEST') .'";
+	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = "' . $LANG->getLL('MAX_WAYPOINTS_EXCEEDED') .'";
+	WecMap.labels.NOT_FOUND = "'              . $LANG->getLL('NOT_FOUND') .'";
+	WecMap.labels.OK = "'                     . $LANG->getLL('OK') .'";
+	WecMap.labels.OVER_QUERY_LIMIT = "'       . $LANG->getLL('OVER_QUERY_LIMIT') .'";
+	WecMap.labels.REQUEST_DENIED = "'         . $LANG->getLL('REQUEST_DENIED') .'";
+	WecMap.labels.UNKNOWN_ERROR = "'          . $LANG->getLL('UNKNOWN_ERROR') .'";
+	WecMap.labels.ZERO_RESULTS = "'           . $LANG->getLL('ZERO_RESULTS') .'";
+
 	WecMap.osmMapType.name = WecMap.labels.OSM;
 	WecMap.osmMapType.alt = WecMap.labels.OSM_alt;
 	WecMap.osmCycleMapType.name = WecMap.labels.OSM_bike;
@@ -626,7 +651,12 @@ function InitWecMapGoogleV3Labels() {
 	 * @return	string	The beginning of the drawMap function in Javascript.
 	 */
 	function js_drawMapStart() {
-		return 'google.maps.event.addDomListener(window,"load", function () { WecMap.init();InitWecMapGoogleV3Labels(); WecMap.createMap("'. $this->mapName . '" );';
+		return 'google.maps.event.addDomListener(window,"load", function () {
+if ( !window["WecMap"] )
+	WecMap = createWecMap();
+WecMap.init();
+InitWecMapGoogleV3Labels();
+WecMap.createMap("'. $this->mapName . '" );';
 	}
 
 	/**
@@ -653,47 +683,8 @@ function InitWecMapGoogleV3Labels() {
 			return '    WecMap.createDirections( "' . $this->mapName . '", "' . $this->directionsDivID . '" );';
 	}
 
-	/**
-	 * Error handler js function
-	 *
-	 * @return string 	Javascript
-	 **/
-	function js_errorHandler() {
-		global $LANG;
-		return 'function handleErrors_'. $this->mapName .'() {
-	var errCode = gdir_'. $this->mapName .'.getStatus().code;
-	var errMsg = "";
-	switch (errCode) {
-		case G_GEO_UNKNOWN_ADDRESS:
-			errMsg = "' . $LANG->getLL('G_GEO_UNKNOWN_ADDRESS') . '";
-		break;
-		case G_GEO_SERVER_ERROR:
-			errMsg = "' . $LANG->getLL('G_GEO_SERVER_ERROR') . '";
-		break;
-		case G_GEO_MISSING_QUERY:
-			errMsg = "' . $LANG->getLL('G_GEO_MISSING_QUERY') . '";
-		break;
-		case G_GEO_UNAVAILABLE_ADDRESS:
-			errMsg = "' . $LANG->getLL('G_GEO_UNAVAILABLE_ADDRESS') . '";
-		break;
-		case G_GEO_BAD_KEY:
-			errMsg = "' . $LANG->getLL('G_GEO_BAD_KEY') . '";
-		break;
-		case G_GEO_UNKNOWN_DIRECTIONS:
-			errMsg = "' . $LANG->getLL('G_GEO_UNKNOWN_DIRECTIONS') . '";
-		break;
-		case G_GEO_BAD_REQUEST:
-			errMsg = "' . $LANG->getLL('G_GEO_BAD_REQUEST') . '";
-		break;
-		default:
-			errMsg = "' . $LANG->getLL('UKNOWN_ERROR') . '";
-		break;
-	}
-	alert(errMsg + " " + errCode);
-}';
-	}
 
-	function js_setMapType($type) {
+function js_setMapType($type) {
 		return 'WecMap.setMapType("'. $this->mapName . '", ' . $type . ');';
 	}
 
@@ -784,7 +775,7 @@ function InitWecMapGoogleV3Labels() {
 		if (count($markers) == 1 && $this->showInfoOnLoad) {
 			foreach($this->groups as $key => $group) {
 				foreach( $group->markers as $marker ) {
-					return $marker->getOpenInfoWindowJS();  // return 1st marker
+					return $marker->getInitialOpenInfoWindowJS();  // return 1st marker
 				}
 			}
 		}

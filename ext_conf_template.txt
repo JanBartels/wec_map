@@ -1,5 +1,3 @@
-#cat=basic; type=integer; label=Google Maps API version: Default is 2. Use 2.x for the newest and 2.some_number for version some_number.
-apiVersion = 2
 # cat=basic; type=boolean; label=Enable map in FE user records
 feUserRecordMap = 0
 # cat=basic; type=boolean; label=Enable Geocoding Status
@@ -8,3 +6,5 @@ geocodingStatus = 0
 defaultCountry = USA
 # cat=basic; type=input; label=Which URL to load the API from: Useful if you have a Premier key from Google. sprintf formatting.
 apiURL = http://maps.google.com/maps?file=api&amp;v=%s&amp;key=%s&amp;hl=%s
+#cat=basic; type=boolean; label=Use downloaded JS-files from Google. Use wec_map-Admin menu before.
+useOwnJS = 0

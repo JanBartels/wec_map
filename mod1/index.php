@@ -78,7 +78,8 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 			'function' => array (
 				'1' => $LANG->getLL('function1'),
 				'2' => $LANG->getLL('function3'),
-				'3' => $LANG->getLL('function2'),
+				'3' => $LANG->getLL('function4'),
+//				'4' => $LANG->getLL('function2'),
 			)
 		);
 		parent::menuConfig();
@@ -176,6 +177,9 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 				$this->content.=$this->batchGeocode();
 			break;
 			case 3:
+				$this->content.=$this->downloadJSFiles();
+			break;
+			case 4:
 				$this->content.=$this->apiKeyAdmin();
 			break;
 		}
@@ -366,6 +370,71 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 
 		return implode(chr(10), $content);
 	}
+	/**
+	 * Rendering the encode-cache content
+	 *
+	 * @param	array		The Page tree data
+	 * @return	string		HTML for the information table.
+	 */
+	function downloadJSFiles()	{
+		global $LANG;
+
+		$cmd = t3lib_div::_GP('cmd');
+
+		$content = array();
+
+		switch($cmd) {
+			case 'downloadJS' :
+				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js', 'markermanager.js' );
+				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js', 'infobubble.js' );
+				$content[] = '<br />';
+				break;
+
+			default :
+				break;
+		}
+
+		$content[] = '<style type="text/css" media="screen">input[type=image] {border: none; background: none;}</style>';
+		$content[] = '<p style="margin-bottom:15px;">';
+		$content[] = $LANG->getLL('downloadInstructions');
+		$content[] = '</p>';
+
+		$content[] = '<form action="" method="POST">';
+		$content[] = '<input name="cmd" type="hidden" value="downloadJS" />';
+		$content[] = '<input type="submit" value="'.$LANG->getLL('download').'"/>';
+		$content[] = '</form>';
+
+		return implode(chr(10), $content);
+	}
+
+	/**
+	 * @param string $sourceUrl
+	 * @param string $destFile
+     * @return string HTML
+	 */
+    protected function download($sourceUrl, $destFile)    {
+		global $LANG;
+
+		$destDir = t3lib_div::getFileAbsFileName('EXT:wec_map/contribJS/');
+
+			// Get file and cancel if not existing/accessible
+		$remoteFileContent = t3lib_div::getURL($sourceUrl);
+		if ($remoteFileContent === FALSE) {
+			return $LANG->getLL('downloadError') . $sourceUrl . '<br />';
+		}
+
+			// Create dir if not existing
+		if (!file_exists($destDir)) {
+			mkdir($destDir);
+		}
+
+			// Write content to disk
+		$handle = fopen($destDir . $destFile, 'wb');
+		fwrite($handle, $remoteFileContent);
+		fclose($handle);
+
+		return $LANG->getLL('downloadSuccess') . $destFile . '<br />';
+    }
 }
 
 

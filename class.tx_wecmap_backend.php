@@ -169,8 +169,8 @@ class tx_wecmap_backend {
 				break;
 		}
 
-		$form = '<label for="wec_map_lat">'.$LANG->getLL('latitude').'</label> <input name="wec_map_lat" value="'.$latlong['lat'].'" />
-				 <label for="wec_map_long">'.$LANG->getLL('longitude').'</label>  <input name="wec_map_long" value="'.$latlong['long'].'" />
+		$form = '<label for="wec_map_lat">'.$LANG->getLL('latitude').'</label> <input id="wec_map_lat" name="wec_map_lat" value="'.$latlong['lat'].'" />
+				 <label for="wec_map_long">'.$LANG->getLL('longitude').'</label>  <input id="wec_map_long" name="wec_map_long" value="'.$latlong['long'].'" />
 				 <input type="hidden" name="wec_map_original_lat" value="'.$latlong['lat'].'" />
 				 <input type="hidden" name="wec_map_original_long" value="'.$latlong['long'].'" />';
 
@@ -196,7 +196,8 @@ class tx_wecmap_backend {
 		$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
 
 		$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
-		$map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
+		$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
+		$marker->setDraggable(true);
 
 		// add some default controls to the map
 		$map->addControl('largeMap');

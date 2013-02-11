@@ -5,15 +5,8 @@
 		<description>Language labels for Google Maps mapping service.</description>
 	</meta>
 	<data type="array">
+		<!-- DEFAULT -->
 		<languageKey index="default" type="array">
-			<label index="error_noApiKey">
-				<![CDATA[
-				No Maps API key has been set for the wec_map extension on this domain. Please make sure
-				that you have set an API key either in the WEC Map Admin, or via TypoScript or 
-				Flexform. If you don't have an API key yet, you may obtain one free of charge from
-				<a href="http://code.google.com/apis/maps/signup.html">the Google Maps website</a>.
-				]]>
-			</label>
 			<label index="error_nothingToDisplay">
 				There doesn't seem to be anything to display. Make sure the map is
 				configured correctly and there are users or markers set.
@@ -23,28 +16,48 @@
 				are set correctly in either the Flexform or via TypoScript.
 			</label>
 			<!-- Make sure to leave these in one line or the map won't load due to JS errors -->
-			<label index="G_GEO_UNKNOWN_ADDRESS">No corresponding geographic location could be found for one of the specified addresses. This may be due to the fact that the address is relatively new, or it may be incorrect.\nError code: </label>
-			<label index="G_GEO_SERVER_ERROR">A geocoding or directions request could not be successfully processed, yet the exact reason for the failure is not known.\n Error code: </label>
-			<label index="G_GEO_MISSING_QUERY">The HTTP q parameter was either missing or had no value. For geocoder requests, this means that an empty address was specified as input. For directions requests, this means that no query was specified in the input.\n Error code: </label>
-			<label index="G_GEO_UNAVAILABLE_ADDRESS">The geocode for the given address or the route for the given directions query cannot be returned due to legal or contractual reasons.\n Error code:  </label>
-			<label index="G_GEO_BAD_KEY">The given key is either invalid or does not match the domain for which it was given. \n Error code: </label>
-			<label index="G_GEO_UNKNOWN_DIRECTIONS">We could not compute directions between the addresses. This is usually because there is no route available between the two points, or because we do not have data for routing in that region. \n Error code: </label>
-			<label index="G_GEO_BAD_REQUEST">A directions request could not be successfully parsed.\n Error code: </label>
-			<label index="UKNOWN_ERROR">An unknown error occurred. Error code: </label>
+			<label index="INVALID_REQUEST">The DirectionsRequest provided was invalid.</label>
+			<label index="MAX_WAYPOINTS_EXCEEDED">Too many DirectionsWaypoints were provided in the DirectionsRequest. The total allowed waypoints is 8, plus the origin and destination. Maps API for Business customers are allowed 23 waypoints, plus the origin, and destination.</label>
+			<label index="NOT_FOUND">At least one of the origin, destination, or waypoints could not be geocoded.</label>
+			<label index="OK">The response contains a valid DirectionsResult.</label>
+			<label index="OVER_QUERY_LIMIT">The webpage has gone over the requests limit in too short a period of time.</label>
+			<label index="REQUEST_DENIED">The webpage is not allowed to use the directions service.</label>
+			<label index="UNKNOWN_ERROR">A directions request could not be processed due to a server error. The request may succeed if you try again.</label>
+			<label index="ZERO_RESULTS">No route could be found between the origin and destination.</label>
 			
 			<label index="OSM">OSM</label>
 			<label index="OSM-alt">OpenStreetmap layer</label>
 			<label index="OSM-bike">OSM-bike</label>
 			<label index="OSM-bike-alt">OpenCycleMap layer</label>
-			
 		</languageKey>
 		
-	    <languageKey index="de" type="array">
-	      <label index="OSM">OSM</label>
-	      <label index="OSM-bike">OSM-Rad</label>
-	      <label index="OSM-alt">OpenStreetmap Layer</label>
-	      <label index="OSM-bike-alt">OpenCycleMap Layer</label>
-	</languageKey>
+		<!-- GERMAN -->
+		<languageKey index="de" type="array">
+			<label index="error_nothingToDisplay">
+				Es scheint nichts anzuzeigen zu sein. Bitte stellen Sie sicher, dass
+				die Karte korrekt konfiguriert ist und Benutzer oder Marker gesetzt sind.
+			</label>
+			<label index="error_noHeightWidth">
+				Für die Karte wurde weder eine Höhe noch eine Breite gesetzt zu sein. Bitte
+				stellen Sie sicher, dass die Höhe und die Breite entweder in der FlexForm 
+				oder per TypoScript korrekt gesetzt werden.
+			</label>
+
+			<!-- Die folgenden Einträge müssen in einer Zeile stehen, damit die Karte korrekt geladen werden kann -->
+			<label index="INVALID_REQUEST">Die Anfrage war ungültig.</label>
+			<label index="MAX_WAYPOINTS_EXCEEDED">Es wurden zu viele Wegpunkte in der Anfrage angegeben. Die maximale Anzahl an waypoints beträgt 8, plus Start- und Zielort. Kunden mit dem Google Maps API für Unternehmen können Anfragen mit bis zu 23 Wegpunkten ausführen.</label>
+			<label index="NOT_FOUND">Mindestens einer der Standorte, die in der Anfrage als Startort, Zielort oder Wegpunkt angegeben wurden, konnte nicht geocodiert werden.</label>
+			<label index="OK">Die Antwort enthält ein gültiges Ergebnis.</label>
+			<label index="OVER_QUERY_LIMIT">Der Dienst hat innerhalb des zulässigen Zeitraums zu viele Anfragen von der Anwendung erhalten.</label>
+			<label index="REQUEST_DENIED">Der Dienst hat die Verwendung des Routenplanerdiensts durch die Anwendung abgelehnt.</label>
+			<label index="UNKNOWN_ERROR">Eine Routenanfrage konnte aufgrund eines Serverfehlers nicht verarbeitet werden. Die Anfrage liefert möglicherweise ein Ergebnis, wenn Sie es erneut versuchen.</label>
+			<label index="ZERO_RESULTS">Es konnte keine Route zwischen Start- und Zielort gefunden werden.</label>
+			
+			<label index="OSM">OSM</label>
+			<label index="OSM-bike">OSM-Rad</label>
+			<label index="OSM-alt">OpenStreetmap Layer</label>
+			<label index="OSM-bike-alt">OpenCycleMap Layer</label>
+		</languageKey>
 		
 	</data>
 </T3locallang>

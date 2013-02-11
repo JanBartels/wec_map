@@ -1,3 +1,18 @@
+3.0.0
+New ownership!!!
+[NEW] support for Google API V3
+[NEW] support for OpenStreetMap layers
+[NEW] dragging of marker in BE to correct position
+[NEW] plugin.tx_wecmap_pi3.tables.* groupBy, orderBy. Thanks to Andre Dittmar
+[DROP] support for Google Earth
+[DROP] support geocoder and map services other than Google
+[FIX] basic support of Typo3 6.0
+[FIX] many fixes
+
+2.4.0
+Last release by Webempowered Church
+[FIX] many fixes
+
 2.3.6-dev
 [FIX] !!! change defaulttitle to COA to make it more consistent. This will break a customized defaulttitle, so be sure to adjust accordingly. 
 [FIX] Use core content object methods to ensure correct display. This fixes a bug that would display content objects out of order.

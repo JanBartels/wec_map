@@ -10,6 +10,7 @@
 			<label index="function1">Geocode Admin</label>
 			<label index="function2">API Key Settings</label>
 			<label index="function3">Batch Geocode</label>
+			<label index="function4">Download JS-Files</label>
 			<label index="editAddress">Edit address</label>
 			<label index="deleteAddress">Delete address</label>
 			<label index="updateAddress">Update address</label>
@@ -42,6 +43,18 @@
 			<label index="googleMapsApiKey">Google Maps API Key</label>
 			<label index="submit">Save</label>
 			
+			<label index="downloadInstructions">
+				<![CDATA[
+				wec_map uses some additional libraries which cannot be included for license reasons. 
+				If you want to host them on your own server, you can download them here. 
+				Please remember to change the settings of wec_map afterwards. 
+				]]>
+			</label>
+			<label index="download">Download</label>
+			<label index="downloadError">Download error: </label>
+			<label index="downloadSuccess">Download successful: </label>
+
+
 			<label index="batchGeocode">Batch Geocode</label>
 			<label index="batchInstructions">
 				The batch geocoder is used to quickly calculate the latitude and
