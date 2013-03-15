@@ -61,7 +61,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 	 */
 	function lookup($street, $city, $state, $zip, $country, $key='')	{
 
-
+		$addressString = '';
 		if ( t3lib_extMgm::isLoaded('static_info_tables') )
 		{
 			// format address for Google search based on local address-format for given $country
@@ -93,10 +93,9 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
 			}
-			if ( !$addressString )
-				return array();
 		}
-		else
+
+		if ( !$addressString )
 		{
 			$addressString = $street.' '.$city.', '.$state.' '.$zip.', '.$country;	// default: US-format
 			// $addressString = $street.','.$zip.' '.$city.','.$country;  			// Alternative German format for better search results
