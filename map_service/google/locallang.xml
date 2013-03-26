@@ -15,6 +15,15 @@
 				The map didn't have a height or width set. Make sure that height and width
 				are set correctly in either the Flexform or via TypoScript.
 			</label>
+
+			<label index="endaddress">End Address</label>
+			<label index="startaddress">Start Address</label>
+
+			<label index="OSM">OSM</label>
+			<label index="OSM-alt">OpenStreetmap layer</label>
+			<label index="OSM-bike">OSM-bike</label>
+			<label index="OSM-bike-alt">OpenCycleMap layer</label>
+
 			<!-- Make sure to leave these in one line or the map won't load due to JS errors -->
 			<label index="INVALID_REQUEST">The DirectionsRequest provided was invalid.</label>
 			<label index="MAX_WAYPOINTS_EXCEEDED">Too many DirectionsWaypoints were provided in the DirectionsRequest. The total allowed waypoints is 8, plus the origin and destination. Maps API for Business customers are allowed 23 waypoints, plus the origin, and destination.</label>
@@ -24,11 +33,6 @@
 			<label index="REQUEST_DENIED">The webpage is not allowed to use the directions service.</label>
 			<label index="UNKNOWN_ERROR">A directions request could not be processed due to a server error. The request may succeed if you try again.</label>
 			<label index="ZERO_RESULTS">No route could be found between the origin and destination.</label>
-			
-			<label index="OSM">OSM</label>
-			<label index="OSM-alt">OpenStreetmap layer</label>
-			<label index="OSM-bike">OSM-bike</label>
-			<label index="OSM-bike-alt">OpenCycleMap layer</label>
 		</languageKey>
 		
 		<!-- GERMAN -->
@@ -43,6 +47,14 @@
 				oder per TypoScript korrekt gesetzt werden.
 			</label>
 
+      			<label index="endaddress">Zieladresse</label>
+      			<label index="startaddress">Startadresse</label>
+
+			<label index="OSM">OSM</label>
+			<label index="OSM-alt">OpenStreetmap Layer</label>
+			<label index="OSM-bike">OSM Rad</label>
+			<label index="OSM-bike-alt">OpenCycleMap Layer</label>
+
 			<!-- Die folgenden Einträge müssen in einer Zeile stehen, damit die Karte korrekt geladen werden kann -->
 			<label index="INVALID_REQUEST">Die Anfrage war ungültig.</label>
 			<label index="MAX_WAYPOINTS_EXCEEDED">Es wurden zu viele Wegpunkte in der Anfrage angegeben. Die maximale Anzahl an waypoints beträgt 8, plus Start- und Zielort. Kunden mit dem Google Maps API für Unternehmen können Anfragen mit bis zu 23 Wegpunkten ausführen.</label>
@@ -52,11 +64,6 @@
 			<label index="REQUEST_DENIED">Der Dienst hat die Verwendung des Routenplanerdiensts durch die Anwendung abgelehnt.</label>
 			<label index="UNKNOWN_ERROR">Eine Routenanfrage konnte aufgrund eines Serverfehlers nicht verarbeitet werden. Die Anfrage liefert möglicherweise ein Ergebnis, wenn Sie es erneut versuchen.</label>
 			<label index="ZERO_RESULTS">Es konnte keine Route zwischen Start- und Zielort gefunden werden.</label>
-			
-			<label index="OSM">OSM</label>
-			<label index="OSM-bike">OSM-Rad</label>
-			<label index="OSM-alt">OpenStreetmap Layer</label>
-			<label index="OSM-bike-alt">OpenCycleMap Layer</label>
 		</languageKey>
 		
 	</data>

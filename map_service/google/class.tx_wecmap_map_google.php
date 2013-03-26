@@ -113,17 +113,15 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		$this->mapName = $mapName;
 
 		if(TYPO3_MODE == 'BE') {
-			global $LANG;
-			if($LANG->lang == 'default') {
-				$this->lang = 'en';
-			} else {
-				$this->lang = $LANG->lang;
-			}
+			global $BE_USER;
+			$this->lang = $BE_USER->uc['lang'];
 		} else {
 			$this->lang = $GLOBALS['TSFE']->config['config']['language'];
-
-			if(empty($this->lang)) $this->lang = 'en';
 		}
+		if( $this->lang == 'default')
+			$this->lang = 'en';
+		else if( empty( $this->lang ) )
+			$this->lang = 'en';
 	}
 
 	/**
@@ -200,6 +198,29 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	}
 
 	/**
+	 * Returns the localized label of the LOCAL_LANG key, $key
+	 *
+	 * @param	array		the LOCAL_LANG array
+	 * @param	string		The key from the LOCAL_LANG array for which to return the value.
+	 * @return	string		The value from LOCAL_LANG.
+	 */
+	function getLL($ll,$key)	{
+			// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
+		if (isset($ll[$this->lang][$key]))	{
+			$word = $ll[$this->lang][$key];
+		} elseif (isset($ll['default'][$key]))	{
+			$word = $ll['default'][$key];	// No charset conversion because default is english and thereby ASCII
+		}
+
+		if(TYPO3_MODE == 'FE') {
+			$word = $GLOBALS['TSFE']->csConv($word);
+		}
+
+		return $word;
+	}
+
+
+	/**
 	 * Main function to draw the map.  Outputs all the necessary HTML and
 	 * Javascript to draw the map in the frontend or backend.
 	 *
@@ -217,15 +238,8 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		}
 		// devlog end
 
-		/* Initialize locallang.  If we're in the backend context, we're fine.
-		   If we're in the frontend, then we need to manually set it up. */
-		global $LANG;
-		if(!is_object($LANG)) {
-			require_once(t3lib_extMgm::extPath('lang').'lang.php');
-			$LANG = t3lib_div::makeInstance('language');
-			$LANG->init($this->lang);
-		}
-		$LANG->includeLLFile('EXT:wec_map/map_service/google/locallang.xml');
+		$lang = t3lib_div::readLLfile('EXT:wec_map/map_service/google/locallang.xml',$this->lang);
+
 		$hasThingsToDisplay = $this->hasThingsToDisplay();
 		$hasHeightWidth = $this->hasHeightWidth();
 
@@ -296,7 +310,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 
 			$jsContent = array();
-			$jsContent[] = $this->js_createLabels( $LANG );
+			$jsContent[] = $this->js_createLabels( $lang );
 			$jsContent[] = '';
 			$jsContent[] = $this->js_drawMapStart();
 			$jsContent[] = $this->js_newGDirections();
@@ -337,9 +351,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			return $htmlContent.t3lib_div::wrapJS($jsContentString);
 
 		} else if (!$hasThingsToDisplay) {
-			$error = '<p>'.$LANG->getLL('error_nothingToDisplay').'</p>';
+			$error = '<p>'.$this->getLL($lang, 'error_nothingToDisplay' ).'</p>';
 		} else if (!$hasHeightWidth) {
-			$error = '<p>'.$LANG->getLL('error_noHeightWidth').'</p>';
+			$error = '<p>'.$this->getLL($lang, 'error_noHeightWidth' ).'</p>';
 		}
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
@@ -616,25 +630,26 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @access	private
 	 * @return	string		The Javascript code for the labels.
 	 */
-	function js_createLabels( $LANG ) {
+	function js_createLabels( $lang ) {
+
 		return '
 function InitWecMapGoogleV3Labels() {
-	WecMap.labels.startaddress = "' . $LANG->getLL('startaddress') .'";
-	WecMap.labels.endaddress = "'   . $LANG->getLL('endaddress')   .'";
-	WecMap.labels.OSM = "'          . $LANG->getLL('OSM')          .'";
-	WecMap.labels.OSM_alt = "'      . $LANG->getLL('OSM-alt')      .'";
-	WecMap.labels.OSM_bike = "'     . $LANG->getLL('OSM-bike')     .'";
-	WecMap.labels.OSM_bike_alt = "' . $LANG->getLL('OSM-bike-alt') .'";
-	WecMap.labels.locale =  "'      . $LANG->lang . '";
+	WecMap.labels.startaddress = "' . $this->getLL($lang, 'startaddress') .'";
+	WecMap.labels.endaddress = "'   . $this->getLL($lang, 'endaddress')   .'";
+	WecMap.labels.OSM = "'          . $this->getLL($lang, 'OSM')          .'";
+	WecMap.labels.OSM_alt = "'      . $this->getLL($lang, 'OSM-alt')      .'";
+	WecMap.labels.OSM_bike = "'     . $this->getLL($lang, 'OSM-bike')     .'";
+	WecMap.labels.OSM_bike_alt = "' . $this->getLL($lang, 'OSM-bike-alt') .'";
+	WecMap.labels.locale =  "'      . $this->lang . '";
 	// error messages
-	WecMap.labels.INVALID_REQUEST = "'        . $LANG->getLL('INVALID_REQUEST') .'";
-	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = "' . $LANG->getLL('MAX_WAYPOINTS_EXCEEDED') .'";
-	WecMap.labels.NOT_FOUND = "'              . $LANG->getLL('NOT_FOUND') .'";
-	WecMap.labels.OK = "'                     . $LANG->getLL('OK') .'";
-	WecMap.labels.OVER_QUERY_LIMIT = "'       . $LANG->getLL('OVER_QUERY_LIMIT') .'";
-	WecMap.labels.REQUEST_DENIED = "'         . $LANG->getLL('REQUEST_DENIED') .'";
-	WecMap.labels.UNKNOWN_ERROR = "'          . $LANG->getLL('UNKNOWN_ERROR') .'";
-	WecMap.labels.ZERO_RESULTS = "'           . $LANG->getLL('ZERO_RESULTS') .'";
+	WecMap.labels.INVALID_REQUEST = "'        . $this->getLL($lang, 'INVALID_REQUEST') .'";
+	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = "' . $this->getLL($lang, 'MAX_WAYPOINTS_EXCEEDED') .'";
+	WecMap.labels.NOT_FOUND = "'              . $this->getLL($lang, 'NOT_FOUND') .'";
+	WecMap.labels.OK = "'                     . $this->getLL($lang, 'OK') .'";
+	WecMap.labels.OVER_QUERY_LIMIT = "'       . $this->getLL($lang, 'OVER_QUERY_LIMIT') .'";
+	WecMap.labels.REQUEST_DENIED = "'         . $this->getLL($lang, 'REQUEST_DENIED') .'";
+	WecMap.labels.UNKNOWN_ERROR = "'          . $this->getLL($lang, 'UNKNOWN_ERROR') .'";
+	WecMap.labels.ZERO_RESULTS = "'           . $this->getLL($lang, 'ZERO_RESULTS') .'";
 
 	WecMap.osmMapType.name = WecMap.labels.OSM;
 	WecMap.osmMapType.alt = WecMap.labels.OSM_alt;
