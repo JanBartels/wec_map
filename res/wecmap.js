@@ -468,9 +468,9 @@ WecMapGoogleV3.prototype.addBubble = function( groupId, markerId, labels, conten
 {
 	if (!(this.bubbleData[groupId] instanceof Array)) 
 		this.bubbleData[groupId] = [];
-//	for (var i = 0; i < content.length; i++) {
-//		content[i] = '<div id="' + this.mapId + '_marker_' + groupId + '_' + markerId + '" class="marker">' + content[i] + '</div>';
-//	}
+	for (var i = 0; i < content.length; i++) {
+		content[i] = '<div id="' + this.mapId + '_marker_' + groupId + '_' + markerId + '" class="marker">' + content[i] + '</div>';
+	}
 	this.bubbleData[groupId][markerId] = {
 		labels: labels,
 		content: content
