@@ -197,7 +197,8 @@ class tx_wecmap_backend {
 
 		$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
 		$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
-		$marker->setDraggable(true);
+		if ( $marker )
+			$marker->setDraggable(true);
 
 		// add some default controls to the map
 		$map->addControl('largeMap');
