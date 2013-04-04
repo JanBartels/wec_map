@@ -376,14 +376,14 @@ WecMapGoogleV3.prototype.addMarker = function( markerId, latlng, iconId, dirTitl
 			this.directionsToData[groupId] = [];
 		}
 
-		var dirText = '<div id="' + this.mapId + '_todirform_' + groupId + '_' + markerId + '" class="todirform" style="display:none"><br /><form action="#" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', [' + point.toUrlValue() + '], document.getElementById(\'tx-wecmap-directions-to-' + this.mapId + '\').value, \'' + dirTitle + '\');return false;">';
-		dirText += '<label class="startendaddress" for="tx-wecmap-directions-to-' + this.mapId + '">' + WecMap.labels.endaddress + '</label><input type="text" name="daddr" value="' + address + '" id="tx-wecmap-directions-to-' + this.mapId + '" />';
-		dirText += '<input type="submit" name="submit" value="Go" /></form></div>';
+		var dirText = '<div id="' + this.mapId + '_todirform_' + groupId + '_' + markerId + '" class="todirform" style="display:none"><br class="todirform" /><form action="#" class="todirform" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', [' + point.toUrlValue() + '], document.getElementById(\'tx-wecmap-directions-to-' + this.mapId + '\').value, \'' + dirTitle + '\');return false;">';
+		dirText += '<label class="startendaddress" for="tx-wecmap-directions-to-' + this.mapId + '">' + WecMap.labels.endaddress + '</label><input class="startendaddress" type="text" name="daddr" value="' + address + '" id="tx-wecmap-directions-to-' + this.mapId + '" />';
+		dirText += '<input class="startendaddresssubmit" type="submit" name="submit" value="Go" /></form></div>';
 		this.directionsFromData[groupId][markerId] = dirText;
 
-		dirText = '<div id="' + this.mapId + '_fromdirform_' + groupId + '_' + markerId + '" class="fromdirform" style="display:none"><br /><form action="#" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', document.getElementById(\'tx-wecmap-directions-from-' + this.mapId + '\').value, [' + point.toUrlValue() + '], \'' + dirTitle + '\');return false;">';
-		dirText += '<label class="startendaddress" for="tx-wecmap-directions-from-' + this.mapId + '">' + WecMap.labels.startaddress + '</label><input type="text" name="saddr" value="' + address + '" id="tx-wecmap-directions-from-' + this.mapId + '" />';
-		dirText += '<input type="submit" name="submit" value="Go" /></form></div>';
+		dirText = '<div id="' + this.mapId + '_fromdirform_' + groupId + '_' + markerId + '" class="fromdirform" style="display:none"><br class="fromdirform" /><form action="#" class="fromdirform" onsubmit="WecMap.setDirections(\'' + this.mapId + '\', document.getElementById(\'tx-wecmap-directions-from-' + this.mapId + '\').value, [' + point.toUrlValue() + '], \'' + dirTitle + '\');return false;">';
+		dirText += '<label class="startendaddress" for="tx-wecmap-directions-from-' + this.mapId + '">' + WecMap.labels.startaddress + '</label><input class="startendaddress" type="text" name="saddr" value="' + address + '" id="tx-wecmap-directions-from-' + this.mapId + '" />';
+		dirText += '<input  class="startendaddresssubmit" type="submit" name="submit" value="Go" /></form></div>';
 		this.directionsToData[groupId][markerId] = dirText;
 		
 		this.bubbleData[groupId][markerId].content[0] += this.directionsToData[groupId][markerId] + this.directionsFromData[groupId][markerId];
