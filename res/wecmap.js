@@ -483,8 +483,8 @@ WecMapGoogleV3.prototype.openInfoWindow = function( groupId, markerId ) {
 	if ( this.infoWindow && marker )
 	{
 		if ( this.infoWindow.tabs_ ) {
-			for ( var i = this.infoWindow.tabs_.length; i; --i ) {
-				this.infoWindow.removeTab( i )
+			for ( var i = this.infoWindow.tabs_.length; i > 0; --i ) {
+				this.infoWindow.removeTab( i - 1 );
 			}
 		}
 		if ( bubbleData.labels.length > 1 )
