@@ -1,24 +1,20 @@
 tx_wecmap_api {
 	addressForm = COA_INT
 	addressForm {
-		10 = TEXT
-		10.value = <table id="{field:map_id}_radiusform" class="radiusform" style="display: none;">
-		10.insertData = true
 		20 = FORM
 		20.layout = <tr><td>###LABEL###</td><td> ###FIELD### </td></tr>
 		20.data (
 			{LLL:EXT:wec_map/locallang_db.xml:radius} | {field:map_id}_radius=select | 10=10, 25=25, 50=50, 100=100, 250=250
-			{LLL:EXT:wec_map/locallang_db.xml:unit} | {field:map_id}_kilometers=select | *miles=0, kilometers=1
+			{LLL:EXT:wec_map/locallang_db.xml:unit} | {field:map_id}_kilometers=select | *{LLL:EXT:wec_map/locallang_db.xml:unit.miles}=0, {LLL:EXT:wec_map/locallang_db.xml:unit.kilometers}=1
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.street}: | {field:map_id}_address=input
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.city}: | {field:map_id}_city=input
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.state}: | {field:map_id}_state=input
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.zip}: | {field:map_id}_zip=input
-			| {field:map_id}_submit=submit | Submit
+			| {field:map_id}_submit=submit | {LLL:EXT:wec_map/locallang_db.xml:submit}
 		) 
 		20.data.insertData = 1
 		20.noValueInsert = 0
-		30 = HTML 
-		30.value = </table>
+		20.stdWrap.dataWrap = <table id="{field:map_id}_radiusform" class="radiusform" style="display: none;">|</table>
 	}
 	
 	directions = COA
@@ -34,7 +30,7 @@ tx_wecmap_api {
 		10.field = content
 		10.wrap = <div id="{field:map_id}_sidebar" class="sidebar" style="height:{field:map_height}px; display: none;">|</div>
 		10.insertData = true
-    10.if.isTrue.field = content
+                10.if.isTrue.field = content
 	}
 	
 	sidebarItem = COA

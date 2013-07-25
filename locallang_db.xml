@@ -37,6 +37,9 @@
       <label index="tx_wecmap_external.title">Title</label>
       <label index="tx_wecmap_external.url">URL</label>
       <label index="unit">Unit: </label>
+      <label index="unit.miles">miles</label>
+      <label index="unit.kilometers">kilometers</label>
+      <label index="submit">Submit</label>
       <label index="pi1TemplateNotIncluded">
           <![CDATA[
           <p>Please include the WEC Simple Map static template on your page.</p>
@@ -128,6 +131,9 @@
       <label index="tx_wecmap_external.title">Titel</label>
       <label index="tx_wecmap_external.url">URL</label>
       <label index="unit">Einheit: </label>
+      <label index="unit.miles">Meilen</label>
+      <label index="unit.kilometers">Kilometer</label>
+      <label index="submit">Absenden</label>
 	<label index="pi1TemplateNotIncluded">
 	<![CDATA[
 	<p>Bitte das WEC Simple Map static template auf ihrer Seite einfügen.</p>
