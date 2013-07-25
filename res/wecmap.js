@@ -226,7 +226,7 @@ function WecMapGoogleV3( mapId )
 	this.map = null;
 	this.icons = [];
 //	this.infoWindow = new google.maps.InfoWindow();
-	this.infoWindow = new InfoBubble({ maxWidth: 300 });
+	this.infoWindow = new InfoBubble({ minWidth: 100, minHeight:100 });
 	this.openInitialInfoWindowMarker = null;
 	this.bubbleData = [];
 	this.markerManager = null;
