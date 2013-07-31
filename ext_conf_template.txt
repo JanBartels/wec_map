@@ -6,5 +6,7 @@ geocodingStatus = 0
 defaultCountry = USA
 # cat=basic; type=input; label=Which URL to load the API from: Useful if you have a Premier key from Google. sprintf formatting.
 apiURL = http://maps.google.com/maps?file=api&amp;v=%s&amp;key=%s&amp;hl=%s
-#cat=basic; type=boolean; label=Use downloaded JS-files from Google. Use wec_map-Admin menu before.
+#cat=basic; type=boolean; label=Use downloaded JS-files for InfoBubble and MarkerManager from Google. Use wec_map-Admin menu before.
 useOwnJS = 0
+# cat=basic; type=input; label=Directory for own JS-files for wec_map (including trailing slash)
+jsDir = 

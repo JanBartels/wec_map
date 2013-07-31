@@ -280,9 +280,12 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 
 			/* If we're in the frontend, use TSFE.  Otherwise, include JS manually. */
-			$jsFile  = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap.js';
-			$jsFile2 = t3lib_extMgm::siteRelPath('wec_map') . 'res/copyrights.js';
-			$jsFile3 = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap_backend.js';
+			$jsDir = tx_wecmap_backend::getExtConf('jsDir');
+			if ( empty( $jsDir ) )
+				$jsDir = t3lib_extMgm::siteRelPath('wec_map') . 'res/';
+			$jsFile  = $jsDir . 'wecmap.js';
+			$jsFile2 = $jsDir . 'copyrights.js';
+			$jsFile3 = $jsDir . 'wecmap_backend.js';
 			if (TYPO3_MODE == 'FE') {
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$mmURL .'" type="text/javascript"></script>'
