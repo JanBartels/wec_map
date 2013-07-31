@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2013 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -327,6 +328,7 @@ class tx_wecmap_backend {
 		global $LANG;
 
 		foreach( $GLOBALS['TCA'] as $table => $conf ) {
+			t3lib_div::loadTCA($table);
 			$isMappable = $conf['ctrl']['EXT']['wec_map']['isMappable'];
 			if($isMappable) {
 				$title = $LANG->sL($conf['ctrl']['title']);
