@@ -27,15 +27,15 @@ $EM_CONF[$_EXTKEY] = array(
 	'modify_tables' => '',
 	'clearcacheonload' => 1,
 	'lockType' => '',
-	'author' => 'Web-Empowered Church Team',
-	'author_email' => 'map@webempoweredchurch.org',
-	'author_company' => 'Christian Technology Ministries International Inc.',
+	'author' => 'Web-Empowered Church Team (V1.x, V2.x), Jan Bartels (V3.x)',
+	'author_email' => 'j.bartels@arcor.de',
+	'author_company' => 'Christian Technology Ministries International Inc. (V1.x, V2.x)',
 	'CGLcompliance' => '',
 	'CGLcompliance_note' => '',
 	'constraints' => array(
 		'depends' => array(
 			'php' => '3.0.0-0.0.0',
-			'typo3' => '4.3.0-0.0.0',
+			'typo3' => '4.3.0-4.7.99',
 		),
 		'conflicts' => array(
 		),
