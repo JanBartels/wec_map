@@ -69,6 +69,7 @@ plugin.tx_wecmap_pi3 {
 	homeicon    		< tx_wecmap_api.homeicon
 	sidebar 			< tx_wecmap_api.sidebar
 	directions 			< tx_wecmap_api.directions
+	directionsMenu 			< tx_wecmap_api.directionsMenu
 	sidebarItem 		< tx_wecmap_api.sidebarItem
 	addressForm 		< tx_wecmap_api.addressForm
 	output 				< tx_wecmap_api.output

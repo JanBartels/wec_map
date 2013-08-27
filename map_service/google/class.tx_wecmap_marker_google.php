@@ -135,7 +135,15 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 		}
 
 		if ($this->directions) {
-			$markerContent[0] .= '<br class="dirmenu"/><div id="'.$this->mapName.'_dirmenu_'.$this->groupId.'_'. $this->index .'" class="dirmenu" style="white-space: nowrap;">'. $GLOBALS['LANG']->getLL('directions') .': <a href="#" class="dirmenutohere" onclick="WecMap.openDirectionsToHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">' . $GLOBALS['LANG']->getLL('toHereFrom') . '</a> - <a href="#" class="dirmenufromhere"onclick=\"WecMap.openDirectionsFromHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">'. $GLOBALS['LANG']->getLL('fromHereTo') .'</a></div>';
+			$data = array( 'map_id' => $this->mapName,
+						   'groupId' => $this->groupId,
+						   'index' => $this->index,
+						   'address' => $this->getUserAddress(),
+						   'latitude' => $this->latitude,
+						   'longitude' => $this->longitude,
+						   'dirTitle' => htmlspecialchars(strip_tags($this->title[0]))
+						 );
+			$markerContent[0] .= tx_wecmap_shared::render( $data, $this->directionsMenuConf );
 		}
 
 		return '

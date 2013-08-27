@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2013 Jan Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -82,6 +83,11 @@ class tx_wecmap_shared {
 	function getAddressField($table, $field) {
 		t3lib_div::loadTCA($table);
  		return $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map']['addressFields'][$field];
+	}
+
+	function getLatLongField($table, $field) {
+		t3lib_div::loadTCA($table);
+ 		return $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map']['latlongFields'][$field];
 	}
 }
 

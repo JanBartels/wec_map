@@ -432,7 +432,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		/* Geocode the address */
 		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
 		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
@@ -453,7 +453,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 **/
-	function &addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -480,7 +480,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		$uid = intval($uid);
 
 		// first get the mappable info from the TCA
@@ -532,7 +532,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
@@ -576,10 +576,23 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return 		boolean
 	 * @access   	public
 	 */
-	function addMarkerIcon($dataArray) {
+	function addMarkerIcon($dataArray, &$cObj=null ) {
 		if (empty($dataArray)) {
 			return false;
 		} else {
+			if ( $cObj && is_array($dataArray))
+			{
+				$sData = $dataArray;
+				$dataArray = array();
+				foreach($sData as $theKey => $theValue)	{
+					if ( substr($theKey, -1, 1 ) == '.') {
+						$dataArray[ substr($theKey,0,-1) ] = $cObj->stdWrap($sData[substr($theKey,0,-1)], $sData[$theKey]);
+					} else {
+						$dataArray[$theKey] = $sData[$theKey];
+					}
+				}
+			}
+
 		  	$this->icons[] = 'WecMap.addIcon("'. $this->mapName . '", "' . $dataArray['iconID'] . '", "' . $dataArray['imagepath'] . '", "' . $dataArray['shadowpath'] . '", new google.maps.Size(' . $dataArray['width'] . ', ' . $dataArray['height'] . '), new google.maps.Size(' . $dataArray['shadowWidth'] . ', ' . $dataArray['shadowHeight'] . '), new google.maps.Point(' . $dataArray['anchorX'] . ', ' . $dataArray['anchorY'] . '), new google.maps.Point(' . $dataArray['infoAnchorX'] . ', ' . $dataArray['infoAnchorY'] . '));
 			';
 			return true;
@@ -872,8 +885,6 @@ function js_setMapType($type) {
 	 **/
 	function getAutoZoom($latSpan, $longSpan) {
 
-		//$pixelsPerLatDegree = pow(2, 17-$zoom);
-		//$pixelsPerLongDegree = pow(2,17 - $zoom) *  0.77162458338772;
 		$wZoom = log($this->width, 2) - log($longSpan, 2);
 		$hZoom = log($this->height, 2) - log($latSpan, 2);
 

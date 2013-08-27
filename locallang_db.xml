@@ -30,6 +30,7 @@
       <label index="radius">Radius: </label>
       <label index="startaddress">Start Address</label>
       <label index="toHereFrom">To here</label>
+      <label index="directionsMenuForm.submit">Go</label>
       <label index="tt_content.list_type_pi1">WEC Simple Map</label>
       <label index="tt_content.list_type_pi2">WEC Frontend User Map</label>
       <label index="tt_content.list_type_pi3">WEC Table Map</label>
@@ -124,6 +125,7 @@
       <label index="radius">Radius: </label>
       <label index="startaddress">Startadresse</label>
       <label index="toHereFrom">Hierhin</label>
+      <label index="directionsMenuForm.submit">Los</label>
       <label index="tt_content.list_type_pi1">Einfache WEC Landkarte</label>
       <label index="tt_content.list_type_pi2">WEC Frontend Benutzer Karte</label>
       <label index="tt_content.list_type_pi3">WEC Tabellenkarte</label>

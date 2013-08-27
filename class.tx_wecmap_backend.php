@@ -46,24 +46,70 @@ class tx_wecmap_backend {
 
 	function processDatamap_postProcessFieldArray($status, $table, $id, &$fieldArray, &$reference) {
 		global $TCA;
-		$isMappable = $TCA[$table]['ctrl']['EXT']['wec_map']['isMappable'];
+		t3lib_div::loadTCA($table);
+
+		$tca = $TCA[$table]['ctrl']['EXT']['wec_map'];
+		$isMappable = $tca['isMappable'];
 
 		if($isMappable) {
-			/* Get the names of the fields from the TCA */
-			$streetField  = tx_wecmap_shared::getAddressField($table, 'street');
-			$cityField    = tx_wecmap_shared::getAddressField($table, 'city');
-			$stateField   = tx_wecmap_shared::getAddressField($table, 'state');
-			$zipField     = tx_wecmap_shared::getAddressField($table, 'zip');
-			$countryField = tx_wecmap_shared::getAddressField($table, 'country');
+			if ( $tca['addressFields'] )
+			{
+				/* Get the names of the fields from the TCA */
+				$streetField  = tx_wecmap_shared::getAddressField($table, 'street');
+				$cityField    = tx_wecmap_shared::getAddressField($table, 'city');
+				$stateField   = tx_wecmap_shared::getAddressField($table, 'state');
+				$zipField     = tx_wecmap_shared::getAddressField($table, 'zip');
+				$countryField = tx_wecmap_shared::getAddressField($table, 'country');
 
+				/* Get the row that we're saving */
+				$row = t3lib_befunc::getRecord($table, $id);
 
-			/* Get the row that we're saving */
-			$row = t3lib_befunc::getRecord($table, $id);
+				/* @todo	Eliminate double save */
+				tx_wecmap_backend::drawGeocodeStatus($row[$streetField], $row[$cityField], $row[$stateField], $row[$zipField], $row[$countryField]);
+			}
+			else if ( $tca['latlongFields'] )
+			{
+				/* Get the names of the fields from the TCA */
+				$latField  = tx_wecmap_shared::getLatLongField($table, 'lat');
+				$longField    = tx_wecmap_shared::getLatLongField($table, 'long');
 
-			/* @todo	Eliminate double save */
-			tx_wecmap_backend::drawGeocodeStatus($row[$streetField], $row[$cityField], $row[$stateField], $row[$zipField], $row[$countryField]);
+				/* Get the row that we're saving */
+				$row = t3lib_befunc::getRecord($table, $id);
+
+				/* @todo	Eliminate double save */
+				tx_wecmap_backend::drawLatlongStatus($row[$latField], $row[$longField]);
+			}
 		}
+	}
 
+	function processDatamap_preProcessFieldArray(array &$incomingFieldArray, $table, $id, t3lib_TCEmain &$reference) {
+		global $TCA;
+		t3lib_div::loadTCA($table);
+
+		$tca = $TCA[$table]['ctrl']['EXT']['wec_map'];
+		$isMappable = $tca['isMappable'];
+
+		if($isMappable) {
+			if ( $tca['latlongFields'] )
+			{
+				/* Grab the lat and long that were posted */
+				$newlat = t3lib_div::_GP('wec_map_lat');
+				$newlong = t3lib_div::_GP('wec_map_long');
+
+				$origlat = t3lib_div::_GP('wec_map_original_lat');
+				$origlong = t3lib_div::_GP('wec_map_original_long');
+
+				/* If the lat/long changed, then insert a new entry into the cache or update it. */
+				if((($newlat != $origlat) or ($newlong != $origlong)) and (!empty($newlat) && !empty($newlong)) and (is_numeric($newlat) && is_numeric($newlong))) {
+					/* Get the names of the fields from the TCA */
+					$latField  = tx_wecmap_shared::getLatLongField($table, 'lat');
+					$longField = tx_wecmap_shared::getLatLongField($table, 'long');
+
+					$incomingFieldArray[$latField] = $newlat;
+					$incomingFieldArray[$longField] = $newlong;
+				}
+			}
+		}
 	}
 
 	/**
@@ -79,15 +125,40 @@ class tx_wecmap_backend {
 		// if geocoding status is disabled, return
 		if(!tx_wecmap_backend::getExtConf('geocodingStatus')) return;
 
-		$street  = tx_wecmap_backend::getFieldValue('street', $PA);
-		$city    = tx_wecmap_backend::getFieldValue('city', $PA);
-		$state   = tx_wecmap_backend::getFieldValue('state', $PA);
-		$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
-		$country = tx_wecmap_backend::getFieldValue('country', $PA);
+		if ( isset($PA['fieldConf']['config']['params']['addressFields']) ) {
+			$street  = tx_wecmap_backend::getFieldValue('street', $PA);
+			$city    = tx_wecmap_backend::getFieldValue('city', $PA);
+			$state   = tx_wecmap_backend::getFieldValue('state', $PA);
+			$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
+			$country = tx_wecmap_backend::getFieldValue('country', $PA);
 
+			return tx_wecmap_backend::drawGeocodeStatus($street, $city, $state, $zip, $country);
+		} else {
+			return '';
+		}
+	}
 
-		return tx_wecmap_backend::drawGeocodeStatus($street, $city, $state, $zip, $country);
+	/**
+	 * Checks the geocoding status for the current record.  This function is
+	 * mainly responsible for taking backend record data and handing it to
+	 * drawLatlongStatus().
+	 *
+	 * @param	array	Array with information about the current field.
+	 * @param	object	Parent object.  Instance of t3lib_tceforms.
+	 * @return	string	HTML output of current geocoding status and editing form.
+	 */
+	function checkLatlongStatus($PA, &$fobj) {
+		// if geocoding status is disabled, return
+		if(!tx_wecmap_backend::getExtConf('geocodingStatus')) return;
 
+		if ( isset($PA['fieldConf']['config']['params']['latlongFields']) ) {
+			$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
+			$long = tx_wecmap_backend::getFieldValue('long', $PA);
+
+			return tx_wecmap_backend::drawLatlongStatus($lat, $long);
+		} else {
+			return '';
+		}
 	}
 
 	/**
@@ -179,6 +250,32 @@ class tx_wecmap_backend {
 	}
 
 	/**
+	 * displays an editing form.
+	 *
+	 * @param	string	Latitude portion of the address.
+	 * @param	string	Longitude portion of the address.
+	 * @return	string	HTML output of current geocoding status and editing form.
+	 */
+	function drawLatlongStatus($lat, $long) {
+		global $LANG;
+		$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
+
+		/* Grab the lat and long that were posted */
+		$newlat = t3lib_div::_GP('wec_map_lat');
+		$newlong = t3lib_div::_GP('wec_map_long');
+
+		$origlat = t3lib_div::_GP('wec_map_original_lat');
+		$origlong = t3lib_div::_GP('wec_map_original_long');
+
+		$form = '<input id="wec_map_lat" name="wec_map_lat" value="'.$lat.'" />
+				 <input id="wec_map_long" name="wec_map_long" value="'.$long.'" />
+				 <input type="hidden" name="wec_map_original_lat" value="'.$lat.'" />
+				 <input type="hidden" name="wec_map_original_long" value="'.$long.'" />';
+
+		return '<p>'.$form.'</p>';
+	}
+
+	/**
 	 * Draws a backend map.
 	 * @param		array		Array with information about the current field.
 	 * @param		object		Parent object.  Instance of t3lib_tceforms.
@@ -188,19 +285,35 @@ class tx_wecmap_backend {
 		$width = '400';
 		$height = '400';
 
-		$street  = tx_wecmap_backend::getFieldValue('street', $PA);
-		$city    = tx_wecmap_backend::getFieldValue('city', $PA);
-		$state   = tx_wecmap_backend::getFieldValue('state', $PA);
-		$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
-		$country = tx_wecmap_backend::getFieldValue('country', $PA);
+		if ( isset($PA['fieldConf']['config']['params']['addressFields']) )
+		{
+			$street  = tx_wecmap_backend::getFieldValue('street', $PA);
+			$city    = tx_wecmap_backend::getFieldValue('city', $PA);
+			$state   = tx_wecmap_backend::getFieldValue('state', $PA);
+			$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
+			$country = tx_wecmap_backend::getFieldValue('country', $PA);
 
-		$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
+			$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
 
-		$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
-		$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
+			$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
+			$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
+		}
+		else if ( isset($PA['fieldConf']['config']['params']['latlongFields']) )
+		{
+			$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
+			$long = tx_wecmap_backend::getFieldValue('long', $PA);
+
+			$description = $lat.','.$long;
+
+			$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
+			$marker = $map->addMarkerByLatLong($lat, $long, $description );
+		} else {
+			return '';
+		}
+
+		// enable dragging to correct lat/long interactively
 		if ( $marker )
 			$marker->setDraggable(true);
-
 		// add some default controls to the map
 		$map->addControl('largeMap');
 		$map->addControl('scale');
@@ -228,18 +341,24 @@ class tx_wecmap_backend {
 		$table = $PA['table'];
 
         $row = $PA['row'];
-        $addressFields = $PA['fieldConf']['config']['params']['addressFields'];
 
 		/* If the address mapping array has a mapping for this address, use it */
+        $addressFields = $PA['fieldConf']['config']['params']['addressFields'];
         if(isset($addressFields[$key])) {
             $fieldName = $addressFields[$key];
         } else {
-			/* If the ctrl section of the TCA has a name, use it */
-			if(isset($ctrlAddressFields[$key])) {
-				$fieldName = tx_wecmap_shared::getAddressField($table, $key);
+			/* If the address mapping array has a mapping for this lat/long, use it */
+			$latlongFields = $PA['fieldConf']['config']['params']['latlongFields'];
+			if(isset($latlongFields[$key])) {
+				$fieldName = $latlongFields[$key];
 			} else {
-				/* Otherwise, use the default name */
-            	$fieldName = $key;
+				/* If the ctrl section of the TCA has a name, use it */
+				if(isset($ctrlAddressFields[$key])) {
+					$fieldName = tx_wecmap_shared::getAddressField($table, $key);
+				} else {
+					/* Otherwise, use the default name */
+					$fieldName = $key;
+				}
 			}
         }
 
@@ -265,17 +384,21 @@ class tx_wecmap_backend {
 	 * @return	string	The specified portion of the address.
 	 */
 	function getFieldValueFromFF($key, $PA) {
-		$addressFields = $PA['fieldConf']['config']['params']['addressFields'];
-
 		$flexForm = t3lib_div::xml2array($PA['row']['pi_flexform']);
 		if(is_array($flexForm)) {
 			$flexForm = $flexForm['data']['default']['lDEF'];
 
 			/* If the address mapping array has a map for this address, use it */
+			$addressFields = $PA['fieldConf']['config']['params']['addressFields'];
 			if(isset($addressFields[$key])) {
 				$fieldName = $addressFields[$key];
 			} else {
-				$fieldName = $key;
+				$latlongFields = $PA['fieldConf']['config']['params']['latlongFields'];
+				if(isset($latlongFields[$key])) {
+					$fieldName = $latlongFields[$key];
+				} else {
+					$fieldName = $key;
+				}
 			}
 
 

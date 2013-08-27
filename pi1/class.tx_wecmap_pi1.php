@@ -101,59 +101,60 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		// get configuration from flexform or TS. Flexform values take
 		// precedence.
 		$width = $this->pi_getFFvalue($piFlexForm, 'mapWidth', 'mapConfig');
-		empty($width) ? $width = $conf['width']:null;
+		empty($width) ? $width = $this->cObj->stdWrap($conf['width'], $conf['width.']):null;
 
 		$height = $this->pi_getFFvalue($piFlexForm, 'mapHeight', 'mapConfig');
-		empty($height) ? $height = $conf['height']:null;
+		empty($height) ? $height = $this->cObj->stdWrap($conf['height'], $conf['height.']):null;
 		$this->height = $height;
 
 		$mapControlSize = $this->pi_getFFvalue($piFlexForm, 'mapControlSize', 'mapControls');
-		(empty($mapControlSize) || $mapControlSize == 'none') ? $mapControlSize = $conf['controls.']['mapControlSize']:null;
+		(empty($mapControlSize) || $mapControlSize == 'none') ? $mapControlSize = $this->cObj->stdWrap($conf['controls.']['mapControlSize'], $conf['controls.']['mapControlSize.']):null;
 
 		$overviewMap = $this->pi_getFFvalue($piFlexForm, 'overviewMap', 'mapControls');
-		empty($overviewMap) ? $overviewMap = $conf['controls.']['showOverviewMap']:null;
+		empty($overviewMap) ? $overviewMap = $this->cObj->stdWrap($conf['controls.']['showOverviewMap'], $conf['controls.']['showOverviewMap.']):null;
 
 		$mapType = $this->pi_getFFvalue($piFlexForm, 'mapType', 'mapControls');
-		empty($mapType) ? $mapType = $conf['controls.']['showMapType']:null;
+		empty($mapType) ? $mapType = $this->cObj->stdWrap($conf['controls.']['showMapType'], $conf['controls.']['showMapType.']):null;
 
 		$googleEarth = $this->pi_getFFvalue($piFlexForm, 'googleEarth', 'mapControls');
-		empty($googleEarth) ? $googleEarth = $conf['controls.']['showGoogleEarth']:null;
+		empty($googleEarth) ? $googleEarth = $this->cObj->stdWrap($conf['controls.']['showGoogleEarth'], $conf['controls.']['showGoogleEarth.']):null;
 
 		$initialMapType = $this->pi_getFFvalue($piFlexForm, 'initialMapType', 'mapConfig');
-		empty($initialMapType) ? $initialMapType = $conf['initialMapType']:null;
+		empty($initialMapType) ? $initialMapType = $this->cObj->stdWrap($conf['initialMapType'], $conf['initialMapType.']):null;
 
 		$scale = $this->pi_getFFvalue($piFlexForm, 'scale', 'mapControls');
-		empty($scale) ? $scale = $conf['controls.']['showScale']:null;
+		empty($scale) ? $scale = $this->cObj->stdWrap($conf['controls.']['showScale'], $conf['controls.']['showScale.']):null;
 
 		$showInfoOnLoad = $this->pi_getFFvalue($piFlexForm, 'showInfoOnLoad', 'mapConfig');
-		empty($showInfoOnLoad) ? $showInfoOnLoad = $conf['showInfoOnLoad']:null;
+		empty($showInfoOnLoad) ? $showInfoOnLoad = $this->cObj->stdWrap($conf['showInfoOnLoad'], $conf['showInfoOnLoad.']):null;
 
 		$showDirs = $this->pi_getFFvalue($piFlexForm, 'showDirections', 'mapConfig');
-		empty($showDirs) ? $showDirs = $conf['showDirections']:null;
+		empty($showDirs) ? $showDirs = $this->cObj->stdWrap($conf['showDirections'], $conf['showDirections.']):null;
+		$this->showDirections = $showDirs;
 
 		$showWrittenDirs = $this->pi_getFFvalue($piFlexForm, 'showWrittenDirections', 'mapConfig');
-		empty($showWrittenDirs) ? $showWrittenDirs = $conf['showWrittenDirections']:null;
+		empty($showWrittenDirs) ? $showWrittenDirs = $this->cObj->stdWrap($conf['showWrittenDirections'], $conf['showWrittenDirections.']):null;
 
 		$prefillAddress = $this->pi_getFFvalue($piFlexForm, 'prefillAddress', 'mapConfig');
-		empty($prefillAddress) ? $prefillAddress = $conf['prefillAddress']:null;
+		empty($prefillAddress) ? $prefillAddress = $this->cObj->stdWrap($conf['prefillAddress'], $conf['prefillAddress.']):null;
 
-		$this->showSidebar = $conf['showSidebar'];
+		$this->showSidebar = $this->cObj->stdWrap($conf['showSidebar'], $conf['showSidebar.']);
 
-		$centerLat = $conf['centerLat'];
+		$centerLat = $this->cObj->stdWrap($conf['centerLat'], $conf['centerLat.']);
 
-		$centerLong = $conf['centerLong'];
+		$centerLong = $this->cObj->stdWrap($conf['centerLong'], $conf['centerLong.']);
 
-		$zoomLevel = $conf['zoomLevel'];
+		$zoomLevel = $this->cObj->stdWrap($conf['zoomLevel'], $conf['zoomLevel.']);
 
-		$maxAutoZoom = $conf['maxAutoZoom'];
+		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
-		$static = $conf['static.']['enabled'];
-		$staticMode = $conf['static.']['mode'];
-		$staticExtent = $conf['static.']['extent'];
-		$staticUrlParam = $conf['static.']['urlParam'];
-		$staticLimit = $conf['static.']['limit'];
+		$static = $this->cObj->stdWrap($conf['static.']['enabled'], $conf['static.']['enabled.']);
+		$staticMode = $this->cObj->stdWrap($conf['static.']['mode'], $conf['static.']['mode.']);
+		$staticExtent = $this->cObj->stdWrap($conf['static.']['extent'], $conf['static.']['extent.']);
+		$staticUrlParam = $this->cObj->stdWrap($conf['static.']['urlParam'], $conf['static.']['urlParam.']);
+		$staticLimit = $this->cObj->stdWrap($conf['static.']['limit'], $conf['static.']['limit.']);
 
-		$mapName = $conf['mapName'];
+		$mapName = $this->cObj->stdWrap($conf['mapName'], $conf['mapName.']);
 		if(empty($mapName)) $mapName = 'map'.$this->cObj->data['uid'];
 		$this->mapName = $mapName;
 
@@ -198,9 +199,9 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		if($showInfoOnLoad) $map->showInfoOnLoad();
 
 		// add icons regardless of whether the ext is configured in TS or Flexform.
-		if(!empty($conf['icons.'])) {
+		if(  !empty($conf['icons.'])) {
 			foreach( $conf['icons.'] as $key => $value ) {
-				$map->addMarkerIcon($value);
+				$map->addMarkerIcon($value, $this->cObj);
 			}
 
 		} else {
@@ -215,31 +216,35 @@ class tx_wecmap_pi1 extends tslib_pibase {
 			foreach($conf['markers.'] as $marker) {
 
 				// use the icon specified in the marker config
-				$iconID = $marker['iconID'];
+				$iconID = $this->cObj->stdWrap($marker['iconID'], $marker['iconID.']);
 
 				// determine if address was entered by string or separated
-				if(array_key_exists('address', $marker)) {
+				if(array_key_exists('address', $marker) || array_key_exists('address.', $marker)) {
 
 					$title = tx_wecmap_shared::render($marker, $conf['marker.']['title.']);
 					$description = tx_wecmap_shared::render($marker, $conf['marker.']['description.']);
 
 					// add address by string
-					$markerObj = $map->addMarkerByString($marker['address'], $title, $description, 0, 17, $iconID);
+					$markerObj = $map->addMarkerByString($this->cObj->stdWrap($marker['address'], $marker['address.']), $title, $description, 0, 18, $iconID);
 
 					$this->addSidebarItem($markerObj, $marker);
+					$this->addDirectionsMenu($markerObj);
 
 				// add address by lat and long only
-				} else if(array_key_exists('lat', $marker) && array_key_exists('long', $marker)) {
+				} else if(  ( array_key_exists('lat', $marker) || array_key_exists('lat.', $marker) )
+				         && ( array_key_exists('long', $marker) || array_key_exists('long.', $marker) )
+				         ) {
 
 					$title = tx_wecmap_shared::render($marker, $conf['marker.']['title.']);
 					$description = tx_wecmap_shared::render($marker, $conf['marker.']['description.']);
-					$lat     = $marker['lat'];
-					$long    = $marker['long'];
+					$lat     = $this->cObj->stdWrap($marker['lat'], $marker['lat.']);
+					$long    = $this->cObj->stdWrap($marker['long'], $marker['long.']);
 
 					// add the marker to the map
-					$markerObj = $map->addMarkerByLatLong($lat, $long, $title, $description, 0, 17, $iconID);
+					$markerObj = $map->addMarkerByLatLong($lat, $long, $title, $description, 0, 18, $iconID);
 
 					$this->addSidebarItem($markerObj, $marker);
+					$this->addDirectionsMenu($markerObj);
 
 				} else {
 
@@ -247,12 +252,15 @@ class tx_wecmap_pi1 extends tslib_pibase {
 					$description = tx_wecmap_shared::render($marker, $conf['marker.']['description.']);
 
 					// add the marker to the map
-					$markerObj = $map->addMarkerByAddress($marker['street'], $marker['city'], $marker['state'],
-											 $marker['zip'], $marker['country'], $title,
-											 $description, 0, 17, $iconID);
+					$markerObj = $map->addMarkerByAddress( $this->cObj->stdWrap($marker['street'], $marker['street.']),
+					                                       $this->cObj->stdWrap($marker['city'], $marker['city.']),
+					                                       $this->cObj->stdWrap($marker['state'], $marker['state.']),
+					                                       $this->cObj->stdWrap($marker['zip'], $marker['zip.']),
+					                                       $this->cObj->stdWrap($marker['country'], $marker['country.']),
+											               $title, $description, 0, 18, $iconID);
 
 					$this->addSidebarItem($markerObj, $marker);
-
+					$this->addDirectionsMenu($markerObj);
 				}
 			}
 		} else {
@@ -269,8 +277,9 @@ class tx_wecmap_pi1 extends tslib_pibase {
 			$description = tx_wecmap_shared::render($marker, $conf['marker.']['description.']);
 
 			// add the marker to the map
-			$markerObj = $map->addMarkerByAddress($street, $city, $state, $zip, $country, $title, $description, 0, 17, $conf['marker.']['iconID']);
+			$markerObj = $map->addMarkerByAddress($street, $city, $state, $zip, $country, $title, $description, 0, 18, $this->cObj->stdWrap($conf['marker.']['iconID'], $conf['marker.']['iconID.']));
 			$this->addSidebarItem($markerObj, $marker);
+			$this->addDirectionsMenu($markerObj);
 		}
 
 		// gather all the content together
@@ -312,6 +321,17 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		$out = tx_wecmap_shared::render(array('map_height' => $this->height, 'map_id' => $this->mapName, 'content' => $c), $this->conf['sidebar.']);
 
 		return $out;
+	}
+
+	/**
+	 * adds a directions menu corresponding to the given marker.
+	 * Does so only if the showDirections is enabled.
+	 *
+	 * @return void
+	 **/
+	function addDirectionsMenu(&$marker) {
+		if(!($this->showDirections && is_object($marker))) return;
+		$marker->setDirectionsMenuConf( $this->conf['directionsMenu.'] );
 	}
 }
 
