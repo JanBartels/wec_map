@@ -102,7 +102,12 @@
       <label index="tt_content.pi_flexform.typeSatellite">Satellite</label>
       <label index="tt_content.pi_flexform.userGroup">Filter by FE user group (default: all)</label>
       <label index="tt_content.pi_flexform.zip">ZIP</label>
-    </languageKey>
+      <label index="tt_content.pi_flexform.recursive.I.1">1 level</label>
+      <label index="tt_content.pi_flexform.recursive.I.2">2 levels</label>
+      <label index="tt_content.pi_flexform.recursive.I.3">3 levels</label>
+      <label index="tt_content.pi_flexform.recursive.I.4">4 levels</label>
+      <label index="tt_content.pi_flexform.recursive.I.5">unlimited</label>
+</languageKey>
     <languageKey index="de" type="array">
       <label index="OSM">OSM</label>
       <label index="OSM-alt">OpenStreetmap Layer</label>
@@ -198,6 +203,11 @@
       <label index="tt_content.pi_flexform.typeSatellite">Satellit</label>
       <label index="tt_content.pi_flexform.userGroup">Nach FE Benutzergruppe filtern (standardmässig alle angezeigt)</label>
       <label index="tt_content.pi_flexform.zip">PLZ</label>
+      <label index="tt_content.pi_flexform.recursive.I.1">1 Ebene</label>
+      <label index="tt_content.pi_flexform.recursive.I.2">2 Ebenen</label>
+      <label index="tt_content.pi_flexform.recursive.I.3">3 Ebenen</label>
+      <label index="tt_content.pi_flexform.recursive.I.4">4 Ebenen</label>
+      <label index="tt_content.pi_flexform.recursive.I.5">unendlich</label>
     </languageKey>
     <languageKey index="fr" type="array">
       <label index="tx_wecmap_external.title">Titre</label>

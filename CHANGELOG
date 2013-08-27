@@ -1,4 +1,5 @@
 3.0.2
+[NEW] recursive starting point for DataTable map
 [NEW] plugin.tx_wecmap_pi3.flexformTables.*
 [NEW] DataTable map supports lat/long directly by TCA
 [FIX] sporadic save-errors in BE-Admin-Module

@@ -109,6 +109,9 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		$pid = $this->pi_getFFvalue($piFlexForm, 'pid', 'default');
 		empty($pid) ? $pid = $this->cObj->stdWrap($conf['pid'], $conf['pid.']):null;
 
+		$recursive = $this->pi_getFFvalue($piFlexForm, 'recursive', 'default');
+		empty($recursive) ? $recursive = $this->cObj->stdWrap($conf['recursive'], $conf['recursive.']):0;
+
 		$mapControlSize = $this->pi_getFFvalue($piFlexForm, 'mapControlSize', 'mapControls');
 		(empty($mapControlSize) || $mapControlSize == 'none') ? $mapControlSize = $this->cObj->stdWrap($conf['controls.']['mapControlSize'], $conf['controls.']['mapControlSize.']):null;
 
@@ -252,21 +255,55 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		// So we check whether it's set via TS, and if not we use FF data
 		if(empty($conf['tables.'])) {
 
+			if(!empty($pid)) {
+				$pidList = $this->pi_getPidList($pid, $recursive);
+				$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
+			} else {
+				$pidWhere = '1=1';
+			}
+
 			foreach( $tables as $table ) {
 
-				if(!empty($pid)) {
-					$where = '1=1' . tx_wecmap_shared::listQueryFromCSV('pid', $pid, $table, 'OR');
-				} else {
+				$tconf   = $conf['flexformTables.'][$table . '.'];
+
+				$where   = $this->cObj->stdWrap($tconf['where'], $tconf['where.']);
+				$select  = $this->cObj->stdWrap($tconf['select'], $tconf['select.']);
+				$join    = $this->cObj->stdWrap($tconf['join'], $tconf['join.']);
+				$orderBy = $this->cObj->stdWrap($tconf['orderBy'], $tconf['orderBy.']);
+				$groupBy = $this->cObj->stdWrap($tconf['groupBy'], $tconf['groupBy.']);
+				$limit   = $this->cObj->stdWrap($tconf['limit'], $tconf['limit.']);
+
+				if(empty($where)) {
 					$where = '1=1';
 				}
 
-				$where .= $this->cObj->enableFields($table);
+				if($join) {
+					$from = $table.' '.$join;
+				} else {
+					$from = $table;
+				}
 
-				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, $where);
+				if(empty($select)) {
+					$select = '*';
+				}
+
+				$where .= ' AND ' . $pidWhere . $this->cObj->enableFields($table);
+
+				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy, $limit);
+
+				// add icon if configured, else see if we just have an iconID
+				// and use that. We assume the icon is added somewhere else.
+				if(  !empty($tconf['icon.']['imagepath'])
+				  || !empty($tconf['icon.']['imagepath.'])
+				  ) {
+					$map->addMarkerIcon($tconf['icon.'], $this->cObj);
+				} else {
+					$tconf['icon.']['iconID'] ? null : $tconf['icon.']['iconID'] = null;
+				}
 
 				foreach( $res as $key => $data ) {
 					// get title and description
-					if ( empty( $conf['flexformTables.'] ) || empty( $conf['flexformTables.'][$table . '.'] ) )
+					if ( empty( $tconf ) )
 					{
 						$conf['table'] = $table;
 						list($title,$desc) = $this->getTitleAndDescription($conf, $data);
@@ -276,22 +313,12 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					}
 					else
 					{
-						$conf['flexformTables.'][$table . '.']['table'] = $table;
-						list($title,$desc) = $this->getTitleAndDescription($conf['flexformTables.'][$table . '.'], $data);
+						$tconf['table'] = $table;
+						list($title,$desc) = $this->getTitleAndDescription($tconf, $data);
 						$data['info_title'] = $title;
 						$data['info_description'] = $desc;
 
-						// add icon if configured, else see if we just have an iconID
-						// and use that. We assume the icon is added somewhere else.
-						if(  !empty($conf['flexformTables.'][$table . '.']['icon.']['imagepath'])
-						  || !empty($conf['flexformTables.'][$table . '.']['icon.']['imagepath.'])
-						  ) {
-							$map->addMarkerIcon($conf['flexformTables.'][$table . '.']['icon.'], $this->cObj);
-						} else {
-							$conf['flexformTables.'][$table . '.']['icon.']['iconID'] ? null : $conf['flexformTables.'][$table . '.']['icon.']['iconID'] = null;
-						}
-
-						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $conf['flexformTables.'][$table . '.']['icon.']['iconID']);
+						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 					}
 
 					// build parameters to pass to the hook
@@ -305,16 +332,15 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		} else {
 			foreach( $conf['tables.'] as $table => $tconf ) {
 
-				$select  = $tconf['select'];
-				$table   = $tconf['table'];
-				$join    = $tconf['join'];
-				$orderBy = $tconf['orderBy'];
-				$groupBy = $tconf['groupBy'];
-				$limit   = $tconf['limit'];
+				$where   = $this->cObj->stdWrap($tconf['where'], $tconf['where.']);
+				$select  = $this->cObj->stdWrap($tconf['select'], $tconf['select.']);
+				$table   = $this->cObj->stdWrap($tconf['table'], $tconf['table.']);
+				$join    = $this->cObj->stdWrap($tconf['join'], $tconf['join.']);
+				$orderBy = $this->cObj->stdWrap($tconf['orderBy'], $tconf['orderBy.']);
+				$groupBy = $this->cObj->stdWrap($tconf['groupBy'], $tconf['groupBy.']);
+				$limit   = $this->cObj->stdWrap($tconf['limit'], $tconf['limit.']);
 
-				if(!empty($tconf['where'])) {
-					$where = $this->cObj->stdWrap($tconf['where'], $tconf['where.']);
-				} else {
+				if(empty($where)) {
 					$where = '1=1';
 				}
 
