@@ -1,4 +1,6 @@
 3.0.2
+!!! Update JS-libraries if useOwnJS is active!!!
+[NEW] spiderfy overlapping markers
 [NEW] recursive starting point for DataTable map
 [NEW] plugin.tx_wecmap_pi3.flexformTables.*
 [NEW] DataTable map supports lat/long directly by TCA

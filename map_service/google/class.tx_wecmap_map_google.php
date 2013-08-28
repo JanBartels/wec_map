@@ -268,11 +268,13 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			{
 				$mmURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/markermanager.js';
 				$ibURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/infobubble.js';
+				$omURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/oms.min.js';
 			}
 			else
 			{
 				$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
 				$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+				$omURL  = 'http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js';
 			}
 
 			if (TYPO3_DLOG) {
@@ -290,6 +292,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$mmURL .'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$ibURL .'" type="text/javascript"></script>'
+				                                                             . '<script src="'.$omURL .'" type="text/javascript"></script>'
 				                                                             ;
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map'] = ( $jsFile  ? '<script src="' . $jsFile  . '" type="text/javascript"></script>' : '' )
 				                                                  . ( $jsFile2 ? '<script src="' . $jsFile2 . '" type="text/javascript"></script>' : '' )
@@ -300,11 +303,13 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				{
 					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $mmURL . '" type="text/javascript"></script>';
 					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $ibURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $omURL . '" type="text/javascript"></script>';
 				}
 				else
 				{
 					$htmlContent .= '<script src="' . $mmURL . '" type="text/javascript"></script>';
 					$htmlContent .= '<script src="' . $ibURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . $omURL . '" type="text/javascript"></script>';
 				}
 				$htmlContent .= ( $jsFile  ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
 				              . ( $jsFile2 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )

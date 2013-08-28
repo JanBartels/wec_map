@@ -387,6 +387,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 			case 'downloadJS' :
 				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js', 'markermanager.js' );
 				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js', 'infobubble.js' );
+				$content[] = $this->download( 'http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js', 'oms.min.js' );
 				$content[] = '<br />';
 				break;
 

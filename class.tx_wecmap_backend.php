@@ -267,8 +267,8 @@ class tx_wecmap_backend {
 		$origlat = t3lib_div::_GP('wec_map_original_lat');
 		$origlong = t3lib_div::_GP('wec_map_original_long');
 
-		$form = '<input id="wec_map_lat" name="wec_map_lat" value="'.$lat.'" />
-				 <input id="wec_map_long" name="wec_map_long" value="'.$long.'" />
+		$form = '<input type="hidden" id="wec_map_lat" name="wec_map_lat" value="'.$lat.'" />
+				 <input type="hidden" id="wec_map_long" name="wec_map_long" value="'.$long.'" />
 				 <input type="hidden" name="wec_map_original_lat" value="'.$lat.'" />
 				 <input type="hidden" name="wec_map_original_long" value="'.$long.'" />';
 
