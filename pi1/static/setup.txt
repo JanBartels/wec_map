@@ -11,7 +11,8 @@ plugin.tx_wecmap_pi1 {
 	centerLong = 
 	mapName =
 	maxAutoZoom =
-
+	enableOverlappingMarkerManager =
+	
 	# this is just an example for how to add a new icon
 	# icons.1 {
 	# 	iconID       = default

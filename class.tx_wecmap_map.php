@@ -57,6 +57,8 @@ class tx_wecmap_map {
 	var $js;
 	var $key;
 
+	var $mapOptions = array();
+
 	/**
 	 * Class constructor stub.  Override in the map_service classes. Look there for
 	 * examples.
@@ -69,6 +71,13 @@ class tx_wecmap_map {
 	 *
 	 */
 	function drawMap() {}
+
+	/**
+	 * Generic stub to set special map-options
+	 */
+	function addOption( $key, $value ) {
+		$this->mapOptions[ $key ] = $value;
+	}
 
 
 	/**

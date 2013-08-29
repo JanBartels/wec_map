@@ -93,7 +93,6 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$this->key = $key;
 		}
 
-		$this->options = array();
 		$this->directions = false;
 		$this->directionsDivID = null;
 		$this->prefillAddress = false;
@@ -317,10 +316,12 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				              ;
 			}
 
+			if ( $this->enableOverlappingMarkerManager )
+				$mapOptions['enableOverlappingMarkerManager'] = true;
 			$jsContent = array();
 			$jsContent[] = $this->js_createLabels( $lang );
 			$jsContent[] = '';
-			$jsContent[] = $this->js_drawMapStart();
+			$jsContent[] = $this->js_drawMapStart($mapOptions);
 			$jsContent[] = $this->js_newGDirections();
 			$jsContent[] = $this->js_setCenter($this->lat, $this->long, $this->zoom, $this->type);
 			if ( is_array( $this->controls ) )
@@ -687,12 +688,16 @@ function InitWecMapGoogleV3Labels() {
 	 * @return	string	The beginning of the drawMap function in Javascript.
 	 */
 	function js_drawMapStart() {
-		return 'google.maps.event.addDomListener(window,"load", function () {
+		$js =  'google.maps.event.addDomListener(window,"load", function () {
 if ( !window["WecMap"] )
 	WecMap = createWecMap();
 WecMap.init();
 InitWecMapGoogleV3Labels();
 WecMap.createMap("'. $this->mapName . '" );';
+
+		if ( $this->mapOptions['enableOverlappingMarkerManager'] )
+			$js .= 'WecMap.enableOverlappingMarkerManager("'. $this->mapName . '", true );';
+		return $js;
 	}
 
 	/**

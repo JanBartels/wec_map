@@ -148,6 +148,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 
 		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
+		$enableOverlappingMarkerManager = $this->cObj->stdWrap($conf['enableOverlappingMarkerManager'], $conf['enableOverlappingMarkerManager.']);
+
 		$static = $this->cObj->stdWrap($conf['static.']['enabled'], $conf['static.']['enabled.']);
 		$staticMode = $this->cObj->stdWrap($conf['static.']['mode'], $conf['static.']['mode.']);
 		$staticExtent = $this->cObj->stdWrap($conf['static.']['extent'], $conf['static.']['extent.']);
@@ -181,6 +183,7 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		}
 
 		$map->setMaxAutoZoom($maxAutoZoom);
+		if($enableOverlappingMarkerManager) $map->addOption('enableOverlappingMarkerManager',true);
 
 		if($scale) $map->addControl('scale');
 		if($overviewMap) $map->addControl('overviewMap');

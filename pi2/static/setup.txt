@@ -14,6 +14,7 @@ plugin.tx_wecmap_pi2 {
 	centerLong = 
 	mapName =
 	maxAutoZoom =
+	enableOverlappingMarkerManager = 
 
 	groups.country {
 		# this is just an example for how to add a new icon

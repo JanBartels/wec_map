@@ -125,6 +125,12 @@ return( {
 		var map = this.get( mapId );
 		return map.openInitialInfoWindow( groupId, markerId );
 	},
+
+	enableOverlappingMarkerManager: function( mapId, flag )	{
+		var map = this.get( mapId );
+		map.enableOverlappingMarkerManager( flag );
+	
+	},
 	
 	// loads directions on a map
 	directionsService: null,
@@ -236,6 +242,7 @@ function WecMapGoogleV3( mapId )
 	this.bubbleData = [];
 	this.markerManager = null;
 	this.overlappingMarkerManager = null;
+	this.overlappingMarkerManagerEnabled = false;
 	this.mmGroupZoom = [];
 	this.directionsRenderer = null;
 	this.directionsDivId = "";
@@ -301,7 +308,7 @@ WecMapGoogleV3.prototype.drawMap = function( strID )
 function WecMapGoogleV3_setupMarkers( mapObj)
 {
 	mapObj.markerManager = new MarkerManager( mapObj.map );
-	mapObj.overlappingMarkerManager = new OverlappingMarkerSpiderfier( mapObj.map );
+	mapObj.overlappingMarkerManager = mapObj.overlappingMarkerManagerEnabled ? new OverlappingMarkerSpiderfier( mapObj.map ) : null;
 	
 	google.maps.event.addListener(mapObj.markerManager, 'loaded', function(){
 		for ( var group = 0; group < mapObj.mmGroupZoom.length; ++group )
@@ -311,34 +318,40 @@ function WecMapGoogleV3_setupMarkers( mapObj)
 			var maxZoom = mapObj.mmGroupZoom[group].maxZoom;
 			mapObj.markerManager.addMarkers( mapObj.markers[ groupId ], minZoom, maxZoom );
 
-			for ( var markerId = 0; markerId < mapObj.markers[ groupId ].length; ++markerId )
+			if ( mapObj.overlappingMarkerManagerEnabled )
 			{
-				if ( mapObj.bubbleData[groupId] && mapObj.bubbleData[groupId][markerId] )
+				for ( var markerId = 0; markerId < mapObj.markers[ groupId ].length; ++markerId )
 				{
-					if ( mapObj.overlappingMarkerManager )
+					if ( mapObj.bubbleData[groupId] && mapObj.bubbleData[groupId][markerId] )
 					{
-						mapObj.overlappingMarkerManager.addListener('click', function(marker, event) {
-							for ( var group = 0; group < mapObj.mmGroupZoom.length; ++group )
-							{
-								var groupId = mapObj.mmGroupZoom[group].groupId;
-								mapObj.markerManager.addMarkers( mapObj.markers[ groupId ], minZoom, maxZoom );
-								for ( var markerId = 0; markerId < mapObj.markers[ groupId ].length; ++markerId )
+						if ( mapObj.overlappingMarkerManager )
+						{
+							mapObj.overlappingMarkerManager.addListener('click', function(marker, event) {
+								for ( var group = 0; group < mapObj.mmGroupZoom.length; ++group )
 								{
-									if ( mapObj.markers[groupId][markerId] === marker )
+									var groupId = mapObj.mmGroupZoom[group].groupId;
+									mapObj.markerManager.addMarkers( mapObj.markers[ groupId ], minZoom, maxZoom );
+									for ( var markerId = 0; markerId < mapObj.markers[ groupId ].length; ++markerId )
 									{
-										mapObj.openInfoWindow( groupId, markerId );
-										return;
+										if ( mapObj.markers[groupId][markerId] === marker )
+										{
+											mapObj.openInfoWindow( groupId, markerId );
+											return;
+										}
 									}
 								}
-							}
-						});
-						mapObj.overlappingMarkerManager.addListener('spiderfy', function(markers) {
-							mapObj.closeInfoWindow( groupId, markerId );
-						});			
-						mapObj.overlappingMarkerManager.addMarker(mapObj.markers[groupId][markerId]);
+							});
+							mapObj.overlappingMarkerManager.addListener('spiderfy', function(markers) {
+								mapObj.closeInfoWindow( groupId, markerId );
+							});			
+							mapObj.overlappingMarkerManager.addMarker(mapObj.markers[groupId][markerId]);
+						}
 					}
 				}
+			} else {
+			
 			}
+			
 		}
 		mapObj.markerManager.refresh();
 		if ( mapObj.openInitialInfoWindowMarker )
@@ -405,11 +418,12 @@ WecMapGoogleV3.prototype.addMarker = function( markerId, latlng, iconId, dirTitl
 	if ( this.bubbleData[groupId] && this.bubbleData[groupId][markerId] )
 	{
 		var thisMap = this;
-//		google.maps.event.addListener(marker, 'click', function() {
-//			thisMap.openInfoWindow( groupId, markerId );
-//		});
-		if ( this.overlappingMarkerManager )
+		if ( !this.overlappingMarkerManagerEnabled )
 		{
+			google.maps.event.addListener(marker, 'click', function() {
+				thisMap.openInfoWindow( groupId, markerId );
+			});
+		} else if ( this.overlappingMarkerManager ) {
 			this.overlappingMarkerManager.addListener('click', function(marker, event) {
 				thisMap.openInfoWindow( groupId, markerId );
 			});
@@ -448,6 +462,11 @@ WecMapGoogleV3.prototype.setDraggable = function( groupId, markerId, flag )
 	}
 }
 
+
+WecMapGoogleV3.prototype.enableOverlappingMarkerManager = function( flag ) 
+{
+	this.overlappingMarkerManagerEnabled = flag;
+}
 
 // http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/docs/reference.html
 WecMapGoogleV3.prototype.addMarkersToManager = function( groupId, minZoom, maxZoom ) 
