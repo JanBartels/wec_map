@@ -316,7 +316,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$data['max_zoom'] = 18;
 
 						// build parameters to pass to the hook
-						$params = array('table' => $table, 'data' => $data);
+						$params = array('table' => $table, 'data' => &$data);
 						$this->processAddMarkerHook($params);
 
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom']);
@@ -331,7 +331,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$data['max_zoom'] = 18;
 
 						// build parameters to pass to the hook
-						$params = array('table' => $table, 'data' => $data);
+						$params = array('table' => $table, 'data' => &$data);
 						$this->processAddMarkerHook($params);
 
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom'], $tconf['icon.']['iconID']);
@@ -393,7 +393,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					$data['max_zoom'] = 18;
 
 					// build parameters to pass to the hook
-					$params = array('table' => $table, 'data' => $data);
+					$params = array('table' => $table, 'data' => &$data);
 					$this->processAddMarkerHook($params);
 
 					$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom'], $tconf['icon.']['iconID']);
