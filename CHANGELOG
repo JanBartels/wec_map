@@ -1,5 +1,6 @@
 3.0.2
 !!! Update JS-libraries if useOwnJS is active!!!
+[NEW] addMarkerHook in pi3
 [NEW] spiderfy overlapping markers, TS-option: enableOverlappingMarkerManager
 [NEW] recursive starting point for DataTable map
 [NEW] plugin.tx_wecmap_pi3.flexformTables.*
