@@ -312,14 +312,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						list($title,$desc) = $this->getTitleAndDescription($conf, $data);
 						$data['info_title'] = $title;
 						$data['info_description'] = $desc;
-						$data['min_zoom'] = 0;
-						$data['max_zoom'] = 18;
-
-						// build parameters to pass to the hook
-						$params = array('table' => $table, 'data' => &$data);
-						$this->processAddMarkerHook($params);
-
-						$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom']);
+						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc);
 					}
 					else
 					{
@@ -327,14 +320,8 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						list($title,$desc) = $this->getTitleAndDescription($tconf, $data);
 						$data['info_title'] = $title;
 						$data['info_description'] = $desc;
-						$data['min_zoom'] = 0;
-						$data['max_zoom'] = 18;
 
-						// build parameters to pass to the hook
-						$params = array('table' => $table, 'data' => &$data);
-						$this->processAddMarkerHook($params);
-
-						$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom'], $tconf['icon.']['iconID']);
+						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 					}
 
 					// build parameters to pass to the hook
@@ -389,18 +376,11 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					list($title,$desc) = $this->getTitleAndDescription($tconf, $data);
 					$data['info_title'] = $title;
 					$data['info_description'] = $desc;
-					$data['min_zoom'] = 0;
-					$data['max_zoom'] = 18;
-
-					// build parameters to pass to the hook
-					$params = array('table' => $table, 'data' => &$data);
-					$this->processAddMarkerHook($params);
-
-					$marker = $map->addMarkerByTCA($table, $data['uid'], $data['info_title'], $data['info_description'], $data['min_zoom'], $data['max_zoom'], $tconf['icon.']['iconID']);
+					$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 
 					// build parameters to pass to the hook
 					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker);
-					$this->processMarkerHook($params);
+					$this->processHook($params);
 
 					$this->addSidebarItem($marker, $data);
 					$this->addDirectionsMenu($marker);
@@ -423,11 +403,11 @@ class tx_wecmap_pi3 extends tslib_pibase {
 	}
 
 	/**
-	 * Processes the markerHook
+	 * Processes the hook
 	 *
 	 * @return void
 	 **/
-	function processMarkerHook(&$hookParameters) {
+	function processHook(&$hookParameters) {
 		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_pi3']['markerHook']))	{
 			$hooks =& $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_pi3']['markerHook'];
 			$hookReference = null;
@@ -435,27 +415,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 				t3lib_div::callUserFunction($hookFunction, $hookParameters, $hookReference);
 				// devlog start
 				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': Called markerHook. Markers may have been changed.', 'wec_map_api', 2);
-				}
-				// devlog end
-			}
-		}
-	}
-
-	/**
-	 * Processes the addMarkerHook
-	 *
-	 * @return void
-	 **/
-	function processAddMarkerHook(&$hookParameters) {
-		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_pi3']['addMarkerHook']))	{
-			$hooks =& $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_pi3']['addMarkerHook'];
-			$hookReference = null;
-			foreach ($hooks as $hookFunction)	{
-				t3lib_div::callUserFunction($hookFunction, $hookParameters, $hookReference);
-				// devlog start
-				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': Called addMarkerHook. Markers may have been changed.', 'wec_map_api', 2);
+					t3lib_div::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
 				}
 				// devlog end
 			}
@@ -471,6 +431,9 @@ class tx_wecmap_pi3 extends tslib_pibase {
 
 		// merge the table into the data
 		$data = array_merge($data, array('table' => $conf['table']));
+//echo t3lib_div::debug( $this->conf, "this->conf" );
+//echo t3lib_div::debug( $conf, "conf" );
+//echo t3lib_div::debug( $data, "data" );
 
 		// process title only if TS config is present
 		if(!empty($conf['title.'])) {
