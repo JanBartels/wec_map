@@ -314,9 +314,6 @@ class tx_wecmap_map {
 		}
 
 		if($lat != '' && $long != '') {
-			$params = array('lat' => &$lat, 'long' => &$long);
-			$this->processAddMarkerHook($params);
-
 			$group =& $this->addGroup($minzoom, $maxzoom);
 			$marker = t3lib_div::makeInstance(
 			                          $this->getMarkerClassName(),
@@ -330,32 +327,13 @@ class tx_wecmap_map {
 									  '0xFF0000',
 									  '0xFFFFFF',
 									  $iconID);
+			$marker->setMap( &$this );
 			$group->addMarker($marker);
 			$group->setDirections($this->directions);
 
 			return $marker;
 		}
 		return null;
-	}
-
-	/**
-	 * Processes the hook
-	 *
-	 * @return void
-	 **/
-	function processAddMarkerHook(&$hookParameters) {
-		if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_map']['addMarkerHook']))	{
-			$hooks =& $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_map']['addMarkerHook'];
-			$hookReference = null;
-			foreach ($hooks as $hookFunction)	{
-				t3lib_div::callUserFunction($hookFunction, $hookParameters, $hookReference);
-				// devlog start
-				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
-				}
-				// devlog end
-			}
-		}
 	}
 
 	/**

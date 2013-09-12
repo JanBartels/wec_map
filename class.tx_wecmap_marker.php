@@ -47,6 +47,7 @@ class tx_wecmap_marker {
 	var $color;
 	var $strokeColor;
 	var $mapName;
+	var $map = null;
 	var $iconID;
 	var $groupId = -1;
 	var $directionsMenuConf;
@@ -147,6 +148,15 @@ class tx_wecmap_marker {
 	 **/
 	function setMapName($mapName) {
 		$this->mapName = $mapName;
+	}
+
+	/**
+	 * Setter for map this marker is a part of
+	 *
+	 * @return void
+	 **/
+	function setMap( $map) {
+		$this->map = $map;
 	}
 
 	/**
