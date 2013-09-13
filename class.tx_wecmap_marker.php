@@ -155,7 +155,7 @@ class tx_wecmap_marker {
 	 *
 	 * @return void
 	 **/
-	function setMap( $map) {
+	function setMap( &$map) {
 		$this->map = $map;
 	}
 

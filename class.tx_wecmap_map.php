@@ -327,7 +327,7 @@ class tx_wecmap_map {
 									  '0xFF0000',
 									  '0xFFFFFF',
 									  $iconID);
-			$marker->setMap( &$this );
+			$marker->setMap( $this );
 			$group->addMarker($marker);
 			$group->setDirections($this->directions);
 
