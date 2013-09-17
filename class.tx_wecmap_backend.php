@@ -48,7 +48,7 @@ class tx_wecmap_backend {
 		global $TCA;
 		t3lib_div::loadTCA($table);
 
-		$tca = $TCA[$table]['ctrl']['EXT']['wec_map'];
+		$tca = &$TCA[$table]['ctrl']['EXT']['wec_map'];
 		$isMappable = $tca['isMappable'];
 
 		if($isMappable) {
@@ -125,17 +125,13 @@ class tx_wecmap_backend {
 		// if geocoding status is disabled, return
 		if(!tx_wecmap_backend::getExtConf('geocodingStatus')) return;
 
-		if ( isset($PA['fieldConf']['config']['params']['addressFields']) ) {
-			$street  = tx_wecmap_backend::getFieldValue('street', $PA);
-			$city    = tx_wecmap_backend::getFieldValue('city', $PA);
-			$state   = tx_wecmap_backend::getFieldValue('state', $PA);
-			$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
-			$country = tx_wecmap_backend::getFieldValue('country', $PA);
+		$street  = tx_wecmap_backend::getFieldValue('street', $PA);
+		$city    = tx_wecmap_backend::getFieldValue('city', $PA);
+		$state   = tx_wecmap_backend::getFieldValue('state', $PA);
+		$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
+		$country = tx_wecmap_backend::getFieldValue('country', $PA);
 
-			return tx_wecmap_backend::drawGeocodeStatus($street, $city, $state, $zip, $country);
-		} else {
-			return '';
-		}
+		return tx_wecmap_backend::drawGeocodeStatus($street, $city, $state, $zip, $country);
 	}
 
 	/**
@@ -147,18 +143,14 @@ class tx_wecmap_backend {
 	 * @param	object	Parent object.  Instance of t3lib_tceforms.
 	 * @return	string	HTML output of current geocoding status and editing form.
 	 */
-	function checkLatlongStatus($PA, &$fobj) {
+	function checkLatLongStatus($PA, &$fobj) {
 		// if geocoding status is disabled, return
 		if(!tx_wecmap_backend::getExtConf('geocodingStatus')) return;
 
-		if ( isset($PA['fieldConf']['config']['params']['latlongFields']) ) {
-			$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
-			$long = tx_wecmap_backend::getFieldValue('long', $PA);
+		$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
+		$long = tx_wecmap_backend::getFieldValue('long', $PA);
 
-			return tx_wecmap_backend::drawLatlongStatus($lat, $long);
-		} else {
-			return '';
-		}
+		return tx_wecmap_backend::drawLatlongStatus($lat, $long);
 	}
 
 	/**
@@ -285,32 +277,48 @@ class tx_wecmap_backend {
 		$width = '400';
 		$height = '400';
 
-		if ( isset($PA['fieldConf']['config']['params']['addressFields']) )
-		{
-			$street  = tx_wecmap_backend::getFieldValue('street', $PA);
-			$city    = tx_wecmap_backend::getFieldValue('city', $PA);
-			$state   = tx_wecmap_backend::getFieldValue('state', $PA);
-			$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
-			$country = tx_wecmap_backend::getFieldValue('country', $PA);
+		$street  = tx_wecmap_backend::getFieldValue('street', $PA);
+		$city    = tx_wecmap_backend::getFieldValue('city', $PA);
+		$state   = tx_wecmap_backend::getFieldValue('state', $PA);
+		$zip     = tx_wecmap_backend::getFieldValue('zip', $PA);
+		$country = tx_wecmap_backend::getFieldValue('country', $PA);
 
-			$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
+		$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
 
-			$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
-			$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
-		}
-		else if ( isset($PA['fieldConf']['config']['params']['latlongFields']) )
-		{
-			$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
-			$long = tx_wecmap_backend::getFieldValue('long', $PA);
+		$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
+		$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
+		// enable dragging to correct lat/long interactively
+		if ( $marker )
+			$marker->setDraggable(true);
 
-			$description = $lat.','.$long;
+		// add some default controls to the map
+		$map->addControl('largeMap');
+		$map->addControl('scale');
+		$map->addControl('mapType');
+		$map->enableDirections(true);
 
-			$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
-			$marker = $map->addMarkerByLatLong($lat, $long, $description );
-		} else {
-			return '';
-		}
+		$content = $map->drawMap();
 
+		return $content;
+	}
+
+	/**
+	 * Draws a backend map.
+	 * @param		array		Array with information about the current field.
+	 * @param		object		Parent object.  Instance of t3lib_tceforms.
+	 * @return		string		HTML to display the map within a backend record.
+	 */
+	function drawLatLongMap($PA, $fobj) {
+		$width = '400';
+		$height = '400';
+
+		$lat  = tx_wecmap_backend::getFieldValue('lat', $PA);
+		$long = tx_wecmap_backend::getFieldValue('long', $PA);
+
+		$description = $lat.','.$long;
+
+		$map = t3lib_div::makeInstance( 'tx_wecmap_map_google', $apiKey, $width, $height);
+		$marker = $map->addMarkerByLatLong($lat, $long, $description );
 		// enable dragging to correct lat/long interactively
 		if ( $marker )
 			$marker->setDraggable(true);
