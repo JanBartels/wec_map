@@ -1,5 +1,6 @@
 3.0.2
 !!! Update JS-libraries if useOwnJS is active!!!
+[NEW] TypoScript-options overlappingMarkerLatDev, overlappingMarkerLongDev
 [NEW] marker hold reference to map
 [NEW] spiderfy overlapping markers, TS-option: enableOverlappingMarkerManager
 [NEW] recursive starting point for DataTable map
