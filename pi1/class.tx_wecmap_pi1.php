@@ -149,6 +149,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
 		$enableOverlappingMarkerManager = $this->cObj->stdWrap($conf['enableOverlappingMarkerManager'], $conf['enableOverlappingMarkerManager.']);
+		$overlappingMarkerLatDev = $this->cObj->stdWrap($conf['overlappingMarkerLatDev'], $conf['overlappingMarkerLatDev.']);
+		$overlappingMarkerLongDev = $this->cObj->stdWrap($conf['overlappingMarkerLongDev'], $conf['overlappingMarkerLongDev.']);
 
 		$static = $this->cObj->stdWrap($conf['static.']['enabled'], $conf['static.']['enabled.']);
 		$staticMode = $this->cObj->stdWrap($conf['static.']['mode'], $conf['static.']['mode.']);
@@ -229,6 +231,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 
 					// add address by string
 					$markerObj = $map->addMarkerByString($this->cObj->stdWrap($marker['address'], $marker['address.']), $title, $description, 0, 18, $iconID);
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $markerObj, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
 
 					$this->addSidebarItem($markerObj, $marker);
 					$this->addDirectionsMenu($markerObj);
@@ -245,6 +249,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 
 					// add the marker to the map
 					$markerObj = $map->addMarkerByLatLong($lat, $long, $title, $description, 0, 18, $iconID);
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $markerObj, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
 
 					$this->addSidebarItem($markerObj, $marker);
 					$this->addDirectionsMenu($markerObj);
@@ -261,7 +267,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 					                                       $this->cObj->stdWrap($marker['zip'], $marker['zip.']),
 					                                       $this->cObj->stdWrap($marker['country'], $marker['country.']),
 											               $title, $description, 0, 18, $iconID);
-
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $markerObj, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
 					$this->addSidebarItem($markerObj, $marker);
 					$this->addDirectionsMenu($markerObj);
 				}

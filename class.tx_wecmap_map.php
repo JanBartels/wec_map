@@ -463,6 +463,23 @@ class tx_wecmap_map {
 	function markerCount() {
 		return $this->markerCount;
 	}
+
+
+	/**
+	 * Moves the marker-position if overlapping
+	 */
+	function handleOverlappingMarker( &$marker, $latDev, $longDev )
+	{
+		// Store coord pairs
+		$cords = number_format ( $marker->latitude, 8 , '.' , '' ) . '-' . number_format ( $marker->longitude, 8 , '.' , '' );
+		if( !isset( $this->devcache[ $cords] ) )
+			$this->devcache[ $cords ] = 0;
+		else
+			$this->devcache[ $cords ]++;
+		// Include linear deviation for markers in exact same location
+		$marker->latitude = $marker->latitude + ( $this->devcache[$cords] * $latDev );
+		$marker->longitude = $marker->longitude + ( $this->devcache[$cords] * $longDev );
+	}
 }
 
 

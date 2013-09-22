@@ -163,6 +163,8 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
 		$enableOverlappingMarkerManager = $this->cObj->stdWrap($conf['enableOverlappingMarkerManager'], $conf['enableOverlappingMarkerManager.']);
+		$overlappingMarkerLatDev = $this->cObj->stdWrap($conf['overlappingMarkerLatDev'], $conf['overlappingMarkerLatDev.']);
+		$overlappingMarkerLongDev = $this->cObj->stdWrap($conf['overlappingMarkerLongDev'], $conf['overlappingMarkerLongDev.']);
 
 		$static = $this->cObj->stdWrap($conf['static.']['enabled'], $conf['static.']['enabled.']);
 		$staticMode = $this->cObj->stdWrap($conf['static.']['mode'], $conf['static.']['mode.']);
@@ -313,6 +315,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$data['info_title'] = $title;
 						$data['info_description'] = $desc;
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc);
+						$tconf = array();
 					}
 					else
 					{
@@ -324,8 +327,11 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 					}
 
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $marker, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
+
 					// build parameters to pass to the hook
-					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker);
+					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker, 'conf' => $tconf );
 					$this->processHook($params);
 
 					$this->addSidebarItem($marker, $data);
@@ -378,8 +384,11 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					$data['info_description'] = $desc;
 					$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $marker, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
+
 					// build parameters to pass to the hook
-					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker);
+					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker, 'conf' => $tconf);
 					$this->processHook($params);
 
 					$this->addSidebarItem($marker, $data);
@@ -431,9 +440,6 @@ class tx_wecmap_pi3 extends tslib_pibase {
 
 		// merge the table into the data
 		$data = array_merge($data, array('table' => $conf['table']));
-//echo t3lib_div::debug( $this->conf, "this->conf" );
-//echo t3lib_div::debug( $conf, "conf" );
-//echo t3lib_div::debug( $data, "data" );
 
 		// process title only if TS config is present
 		if(!empty($conf['title.'])) {

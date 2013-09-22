@@ -162,6 +162,8 @@ class tx_wecmap_pi2 extends tslib_pibase {
 		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
 		$enableOverlappingMarkerManager = $this->cObj->stdWrap($conf['enableOverlappingMarkerManager'], $conf['enableOverlappingMarkerManager.']);
+		$overlappingMarkerLatDev = $this->cObj->stdWrap($conf['overlappingMarkerLatDev'], $conf['overlappingMarkerLatDev.']);
+		$overlappingMarkerLongDev = $this->cObj->stdWrap($conf['overlappingMarkerLongDev'], $conf['overlappingMarkerLongDev.']);
 
 		$static = $this->cObj->stdWrap($conf['static.']['enabled'], $conf['static.']['enabled.']);
 		$staticMode = $this->cObj->stdWrap($conf['static.']['mode'], $conf['static.']['mode.']);
@@ -411,6 +413,8 @@ class tx_wecmap_pi2 extends tslib_pibase {
 				// unless we are using privacy, add individual markers as well
 				if(!$private) {
 					$marker = $map->addMarkerByAddress($row[$streetField], $row[$cityField], $row[$stateField], $row[$zipField], $row[$countryField], $title, $description, $singleConf['minzoom'], $singleConf['maxzoom'], $singleConf['icon']['iconID']);
+					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
+						$map->handleOverlappingMarker( $marker, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
 					$row['info_title'] = $title;
 					$row['info_description'] = $description;
 					$this->addSidebarItem($marker, $row);
