@@ -204,11 +204,22 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	string		The value from LOCAL_LANG.
 	 */
 	function getLL($ll,$key)	{
+
+		if ( is_array( $ll[$this->lang][$key] ) ) {
+		    // Typo3 6.x
+			if (isset($ll[$this->lang][$key][0]["target"]))	{
+				$word = $ll[$this->lang][$key][0]["target"];
+			} elseif (isset($ll['default'][$key][0]["target"]))	{
+				$word = $ll['default'][$key][0]["target"];	// No charset conversion because default is english and thereby ASCII
+			}
+		} else {
+		    // Typo3 4.x
 			// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-		if (isset($ll[$this->lang][$key]))	{
-			$word = $ll[$this->lang][$key];
-		} elseif (isset($ll['default'][$key]))	{
-			$word = $ll['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			if (isset($ll[$this->lang][$key]))	{
+				$word = $ll[$this->lang][$key];
+			} elseif (isset($ll['default'][$key]))	{
+				$word = $ll['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			}
 		}
 
 		if(TYPO3_MODE == 'FE') {
