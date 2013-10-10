@@ -1,5 +1,7 @@
 3.0.2
 !!! Update JS-libraries if useOwnJS is active!!!
+[FIX] Respect HTTPS for JS-libs. Thanks to Bernd P.
+[FIX] respect Geocoder limit. Thanks to Gernot B.
 [FIX] Language-handling for Typo3 6.x
 [NEW] TypoScript-options overlappingMarkerLatDev, overlappingMarkerLongDev
 [NEW] marker hold reference to map
