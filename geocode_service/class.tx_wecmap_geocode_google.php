@@ -127,12 +127,19 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 			t3lib_div::devLog('Google V3: URL '.$url, 'wec_map_geocode', -1 );
 		}
 
-		$jsonstr = t3lib_div::getURL($url);
+		$attempt = 1;
+		do {
+			$jsonstr = t3lib_div::getURL($url);
 
-		$response_obj = json_decode( $jsonstr, true );
-		if(TYPO3_DLOG) {
-			t3lib_div::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
-		}
+			$response_obj = json_decode( $jsonstr, true );
+			if(TYPO3_DLOG) {
+				t3lib_div::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
+			}
+				if ($response_obj['status'] == 'OVER_QUERY_LIMIT')
+					sleep(2);
+
+			$attempt++;
+		} while ($attempt <= 3 && $response_obj['status'] == 'OVER_QUERY_LIMIT');
 
 		$latlong = array();
 		if(TYPO3_DLOG) {
