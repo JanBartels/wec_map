@@ -207,10 +207,10 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 		if ( is_array( $ll[$this->lang][$key] ) ) {
 		    // Typo3 6.x
-			if (isset($ll[$this->lang][$key][0]["target"]))	{
-				$word = $ll[$this->lang][$key][0]["target"];
-			} elseif (isset($ll['default'][$key][0]["target"]))	{
-				$word = $ll['default'][$key][0]["target"];	// No charset conversion because default is english and thereby ASCII
+			if (isset($ll[$this->lang][$key][0]['target']))	{
+				$word = $ll[$this->lang][$key][0]['target'];
+			} elseif (isset($ll['default'][$key][0]['target']))	{
+				$word = $ll['default'][$key][0]['target'];	// No charset conversion because default is english and thereby ASCII
 			}
 		} else {
 		    // Typo3 4.x
@@ -268,10 +268,11 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				return $htmlContent;
 			}
 
+			$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
 //			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
 //			$apiURL = sprintf($apiURL, $this->lang);
-			$apiURL = "http://maps.googleapis.com/maps/api/js?sensor=false&language=" . $this->lang;
+			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?sensor=false&language=' . $this->lang;
 
 
 			if(tx_wecmap_backend::getExtConf('useOwnJS'))
@@ -282,9 +283,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 			else
 			{
-				$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
-				$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
-				$omURL  = 'http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js';
+				$mmURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
+				$ibURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+				$omURL  = $scheme . 'jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js';
 			}
 
 			if (TYPO3_DLOG) {
@@ -426,10 +427,12 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return void
 	 **/
 	function generateStaticMap($markers, $center = true, $alt = '') {
+		$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
+
 		if($center) {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		} else {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		}
 
 	}
