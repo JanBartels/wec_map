@@ -131,7 +131,6 @@ class tx_wecmap_pi2 extends tslib_pibase {
 		empty($scale) ? $scale = $this->cObj->stdWrap($conf['controls.']['showScale'], $conf['controls.']['showScale.']):null;
 
 		$private = $this->pi_getFFvalue($piFlexForm, 'privacy', 'default');
-		empty($private) ? $private = $conf['private']:null;
 		empty($private) ? $private = $this->cObj->stdWrap($conf['private'], $conf['private.']):null;
 
 		$showDirs = $this->pi_getFFvalue($piFlexForm, 'showDirections', 'default');
@@ -151,7 +150,7 @@ class tx_wecmap_pi2 extends tslib_pibase {
 		empty($showSidebar) ? $showSidebar = $this->cObj->stdWrap($conf['showSidebar'], $conf['showSidebar.']):null;
 		$this->showSidebar = $showSidebar;
 
-		$kml = $this->cObj->stdWrap($conf['kml'], $conf['kml.'])
+		$kml = $this->cObj->stdWrap($conf['kml'], $conf['kml.']);
 
 		$centerLat = $this->cObj->stdWrap($conf['centerLat'], $conf['centerLat.']);
 
