@@ -180,7 +180,7 @@ class tx_wecmap_pi2 extends tslib_pibase {
 
 		// get kml urls for each included record
 		if(!empty($kml)) {
-			$where = 'uid IN ('.$kml.')';
+			$where = 'uid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($kml).')';
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url', 'tx_wecmap_external', $where);
 			foreach( $res as $key => $url ) {
 				$link = trim($url['url']);
@@ -383,7 +383,10 @@ class tx_wecmap_pi2 extends tslib_pibase {
 					// add a little info so users know what to do
 					$title = tx_wecmap_shared::render(array('name' => 'Info'), $title_conf);
 
-					$count = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(*)', 'fe_users', $cityField.'="'. $row[$cityField] .'"');
+					$countWhere = $cityField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$cityField], 'fe_users' );
+					if ( $zipField )
+						$countWhere .= ' AND ' . $zipField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$zipField], 'fe_users' );
+					$count = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(*)', 'fe_users', $countWhere);
 					$count = $count[0]['count(*)'];
 
 					// extra processing if private is turned on
