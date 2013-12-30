@@ -10,6 +10,7 @@ tx_wecmap_api {
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.city}: | {field:map_id}_city=input
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.state}: | {field:map_id}_state=input
 			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.zip}: | {field:map_id}_zip=input
+			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.country}: | {field:map_id}_country=input
 			| {field:map_id}_submit=submit | {LLL:EXT:wec_map/locallang_db.xml:submit}
 		) 
 		20.data.insertData = 1
