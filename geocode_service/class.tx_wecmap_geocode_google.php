@@ -62,7 +62,9 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 	function lookup($street, $city, $state, $zip, $country, $key='')	{
 
 		$addressString = '';
-		if ( t3lib_extMgm::isLoaded('static_info_tables') )
+
+		$version = class_exists('t3lib_utility_VersionNumber') ? t3lib_utility_VersionNumber::convertVersionNumberToInteger( TYPO3_version ) : t3lib_div::int_from_ver( TYPO3_version );
+		if ( $version < 5000000 && t3lib_extMgm::isLoaded('static_info_tables') )  // don't use static_info_tables on Typo3 6.x because of internal changes
 		{
 			// format address for Google search based on local address-format for given $country
 
@@ -127,12 +129,19 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 			t3lib_div::devLog('Google V3: URL '.$url, 'wec_map_geocode', -1 );
 		}
 
-		$jsonstr = t3lib_div::getURL($url);
+		$attempt = 1;
+		do {
+			$jsonstr = t3lib_div::getURL($url);
 
-		$response_obj = json_decode( $jsonstr, true );
-		if(TYPO3_DLOG) {
-			t3lib_div::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
-		}
+			$response_obj = json_decode( $jsonstr, true );
+			if(TYPO3_DLOG) {
+				t3lib_div::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
+			}
+				if ($response_obj['status'] == 'OVER_QUERY_LIMIT')
+					sleep(2);
+
+			$attempt++;
+		} while ($attempt <= 3 && $response_obj['status'] == 'OVER_QUERY_LIMIT');
 
 		$latlong = array();
 		if(TYPO3_DLOG) {

@@ -1,3 +1,36 @@
+3.0.3
+[FIX] Security-fixes
+[FIX] pi2: count-calculation corrected. Thanks to Franz Geiger
+[FIX] country-field missing in radius-search. Thanks to Andreas T.
+
+3.0.2
+!!! Update JS-libraries if useOwnJS is active!!!
+[FIX] Respect HTTPS for JS-libs. Thanks to Bernd P.
+[FIX] respect Geocoder limit. Thanks to Gernot B.
+[FIX] Language-handling for Typo3 6.x
+[NEW] TypoScript-options overlappingMarkerLatDev, overlappingMarkerLongDev
+[NEW] marker hold reference to map
+[NEW] spiderfy overlapping markers, TS-option: enableOverlappingMarkerManager
+[NEW] recursive starting point for DataTable map
+[NEW] plugin.tx_wecmap_pi3.flexformTables.*
+[NEW] DataTable map supports lat/long directly by TCA
+[FIX] sporadic save-errors in BE-Admin-Module
+[NEW] all TypoScript-properties support stdWrap
+[NEW] directionsmenu configurable vie TypoScript
+[FIX] tx_cal_location isn't listed in pi3-flexform
+[NEW] Radius search submit button not localized
+[FIX] Invalid HTML-output in radius search form. Thanks to Christian Hennecke
+[FIX] Double tabs in info window if open it second time
+[FIX] scrollbars in infobubble. Thanks to Peter Linzenkirchner
+
+3.0.1
+[FIX] edit/save/undo buttons didn't work correctly
+[NEW] <div> and <span> with classes
+[FIX] Call to a member function setDraggable()
+[FIX] local language handling for map texts
+[NEW] InfoBubbles: missing class-names and ids
+[FIX] formatAddress function returns nothing
+
 3.0.0
 New ownership!!!
 [NEW] support for Google API V3

@@ -74,7 +74,7 @@ if(t3lib_extMgm::isLoaded('sr_feuser_register')) {
 			'street' => 'address',
 			'city' => 'city',
 			'state' => '',
-			'zip' => '',
+			'zip' => 'zip',
 			'country' => 'country',
 		),
 	);

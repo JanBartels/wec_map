@@ -47,8 +47,10 @@ class tx_wecmap_marker {
 	var $color;
 	var $strokeColor;
 	var $mapName;
+	var $map = null;
 	var $iconID;
 	var $groupId = -1;
+	var $directionsMenuConf;
 
 	/**
 	 * Constructor stub. See map_service classes for more details on the marker
@@ -149,6 +151,15 @@ class tx_wecmap_marker {
 	}
 
 	/**
+	 * Setter for map this marker is a part of
+	 *
+	 * @return void
+	 **/
+	function setMap( &$map) {
+		$this->map = $map;
+	}
+
+	/**
 	 * set the id of the group this marker belongs to
 	 *
 	 * @return void
@@ -174,6 +185,16 @@ class tx_wecmap_marker {
 	function setMaxzoom($zoom) {
 		$this->maxzoom = $zoom;
 	}
+
+	/**
+	 * Setter for map name this marker is a part of
+	 *
+	 * @return void
+	 **/
+	function setDirectionsMenuConf( $conf ) {
+		$this->directionsMenuConf = $conf;
+	}
+
 }
 
 

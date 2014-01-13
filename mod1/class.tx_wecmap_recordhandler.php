@@ -84,7 +84,7 @@ class tx_wecmap_recordhandler {
 
 			// Compile Row:
 			$output.= '
-				<tr id="'. $row['address_hash'] .'" class="bgColor'.($cc%2 ? '-20':'-10').'">
+				<tr id="item_'. $row['address_hash'] .'" class="bgColor'.($cc%2 ? '-20':'-10').'">
 					'.implode('
 					',$cells).'
 				</tr>';
@@ -220,9 +220,9 @@ class tx_wecmap_recordhandler {
 				}
 
 				function editRecord(id) {
-					var longitudes = $(id).getElementsByClassName(\'longitude\');
-					var latitudes = $(id).getElementsByClassName(\'latitude\');
-					var editButtons = $(id).getElementsByClassName(\'editButton\');
+					var longitudes = $(\'item_\'+id).getElementsByClassName(\'longitude\');
+					var latitudes = $(\'item_\'+id).getElementsByClassName(\'latitude\');
+					var editButtons = $(\'item_\'+id).getElementsByClassName(\'editButton\');
 					var longitude = longitudes[0];
 					var latitude = latitudes[0];
 					var editButton = editButtons[0];
@@ -248,11 +248,11 @@ class tx_wecmap_recordhandler {
 				}
 
 				function saveRecord(id) {
-					var longEl = $(id).getElementsBySelector(".longForm");
+					var longEl = $(\'item_\'+id).getElementsBySelector(\'.longForm\');
 					var longValue = $F(longEl[0]);
-					var lat = $(id).getElementsBySelector(\'.latForm\');
+					var lat = $(\'item_\'+id).getElementsBySelector(\'.latForm\');
 					var latValue = $F(lat[0]);
-					var editButtons = $(id).getElementsByClassName(\'editButton\');
+					var editButtons = $(\'item_\'+id).getElementsByClassName(\'editButton\');
 					var editButton = editButtons[0];
 					var link = getEditLink(id);
 					editButton.update(link);
@@ -263,9 +263,9 @@ class tx_wecmap_recordhandler {
 				}
 
 				function unEdit(id, longVal, lat) {
-					var longitudes = $(id).getElementsByClassName(\'longitude\');
-					var latitudes = $(id).getElementsByClassName(\'latitude\');
-					var editButtons = $(id).getElementsByClassName(\'editButton\');
+					var longitudes = $(\'item_\'+id).getElementsByClassName(\'longitude\');
+					var latitudes = $(\'item_\'+id).getElementsByClassName(\'latitude\');
+					var editButtons = $(\'item_\'+id).getElementsByClassName(\'editButton\');
 					var longitude = longitudes[0];
 					var latitude = latitudes[0];
 					var editButton = editButtons[0];
@@ -287,7 +287,7 @@ class tx_wecmap_recordhandler {
 				}
 
 				function clearRow(id) {
-					$(id).remove();
+					$(\'item_\'+id).remove();
 					var count = $(\'recordCount\');
 					var number = count.innerHTML;
 

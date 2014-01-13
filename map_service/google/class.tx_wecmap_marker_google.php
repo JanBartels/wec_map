@@ -135,7 +135,15 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 		}
 
 		if ($this->directions) {
-			$markerContent[0] .= '<br class="dirmenu"/><div id="'.$this->mapName.'_dirmenu_'.$this->groupId.'_'. $this->index .'" class="dirmenu" style="white-space: nowrap;">'. $GLOBALS['LANG']->getLL('directions') .': <a href="#" class="dirmenutohere" onclick="WecMap.openDirectionsToHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">' . $GLOBALS['LANG']->getLL('toHereFrom') . '</a> - <a href="#" class="dirmenufromhere"onclick=\"WecMap.openDirectionsFromHere(\\\'' . $this->mapName . '\\\', ' . $this->groupId . ', ' . $this->index . ');return false;">'. $GLOBALS['LANG']->getLL('fromHereTo') .'</a></div>';
+			$data = array( 'map_id' => $this->mapName,
+						   'groupId' => $this->groupId,
+						   'index' => $this->index,
+						   'address' => $this->getUserAddress(),
+						   'latitude' => $this->latitude,
+						   'longitude' => $this->longitude,
+						   'dirTitle' => htmlspecialchars(strip_tags($this->title[0]))
+						 );
+			$markerContent[0] .= tx_wecmap_shared::render( $data, $this->directionsMenuConf );
 		}
 
 		return '
@@ -230,7 +238,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 					$selectArray = t3lib_div::trimExplode(',', $select, true);
 					$select = implode(',', $selectArray);
 
-					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.$feuser_id);
+					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.intval($feuser_id));
 					return $rows[0][$streetField].', '.$rows[0][$cityField].', '.$rows[0][$stateField].' '.$rows[0][$zipField].', '.$rows[0][$countryField];
 				}
 			} else {

@@ -93,7 +93,6 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$this->key = $key;
 		}
 
-		$this->options = array();
 		$this->directions = false;
 		$this->directionsDivID = null;
 		$this->prefillAddress = false;
@@ -205,11 +204,22 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	string		The value from LOCAL_LANG.
 	 */
 	function getLL($ll,$key)	{
+
+		if ( is_array( $ll[$this->lang][$key] ) ) {
+		    // Typo3 6.x
+			if (isset($ll[$this->lang][$key][0]['target']))	{
+				$word = $ll[$this->lang][$key][0]['target'];
+			} elseif (isset($ll['default'][$key][0]['target']))	{
+				$word = $ll['default'][$key][0]['target'];	// No charset conversion because default is english and thereby ASCII
+			}
+		} else {
+		    // Typo3 4.x
 			// The "from" charset of csConv() is only set for strings from TypoScript via _LOCAL_LANG
-		if (isset($ll[$this->lang][$key]))	{
-			$word = $ll[$this->lang][$key];
-		} elseif (isset($ll['default'][$key]))	{
-			$word = $ll['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			if (isset($ll[$this->lang][$key]))	{
+				$word = $ll[$this->lang][$key];
+			} elseif (isset($ll['default'][$key]))	{
+				$word = $ll['default'][$key];	// No charset conversion because default is english and thereby ASCII
+			}
 		}
 
 		if(TYPO3_MODE == 'FE') {
@@ -258,21 +268,24 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				return $htmlContent;
 			}
 
+			$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
 //			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
 //			$apiURL = sprintf($apiURL, $this->lang);
-			$apiURL = "http://maps.googleapis.com/maps/api/js?sensor=false&language=" . $this->lang;
+			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?sensor=false&language=' . $this->lang;
 
 
 			if(tx_wecmap_backend::getExtConf('useOwnJS'))
 			{
 				$mmURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/markermanager.js';
 				$ibURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/infobubble.js';
+				$omURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/oms.min.js';
 			}
 			else
 			{
-				$mmURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
-				$ibURL  = 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+				$mmURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
+				$ibURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
+				$omURL  = $scheme . 'jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js';
 			}
 
 			if (TYPO3_DLOG) {
@@ -280,13 +293,17 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 
 			/* If we're in the frontend, use TSFE.  Otherwise, include JS manually. */
-			$jsFile  = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap.js';
-			$jsFile2 = t3lib_extMgm::siteRelPath('wec_map') . 'res/copyrights.js';
-			$jsFile3 = t3lib_extMgm::siteRelPath('wec_map') . 'res/wecmap_backend.js';
+			$jsDir = tx_wecmap_backend::getExtConf('jsDir');
+			if ( empty( $jsDir ) )
+				$jsDir = t3lib_extMgm::siteRelPath('wec_map') . 'res/';
+			$jsFile  = $jsDir . 'wecmap.js';
+			$jsFile2 = $jsDir . 'copyrights.js';
+			$jsFile3 = $jsDir . 'wecmap_backend.js';
 			if (TYPO3_MODE == 'FE') {
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map_googleMaps'] = '<script src="'.$apiURL.'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$mmURL .'" type="text/javascript"></script>'
 				                                                             . '<script src="'.$ibURL .'" type="text/javascript"></script>'
+				                                                             . '<script src="'.$omURL .'" type="text/javascript"></script>'
 				                                                             ;
 				$GLOBALS['TSFE']->additionalHeaderData['wec_map'] = ( $jsFile  ? '<script src="' . $jsFile  . '" type="text/javascript"></script>' : '' )
 				                                                  . ( $jsFile2 ? '<script src="' . $jsFile2 . '" type="text/javascript"></script>' : '' )
@@ -297,11 +314,13 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				{
 					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $mmURL . '" type="text/javascript"></script>';
 					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $ibURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $omURL . '" type="text/javascript"></script>';
 				}
 				else
 				{
 					$htmlContent .= '<script src="' . $mmURL . '" type="text/javascript"></script>';
 					$htmlContent .= '<script src="' . $ibURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . $omURL . '" type="text/javascript"></script>';
 				}
 				$htmlContent .= ( $jsFile  ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
 				              . ( $jsFile2 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )
@@ -309,10 +328,12 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				              ;
 			}
 
+			if ( $this->enableOverlappingMarkerManager )
+				$mapOptions['enableOverlappingMarkerManager'] = true;
 			$jsContent = array();
 			$jsContent[] = $this->js_createLabels( $lang );
 			$jsContent[] = '';
-			$jsContent[] = $this->js_drawMapStart();
+			$jsContent[] = $this->js_drawMapStart($mapOptions);
 			$jsContent[] = $this->js_newGDirections();
 			$jsContent[] = $this->js_setCenter($this->lat, $this->long, $this->zoom, $this->type);
 			if ( is_array( $this->controls ) )
@@ -406,10 +427,12 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return void
 	 **/
 	function generateStaticMap($markers, $center = true, $alt = '') {
+		$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
+
 		if($center) {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		} else {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="http://maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
 		}
 
 	}
@@ -429,7 +452,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		/* Geocode the address */
 		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
 		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
@@ -450,7 +473,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 **/
-	function &addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -477,7 +500,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		$uid = intval($uid);
 
 		// first get the mappable info from the TCA
@@ -494,7 +517,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		$countryfield = tx_wecmap_shared::getAddressField($table, 'country');
 
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.$uid);
+		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
 		$record = $record[0];
 
 		$street = $record[$streetfield];
@@ -529,7 +552,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
@@ -573,10 +596,23 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return 		boolean
 	 * @access   	public
 	 */
-	function addMarkerIcon($dataArray) {
+	function addMarkerIcon($dataArray, &$cObj=null ) {
 		if (empty($dataArray)) {
 			return false;
 		} else {
+			if ( $cObj && is_array($dataArray))
+			{
+				$sData = $dataArray;
+				$dataArray = array();
+				foreach($sData as $theKey => $theValue)	{
+					if ( substr($theKey, -1, 1 ) == '.') {
+						$dataArray[ substr($theKey,0,-1) ] = $cObj->stdWrap($sData[substr($theKey,0,-1)], $sData[$theKey]);
+					} else {
+						$dataArray[$theKey] = $sData[$theKey];
+					}
+				}
+			}
+
 		  	$this->icons[] = 'WecMap.addIcon("'. $this->mapName . '", "' . $dataArray['iconID'] . '", "' . $dataArray['imagepath'] . '", "' . $dataArray['shadowpath'] . '", new google.maps.Size(' . $dataArray['width'] . ', ' . $dataArray['height'] . '), new google.maps.Size(' . $dataArray['shadowWidth'] . ', ' . $dataArray['shadowHeight'] . '), new google.maps.Point(' . $dataArray['anchorX'] . ', ' . $dataArray['anchorY'] . '), new google.maps.Point(' . $dataArray['infoAnchorX'] . ', ' . $dataArray['infoAnchorY'] . '));
 			';
 			return true;
@@ -666,12 +702,16 @@ function InitWecMapGoogleV3Labels() {
 	 * @return	string	The beginning of the drawMap function in Javascript.
 	 */
 	function js_drawMapStart() {
-		return 'google.maps.event.addDomListener(window,"load", function () {
+		$js =  'google.maps.event.addDomListener(window,"load", function () {
 if ( !window["WecMap"] )
 	WecMap = createWecMap();
 WecMap.init();
 InitWecMapGoogleV3Labels();
 WecMap.createMap("'. $this->mapName . '" );';
+
+		if ( $this->mapOptions['enableOverlappingMarkerManager'] )
+			$js .= 'WecMap.enableOverlappingMarkerManager("'. $this->mapName . '", true );';
+		return $js;
 	}
 
 	/**
@@ -869,8 +909,6 @@ function js_setMapType($type) {
 	 **/
 	function getAutoZoom($latSpan, $longSpan) {
 
-		//$pixelsPerLatDegree = pow(2, 17-$zoom);
-		//$pixelsPerLongDegree = pow(2,17 - $zoom) *  0.77162458338772;
 		$wZoom = log($this->width, 2) - log($longSpan, 2);
 		$hZoom = log($this->height, 2) - log($latSpan, 2);
 

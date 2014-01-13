@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2013 Jan Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -56,6 +57,8 @@ class tx_wecmap_map {
 	var $js;
 	var $key;
 
+	var $mapOptions = array();
+
 	/**
 	 * Class constructor stub.  Override in the map_service classes. Look there for
 	 * examples.
@@ -68,6 +71,13 @@ class tx_wecmap_map {
 	 *
 	 */
 	function drawMap() {}
+
+	/**
+	 * Generic stub to set special map-options
+	 */
+	function addOption( $key, $value ) {
+		$this->mapOptions[ $key ] = $value;
+	}
 
 
 	/**
@@ -265,7 +275,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	added marker object
 	 */
-	function &addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 17, $iconID='') {
+	function &addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		/* Geocode the address */
 		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
@@ -287,7 +297,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 */
-	function &addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 17, $iconID='') {
+	function &addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
@@ -317,6 +327,7 @@ class tx_wecmap_map {
 									  '0xFF0000',
 									  '0xFFFFFF',
 									  $iconID);
+			$marker->setMap( $this );
 			$group->addMarker($marker);
 			$group->setDirections($this->directions);
 
@@ -335,7 +346,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -365,7 +376,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 17, $iconID = '') {
+	function &addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		$uid = intval($uid);
 
@@ -376,35 +387,50 @@ class tx_wecmap_map {
 		if(!$tca) return false;
 		if(!$tca['isMappable']) return false;
 
-		$streetfield  = tx_wecmap_shared::getAddressField($table, 'street');
-		$cityfield    = tx_wecmap_shared::getAddressField($table, 'city');
-		$statefield   = tx_wecmap_shared::getAddressField($table, 'state');
-		$zipfield     = tx_wecmap_shared::getAddressField($table, 'zip');
-		$countryfield = tx_wecmap_shared::getAddressField($table, 'country');
-
-
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.$uid);
+		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
 		$record = $record[0];
 
-		$street = $record[$streetfield];
-		$city 	= $record[$cityfield];
-		$state 	= $record[$statefield];
-		$zip	= $record[$zipfield];
-		$country= $record[$countryfield];
+		if ( $tca['addressFields'] )
+		{
+			$streetfield  = tx_wecmap_shared::getAddressField($table, 'street');
+			$cityfield    = tx_wecmap_shared::getAddressField($table, 'city');
+			$statefield   = tx_wecmap_shared::getAddressField($table, 'state');
+			$zipfield     = tx_wecmap_shared::getAddressField($table, 'zip');
+			$countryfield = tx_wecmap_shared::getAddressField($table, 'country');
 
-		if(empty($country) && $countryfield == 'static_info_country') {
-			$country = $record['country'];
-		} else if(empty($country) && $countryfield == 'country') {
-			$country = $record['static_info_country'];
+			$street = $record[$streetfield];
+			$city 	= $record[$cityfield];
+			$state 	= $record[$statefield];
+			$zip	= $record[$zipfield];
+			$country= $record[$countryfield];
+
+			if(empty($country) && $countryfield == 'static_info_country') {
+				$country = $record['country'];
+			} else if(empty($country) && $countryfield == 'country') {
+				$country = $record['static_info_country'];
+			}
+
+			/* Geocode the address */
+			$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
+			$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+
+			/* Create a marker at the specified latitude and longitude */
+			return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
 		}
+		else if ( $tca['latlongFields'] )
+		{
+			$latfield  = tx_wecmap_shared::getLatLongField($table, 'lat');
+			$longfield = tx_wecmap_shared::getLatLongField($table, 'long');
 
-		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+			$lat  = $record[$latfield];
+			$long = $record[$longfield];
 
-		/* Create a marker at the specified latitude and longitdue */
-		return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
+			/* Create a marker at the specified latitude and longitude */
+			return $this->addMarkerByLatLong($lat, $long, $title, $description, $minzoom, $maxzoom, $iconID);
+		}
+		else
+			return false;
 	}
 
 	/**
@@ -436,6 +462,23 @@ class tx_wecmap_map {
 
 	function markerCount() {
 		return $this->markerCount;
+	}
+
+
+	/**
+	 * Moves the marker-position if overlapping
+	 */
+	function handleOverlappingMarker( &$marker, $latDev, $longDev )
+	{
+		// Store coord pairs
+		$cords = number_format ( $marker->latitude, 8 , '.' , '' ) . '-' . number_format ( $marker->longitude, 8 , '.' , '' );
+		if( !isset( $this->devcache[ $cords] ) )
+			$this->devcache[ $cords ] = 0;
+		else
+			$this->devcache[ $cords ]++;
+		// Include linear deviation for markers in exact same location
+		$marker->latitude = $marker->latitude + ( $this->devcache[$cords] * $latDev );
+		$marker->longitude = $marker->longitude + ( $this->devcache[$cords] * $longDev );
 	}
 }
 
