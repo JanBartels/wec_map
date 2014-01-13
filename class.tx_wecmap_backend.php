@@ -233,10 +233,10 @@ class tx_wecmap_backend {
 				break;
 		}
 
-		$form = '<label for="wec_map_lat">'.$LANG->getLL('latitude').'</label> <input id="wec_map_lat" name="wec_map_lat" value="'.$latlong['lat'].'" />
-				 <label for="wec_map_long">'.$LANG->getLL('longitude').'</label>  <input id="wec_map_long" name="wec_map_long" value="'.$latlong['long'].'" />
-				 <input type="hidden" name="wec_map_original_lat" value="'.$latlong['lat'].'" />
-				 <input type="hidden" name="wec_map_original_long" value="'.$latlong['long'].'" />';
+		$form = '<label for="wec_map_lat">'.$LANG->getLL('latitude').'</label> <input id="wec_map_lat" name="wec_map_lat" value="'.htmlspecialchars($latlong['lat']).'" />
+				 <label for="wec_map_long">'.$LANG->getLL('longitude').'</label>  <input id="wec_map_long" name="wec_map_long" value="'.htmlspecialchars($latlong['long']).'" />
+				 <input type="hidden" name="wec_map_original_lat" value="'.htmlspecialchars($latlong['lat']).'" />
+				 <input type="hidden" name="wec_map_original_long" value="'.htmlspecialchars($latlong['long']).'" />';
 
 		return '<p>'.$status.'</p><p>'.$form.'</p>';
 	}
@@ -259,10 +259,10 @@ class tx_wecmap_backend {
 		$origlat = t3lib_div::_GP('wec_map_original_lat');
 		$origlong = t3lib_div::_GP('wec_map_original_long');
 
-		$form = '<input type="hidden" id="wec_map_lat" name="wec_map_lat" value="'.$lat.'" />
-				 <input type="hidden" id="wec_map_long" name="wec_map_long" value="'.$long.'" />
-				 <input type="hidden" name="wec_map_original_lat" value="'.$lat.'" />
-				 <input type="hidden" name="wec_map_original_long" value="'.$long.'" />';
+		$form = '<input type="hidden" id="wec_map_lat" name="wec_map_lat" value="'.htmlspecialchars($lat).'" />
+				 <input type="hidden" id="wec_map_long" name="wec_map_long" value="'.htmlspecialchars($long).'" />
+				 <input type="hidden" name="wec_map_original_lat" value="'.htmlspecialchars($lat).'" />
+				 <input type="hidden" name="wec_map_original_long" value="'.htmlspecialchars($long).'" />';
 
 		return '<p>'.$form.'</p>';
 	}

@@ -186,7 +186,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 	}
 
 	function linkSelf($addParams)	{
-		return htmlspecialchars('index.php?id='.$this->pObj->id.'&showLanguage='.rawurlencode(t3lib_div::_GP('showLanguage')).$addParams);
+		return htmlspecialchars('index.php?id='.$this->pObj->id.'&showLanguage='.rawurlencode(strip_tags(t3lib_div::_GP('showLanguage'))).$addParams);
 	}
 
 	/**
@@ -205,9 +205,6 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 
 		global $LANG;
 
-		$uid       = t3lib_div::_GP('uid');
-		$latitude  = t3lib_div::_GP('latitude');
-		$longitude = t3lib_div::_GP('longitude');
 		$cmd       = t3lib_div::_GP('cmd');
 
 		$output   = $recordHandler->displaySearch();

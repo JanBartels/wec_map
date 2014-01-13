@@ -1,3 +1,8 @@
+3.0.3
+[FIX] Security-fixes
+[FIX] pi2: count-calculation corrected. Thanks to Franz Geiger
+[FIX] country-field missing in radius-search. Thanks to Andreas T.
+
 3.0.2
 !!! Update JS-libraries if useOwnJS is active!!!
 [FIX] Respect HTTPS for JS-libs. Thanks to Bernd P.

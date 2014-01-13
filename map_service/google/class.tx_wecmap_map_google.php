@@ -517,7 +517,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		$countryfield = tx_wecmap_shared::getAddressField($table, 'country');
 
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.$uid);
+		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
 		$record = $record[0];
 
 		$street = $record[$streetfield];

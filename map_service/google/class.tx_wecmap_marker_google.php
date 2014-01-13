@@ -238,7 +238,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 					$selectArray = t3lib_div::trimExplode(',', $select, true);
 					$select = implode(',', $selectArray);
 
-					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.$feuser_id);
+					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.intval($feuser_id));
 					return $rows[0][$streetField].', '.$rows[0][$cityField].', '.$rows[0][$stateField].' '.$rows[0][$zipField].', '.$rows[0][$countryField];
 				}
 			} else {

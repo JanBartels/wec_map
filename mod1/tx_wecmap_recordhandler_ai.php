@@ -34,13 +34,13 @@ require($BACK_PATH. 'init.php');
 require_once('../class.tx_wecmap_cache.php');
 require_once('class.tx_wecmap_recordhandler.php');
 
-$cmd = htmlspecialchars(t3lib_div::_GP('cmd'));
-$uid  = htmlspecialchars(t3lib_div::_GP('record'));
-$page = htmlspecialchars(t3lib_div::_GP('page'));
-$itemsPerPage = htmlspecialchars(t3lib_div::_GP('itemsPerPage'));
-$count = htmlspecialchars(t3lib_div::_GP('count'));
-$latitude = htmlspecialchars(t3lib_div::_GP('latitude'));
-$longitude = htmlspecialchars(t3lib_div::_GP('longitude'));
+$cmd = t3lib_div::_GP('cmd');
+$uid  = intval(t3lib_div::_GP('record'));
+$page = intval(t3lib_div::_GP('page'));
+$itemsPerPage = intval(t3lib_div::_GP('itemsPerPage'));
+$count = intval(t3lib_div::_GP('count'));
+$latitude = t3lib_div::_GP('latitude');
+$longitude = t3lib_div::_GP('longitude');
 
 if($cmd == 'deleteAll') {
 	tx_wecmap_cache::deleteAll();

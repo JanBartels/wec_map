@@ -388,7 +388,7 @@ class tx_wecmap_map {
 		if(!$tca['isMappable']) return false;
 
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.$uid);
+		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
 		$record = $record[0];
 
 		if ( $tca['addressFields'] )

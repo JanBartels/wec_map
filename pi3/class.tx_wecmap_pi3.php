@@ -182,7 +182,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 
 		// get kml urls for each included record
 		if(!empty($kml)) {
-			$where = 'uid IN ('.$kml.')';
+			$where = 'uid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($kml).')';
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url', 'tx_wecmap_external', $where);
 			foreach( $res as $key => $url ) {
 				$link = trim($url['url']);
