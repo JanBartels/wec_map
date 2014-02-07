@@ -143,7 +143,17 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 						   'longitude' => $this->longitude,
 						   'dirTitle' => htmlspecialchars(strip_tags($this->title[0]))
 						 );
-			$markerContent[0] .= tx_wecmap_shared::render( $data, $this->directionsMenuConf );
+
+			if ( is_array( $this->directionsMenuConf ) )
+				$markerContent[0] .= tx_wecmap_shared::render( $data, $this->directionsMenuConf );
+			else
+			{
+				// Workaround for EXT:cal
+				// get default directionsMenu
+				$directionsMenuConf = $GLOBALS['TSFE']->tmpl->setup['tx_wecmap_api.']['directionsMenu.'];
+				if ( is_array( $directionsMenuConf ) )
+					$markerContent[0] .= tx_wecmap_shared::render( $data, $directionsMenuConf );
+			}
 		}
 
 		return '

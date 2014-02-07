@@ -573,6 +573,15 @@ WecMapGoogleV3.prototype.setDirections = function( fromAddr, toAddr) {
 			this.directionsDivId = this.mapId + '_directions';
 		this.directionsRenderer = new google.maps.DirectionsRenderer();
 		this.directionsRenderer.setMap( this.map );
+		if ( !document.getElementById( this.directionsDivId ) )
+		{
+			// Workaround for EXT:cal
+			// if directions-DIV doesn't exist, create and append it
+			var newDiv = document.createElement('div');
+		        newDiv.id = this.directionsDivId;
+		        var map = document.getElementById( this.mapId )
+        		map.parentNode.insertBefore(newDiv,map.nextSibling);
+        	}
 		this.directionsRenderer.setPanel( document.getElementById( this.directionsDivId ) );
 	}
 
