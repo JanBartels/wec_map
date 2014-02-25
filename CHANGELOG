@@ -1,6 +1,7 @@
 3.0.4
 [FIX] cal integration
 [FIX] Escaping for record-parameter corrected (fixes #56095). Thanks to Peter L.
+[FIX] pi3 does not check for pid (fixes #55984). Thanks to Volkmar L.
 
 3.0.3
 [FIX] Security-fixes

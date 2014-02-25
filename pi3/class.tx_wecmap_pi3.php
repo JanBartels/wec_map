@@ -254,18 +254,18 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			}
 		}
 
+		if(!empty($pid)) {
+			$pidList = $this->pi_getPidList($pid, $recursive);
+			$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
+		} else {
+			$pidWhere = '1=1';
+		}
+
 		// there are two ways of buiding the SQL query:
 		// 1. from the data given via flexform
 		// 2. all manually from TS
 		// So we check whether it's set via TS, and if not we use FF data
 		if(empty($conf['tables.'])) {
-
-			if(!empty($pid)) {
-				$pidList = $this->pi_getPidList($pid, $recursive);
-				$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
-			} else {
-				$pidWhere = '1=1';
-			}
 
 			foreach( $tables as $table ) {
 
@@ -363,7 +363,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					$select = '*';
 				}
 
-				$where .= $this->cObj->enableFields($table);
+				$where .= ' AND ' . $pidWhere . $this->cObj->enableFields($table);
 
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy, $limit);
 
