@@ -1,5 +1,6 @@
 3.0.4
 [FIX] cal integration
+[FIX] Escaping for record-parameter corrected (fixes #56095). Thanks to Peter L.
 
 3.0.3
 [FIX] Security-fixes

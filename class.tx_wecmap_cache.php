@@ -268,7 +268,7 @@ class tx_wecmap_cache {
 	 */
 	function updateByUID($uid, $lat, $long) {
 		$latlong = array('latitude' => $lat, 'longitude' => $long);
-		$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', "address_hash='".$uid."'", $latlong);
+		$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache'), $latlong);
 	}
 
 	/**
@@ -277,7 +277,7 @@ class tx_wecmap_cache {
 	 * @return	none
 	 */
 	function deleteByUID($uid) {
-		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', "address_hash='".$uid."'");
+		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache') );
 	}
 
 	/**

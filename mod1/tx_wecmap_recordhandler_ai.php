@@ -35,21 +35,21 @@ require_once('../class.tx_wecmap_cache.php');
 require_once('class.tx_wecmap_recordhandler.php');
 
 $cmd = t3lib_div::_GP('cmd');
-$uid  = intval(t3lib_div::_GP('record'));
+$hash = t3lib_div::_GP('record');
 $page = intval(t3lib_div::_GP('page'));
 $itemsPerPage = intval(t3lib_div::_GP('itemsPerPage'));
 $count = intval(t3lib_div::_GP('count'));
-$latitude = t3lib_div::_GP('latitude');
-$longitude = t3lib_div::_GP('longitude');
+$latitude = floatval(t3lib_div::_GP('latitude'));
+$longitude = floatval(t3lib_div::_GP('longitude'));
 
 if($cmd == 'deleteAll') {
 	tx_wecmap_cache::deleteAll();
 } else if($cmd == 'deleteSingle') {
-	tx_wecmap_cache::deleteByUID($uid);
+	tx_wecmap_cache::deleteByUID($hash);  // $hash is escaped in deleteByUID()
 } else if($cmd == 'updatePagination') {
 	echo makePagination($page, $count, $itemsPerPage);
 } else if($cmd == 'saveRecord') {
-	tx_wecmap_cache::updateByUID($uid, $latitude, $longitude);
+	tx_wecmap_cache::updateByUID($hash, $latitude, $longitude);   // $hash is escaped in updateByUID()
 }
 
 /**
