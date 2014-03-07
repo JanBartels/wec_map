@@ -151,7 +151,7 @@ tx_wecmap_api {
 	
 	_CSS_DEFAULT_STYLE (
 		.tx-wecmap_map .sidebar {display:block; overflow: auto;}
-		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%;}
+		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%; width:100%; }
 		.tx-wecmap-map .infotitle { font-weight: bold; font-size: 110%;}
 		.tx-wecmap-map #copyright-control a:link,
 		.tx-wecmap-map #copyright-control a:visited,

@@ -272,7 +272,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			// get the correct API URL
 //			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
 //			$apiURL = sprintf($apiURL, $this->lang);
-			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?sensor=false&language=' . $this->lang;
+			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?sensor=false&language=' . $this->lang . '&libraries=places';
 
 
 			if(tx_wecmap_backend::getExtConf('useOwnJS'))

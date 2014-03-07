@@ -246,7 +246,7 @@ function WecMapGoogleV3( mapId )
 	this.mmGroupZoom = [];
 	this.directionsRenderer = null;
 	this.directionsDivId = "";
-
+	this.autocomplete = null;
 	return this;
 }
 
@@ -626,6 +626,9 @@ WecMapGoogleV3.prototype.openDirectionsToHere = function( groupId, markerId ) {
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "block";
 	this.infoWindow.draw();
+	var input = document.getElementById( 'tx-wecmap-directions-from-' + this.mapId );
+	this.autocomplete = new google.maps.places.Autocomplete(input);
+	this.autocomplete.bindTo('bounds', this.map);
 	return false;
 }
 
@@ -636,6 +639,9 @@ WecMapGoogleV3.prototype.openDirectionsFromHere = function( groupId, markerId ) 
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "none";
 	this.infoWindow.draw();
+	var input = document.getElementById( 'tx-wecmap-directions-to-' + this.mapId );
+	this.autocomplete = new google.maps.places.Autocomplete(input);
+	this.autocomplete.bindTo('bounds', this.map);
 	return false;
 }
 
