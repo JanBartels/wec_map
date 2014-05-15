@@ -1,3 +1,6 @@
+3.0.5
+[FIX] marker-references corrected (issue #58808)
+
 3.0.4
 [NEW] support of autocompletion/Google places
 [] setMap() obsolete; Avoids circular object-references

@@ -35,7 +35,7 @@
  */
 
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
+#require_once(PATH_tslib.'class.tslib_pibase.php');
 require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
@@ -66,7 +66,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		if(empty($conf['templateIncluded'])) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
+#				require_once(t3lib_extMgm::extPath('lang').'lang.php');
 				$LANG = t3lib_div::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
@@ -82,7 +82,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		if(empty($conf['output']) && !empty($conf['templateIncluded'])) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
+#				require_once(t3lib_extMgm::extPath('lang').'lang.php');
 				$LANG = t3lib_div::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
@@ -327,8 +327,10 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 					}
 
+t3lib_div::debug("vorher", $marker );
 					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
 						$map->handleOverlappingMarker( $marker, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
+t3lib_div::debug("nachher", $marker );
 
 					// build parameters to pass to the hook
 					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker, 'conf' => $tconf );
@@ -519,7 +521,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addSidebarItem(&$marker, $data) {
+	function addSidebarItem($marker, $data) {
 		if(!($this->showSidebar && is_object($marker))) return;
 		$data['onclickLink'] = $marker->getClickJS();
 		$this->sidebarLinks[] = tx_wecmap_shared::render($data, $this->conf['sidebarItem.']);
@@ -542,7 +544,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addDirectionsMenu(&$marker) {
+	function addDirectionsMenu($marker) {
 		if(!($this->showDirections && is_object($marker))) return;
 		$marker->setDirectionsMenuConf( $this->conf['directionsMenu.'] );
 	}

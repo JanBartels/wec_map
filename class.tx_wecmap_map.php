@@ -275,7 +275,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	added marker object
 	 */
-	function &addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
+	function addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		/* Geocode the address */
 		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
@@ -297,7 +297,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 */
-	function &addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
+	function addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
@@ -345,7 +345,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -375,7 +375,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		$uid = intval($uid);
 
@@ -437,7 +437,7 @@ class tx_wecmap_map {
 	 *
 	 * @return int id of this group
 	 **/
-	function &addGroup($minzoom = 1, $maxzoom = '') {
+	function addGroup($minzoom = 1, $maxzoom = '') {
 
 		if(!is_object($this->groups[$minzoom.':'.$maxzoom])) {
 			$group = t3lib_div::makeInstance('tx_wecmap_markergroup', $this->groupCount, $minzoom, $maxzoom);
@@ -467,7 +467,7 @@ class tx_wecmap_map {
 	/**
 	 * Moves the marker-position if overlapping
 	 */
-	function handleOverlappingMarker( &$marker, $latDev, $longDev )
+	function handleOverlappingMarker( $marker, $latDev, $longDev )
 	{
 		// Store coord pairs
 		$cords = number_format ( $marker->latitude, 8 , '.' , '' ) . '-' . number_format ( $marker->longitude, 8 , '.' , '' );
