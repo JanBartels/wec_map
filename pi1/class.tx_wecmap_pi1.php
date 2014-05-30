@@ -34,8 +34,8 @@
  */
 
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(PATH_tslib.'class.tslib_pibase.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Simple frontend plugin for displaying an address on a map.
@@ -66,14 +66,14 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		if(empty($conf['output']) && !(empty($conf['marker.']['title']) && empty($conf['marker.']['description']))) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
-				$LANG = t3lib_div::makeInstance('language');
+				#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lang').'lang.php');
+				$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
 			$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
 			$out .= $LANG->getLL('wecApiTemplateNotIncluded');
 			// syslog start
-				t3lib_div::sysLog('WEC Map API template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog('WEC Map API template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
 			// syslog end
 			return $out;
 		}
@@ -82,14 +82,14 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		if(empty($conf['marker.']['title']) && empty($conf['marker.']['description'])) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
-				$LANG = t3lib_div::makeInstance('language');
+#				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lang').'lang.php');
+				$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
 			$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
 			$out .= $LANG->getLL('pi1TemplateNotIncluded');
 			// syslog start
-				t3lib_div::sysLog('WEC Simple Map template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog('WEC Simple Map template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
 			// syslog end
 			return $out;
 		}
@@ -172,8 +172,8 @@ class tx_wecmap_pi1 extends tslib_pibase {
 		$description = $this->pi_getFFvalue($piFlexForm, 'description', 'default');
 
 		/* Create the map class and add markers to the map */
-		include_once(t3lib_extMgm::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
-		$map = t3lib_div::makeInstance('tx_wecmap_map_google', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
+		#include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
+		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_map_google', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// evaluate config to see which map controls we need to show
 		if($mapControlSize == 'large') {
@@ -315,7 +315,7 @@ class tx_wecmap_pi1 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addSidebarItem(&$marker, $data) {
+	function addSidebarItem($marker, $data) {
 		if(!($this->showSidebar && is_object($marker))) return;
 		$data['onclickLink'] = $marker->getClickJS();
 		$this->sidebarLinks[] = tx_wecmap_shared::render($data, $this->conf['sidebarItem.']);
@@ -339,7 +339,7 @@ class tx_wecmap_pi1 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addDirectionsMenu(&$marker) {
+	function addDirectionsMenu($marker) {
 		if(!($this->showDirections && is_object($marker))) return;
 		$marker->setDirectionsMenuConf( $this->conf['directionsMenu.'] );
 	}

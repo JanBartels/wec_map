@@ -27,7 +27,7 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_backend.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_backend.php');
 
 /**
  * Main address lookup class for the wec_map extension.  Looks up existing
@@ -41,9 +41,9 @@ require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_backend.php');
  */
 class tx_wecmap_cache {
 
-	function lookup($street, $city, $state, $zip, $country, $key='', $forceLookup=false) {
+	static function lookup($street, $city, $state, $zip, $country, $key='', $forceLookup=false) {
 		$fakeObject = null;
-		return tx_wecmap_cache::lookupWithCallback($street, $city, $state, $zip, $country, $key, $forceLookup, $fakeObject);
+		return self::lookupWithCallback($street, $city, $state, $zip, $country, $key, $forceLookup, $fakeObject);
 	}
 
 	/**
@@ -59,24 +59,24 @@ class tx_wecmap_cache {
 	 * @param	boolean		Force a new lookup for address.
 	 * @return	array		Lat/long array for specified address.  Null if lookup fails.
 	 */
-	function lookupWithCallback($street, $city, $state, $zip, $country, $key='', $forceLookup=false, &$pObj) {
+	static function lookupWithCallback($street, $city, $state, $zip, $country, $key='', $forceLookup=false, &$pObj) {
 
 		/* Do some basic normalization on the address */
-		tx_wecmap_cache::normalizeAddress($street, $city, $state, $zip, $country);
+		self::normalizeAddress($street, $city, $state, $zip, $country);
 
 		/* If we have enough address information, try to geocode. If not, return null. */
-		if(tx_wecmap_cache::isEmptyAddress($street, $city, $state, $zip, $country)) {
+		if(self::isEmptyAddress($street, $city, $state, $zip, $country)) {
 			$latlong = null;
 		} else {
 			/* Look up the address in the cache table. */
-			$latlong = tx_wecmap_cache::find($street, $city, $state, $zip, $country);
+			$latlong = self::find($street, $city, $state, $zip, $country);
 
 			/* Didn't find a cached match */
 			if (is_null($latlong)) {
 				/* Intiate service chain to find lat/long */
 				$serviceChain='';
 
-				while (is_object($lookupObj = t3lib_div::makeInstanceService('geocode', '', $serviceChain))) {
+				while (is_object($lookupObj =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstanceService('geocode', '', $serviceChain))) {
 					$serviceChain.=','.$lookupObj->getServiceKey();
 					$latlong = $lookupObj->lookup($street, $city, $state, $zip, $country, $key);
 
@@ -91,7 +91,7 @@ class tx_wecmap_cache {
 				}
 
 				/* Insert the lat/long into the cache.  */
-				tx_wecmap_cache::insert($street, $city, $state, $zip, $country, $latlong['lat'], $latlong['long']);
+				self::insert($street, $city, $state, $zip, $country, $latlong['lat'], $latlong['long']);
 				$latlong['lat'] = trim($latlong['lat'],'0');
 				$latlong['long'] = trim($latlong['long'],'0');
 			}
@@ -121,7 +121,7 @@ class tx_wecmap_cache {
 	 * @param	string		The optional API key to use in the lookup.
 	 * @return	none
 	 */
-	function normalizeAddress(&$street, &$city, &$state, &$zip, &$country) {
+	static function normalizeAddress(&$street, &$city, &$state, &$zip, &$country) {
 
 		// pseudo normalize data: first letter uppercase.
 		// @todo: get rid of this once we implement normalization properly
@@ -143,7 +143,7 @@ class tx_wecmap_cache {
 		// to somehow normalize the data we get, we will check for country codes like DEU that the geocoder
 		// doesn't understand and look up a real country name from static_info_countries
 		// 1. check if static_info_tables is available
-		if (t3lib_extmgm::isLoaded('static_info_tables')) {
+		if ( \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('static_info_tables')) {
 
 			// 2. check the length of the country and do lookup only if it's 2 or 3 characters
 			$length = strlen($country);
@@ -166,7 +166,7 @@ class tx_wecmap_cache {
 			$country = tx_wecmap_backend::getExtConf('defaultCountry');
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog('Using default country: '.$country, 'wec_map_geocode');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Using default country: '.$country, 'wec_map_geocode');
 			}
 			// devlog end
 		}
@@ -184,9 +184,9 @@ class tx_wecmap_cache {
 	 * @param	string		The country name.
 	 * @return	integer		Status code. -1=Failed, 0=Not Completed, 1=Successfull.
 	 */
-	function status($street, $city, $state, $zip, $country) {
+	static function status($street, $city, $state, $zip, $country) {
 		/* Look up the address in the cache table */
-		$latlong = tx_wecmap_cache::find($street, $city, $state, $zip, $country);
+		$latlong = self::find($street, $city, $state, $zip, $country);
 
 		/* Found a cached match */
 		if ($latlong) {
@@ -215,8 +215,8 @@ class tx_wecmap_cache {
 	 * @param	string		The country name.
 	 * @return	array		Lat/long array for specified address.  Null if lookup fails.
 	 */
-	function find($street, $city, $state, $zip, $country) {
-		$hash = tx_wecmap_cache::hash($street, $city, $state, $zip, $country);
+	static function find($street, $city, $state, $zip, $country) {
+		$hash = self::hash($street, $city, $state, $zip, $country);
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wecmap_cache', ' address_hash="'.$hash.'"');
 		if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result)) {
 			$latlong = array('lat' => $row['latitude'], 'long' => $row['longitude']);
@@ -239,16 +239,16 @@ class tx_wecmap_cache {
 	 * @param	string		Longitude.
 	 * @return	none
 	 */
-	function insert($street, $city, $state, $zip, $country, $lat, $long) {
+	static function insert($street, $city, $state, $zip, $country, $lat, $long) {
 		/* Check if value is already in DB */
-		if (tx_wecmap_cache::find($street,$city,$state,$zip,$country)) {
+		if (self::find($street,$city,$state,$zip,$country)) {
 			/* Update existing entry */
 			$latlong = array('latitude' => $lat, 'longitude' => $long);
-			$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', "address_hash='".tx_wecmap_cache::hash($street, $city, $state, $zip, $country)."'", $latlong);
+			$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', "address_hash='".self::hash($street, $city, $state, $zip, $country)."'", $latlong);
 		} else {
 			/* Insert new entry */
 			$insertArray = array();
-			$insertArray['address_hash'] = tx_wecmap_cache::hash($street, $city, $state, $zip, $country);
+			$insertArray['address_hash'] = self::hash($street, $city, $state, $zip, $country);
 			$insertArray['address'] = $street.' '.$city.' '.$state.' '.$zip.' '.$country;
 			$insertArray['latitude'] = $lat;
 			$insertArray['longitude'] = $long;
@@ -266,7 +266,7 @@ class tx_wecmap_cache {
 	 * @param	float		New longitude.
 	 * @return	none
 	 */
-	function updateByUID($uid, $lat, $long) {
+	static function updateByUID($uid, $lat, $long) {
 		$latlong = array('latitude' => $lat, 'longitude' => $long);
 		$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache'), $latlong);
 	}
@@ -276,7 +276,7 @@ class tx_wecmap_cache {
 	 *
 	 * @return	none
 	 */
-	function deleteByUID($uid) {
+	static function deleteByUID($uid) {
 		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache') );
 	}
 
@@ -285,7 +285,7 @@ class tx_wecmap_cache {
 	 *
 	 * @return	none
 	 */
-	function deleteAll() {
+	static function deleteAll() {
 		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache','');
 	}
 
@@ -299,8 +299,8 @@ class tx_wecmap_cache {
 	 * @param	string		The country name.
 	 * @return	none
 	 */
-	function delete($street, $city, $state, $zip, $country) {
-		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', "address_hash='".tx_wecmap_cache::hash($street, $city, $state, $zip, $country)."'");
+	static function delete($street, $city, $state, $zip, $country) {
+		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', "address_hash='".self::hash($street, $city, $state, $zip, $country)."'");
 	}
 
 	/**
@@ -313,7 +313,7 @@ class tx_wecmap_cache {
 	 * @param	string		The country name.
 	 * @return	string		MD5 hash of the address.
 	 */
-	function hash($street, $city, $state, $zip, $country) {
+	static function hash($street, $city, $state, $zip, $country) {
 		$address_string = $street.' '.$city.' '.$state.' '.$zip.' '.$country;
 		return md5($address_string);
 	}
@@ -329,7 +329,7 @@ class tx_wecmap_cache {
 	 * @param	string		The country name.
 	 * @return	string		True if an address is empty. False otherwise.
 	 */
-	function isEmptyAddress($street, $city, $state, $zip, $country) {
+	static function isEmptyAddress($street, $city, $state, $zip, $country) {
 		if($street == '' and $city == '' and $state == '' and $zip == '' and $country == '') {
 			$isEmptyAddress = true;
 		} else {

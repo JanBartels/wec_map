@@ -28,10 +28,10 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_marker.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_markergroup.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_cache.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_marker.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_markergroup.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_cache.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Main class for the wec_map extension.  This class sits between the various
@@ -197,7 +197,7 @@ class tx_wecmap_map {
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
 			$kilometers ? $km = 'km':$km = 'miles';
-			t3lib_div::devLog($this->mapName.': setting radius '.$radius.' '.$km, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': setting radius '.$radius.' '.$km, 'wec_map_api');
 		}
 		// devlog end
 	}
@@ -275,11 +275,10 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	added marker object
 	 */
-	function &addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
+	function addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
@@ -297,14 +296,14 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 */
-	function &addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
+	function addMarkerByLatLong($lat, $long, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
 
 			// devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': Distance: '.$distance.' - Radius: '.$this->radius, 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Distance: '.$distance.' - Radius: '.$this->radius, 'wec_map_api');
 			}
 			// devlog end
 
@@ -315,7 +314,7 @@ class tx_wecmap_map {
 
 		if($lat != '' && $long != '') {
 			$group =& $this->addGroup($minzoom, $maxzoom);
-			$marker = t3lib_div::makeInstance(
+			$marker =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 			                          $this->getMarkerClassName(),
 			                          $group->getMarkerCount(),
 									  $lat,
@@ -345,7 +344,7 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByString($string, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -357,8 +356,7 @@ class tx_wecmap_map {
 		$country = $address[3];
 
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
@@ -375,12 +373,12 @@ class tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByTCA($table, $uid, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		$uid = intval($uid);
 
 		// first get the mappable info from the TCA
-		t3lib_div::loadTCA($table);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 		$tca = $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map'];
 
 		if(!$tca) return false;
@@ -411,8 +409,7 @@ class tx_wecmap_map {
 			}
 
 			/* Geocode the address */
-			$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-			$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+			$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 			/* Create a marker at the specified latitude and longitude */
 			return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
@@ -437,10 +434,10 @@ class tx_wecmap_map {
 	 *
 	 * @return int id of this group
 	 **/
-	function &addGroup($minzoom = 1, $maxzoom = '') {
+	function addGroup($minzoom = 1, $maxzoom = '') {
 
 		if(!is_object($this->groups[$minzoom.':'.$maxzoom])) {
-			$group = t3lib_div::makeInstance('tx_wecmap_markergroup', $this->groupCount, $minzoom, $maxzoom);
+			$group =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_markergroup', $this->groupCount, $minzoom, $maxzoom);
 			$this->groupCount++;
 			$group->setMapName($this->mapName);
 			$this->groups[$minzoom.':'.$maxzoom] =& $group;
@@ -467,7 +464,7 @@ class tx_wecmap_map {
 	/**
 	 * Moves the marker-position if overlapping
 	 */
-	function handleOverlappingMarker( &$marker, $latDev, $longDev )
+	function handleOverlappingMarker( $marker, $latDev, $longDev )
 	{
 		// Store coord pairs
 		$cords = number_format ( $marker->latitude, 8 , '.' , '' ) . '-' . number_format ( $marker->longitude, 8 , '.' , '' );

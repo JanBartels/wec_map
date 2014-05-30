@@ -28,11 +28,11 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_map.php');
-require_once(t3lib_extMgm::extPath('wec_map').'map_service/google/class.tx_wecmap_marker_google.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_backend.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_domainmgr.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_map.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'map_service/google/class.tx_wecmap_marker_google.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_backend.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_domainmgr.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Map implementation for the Google Maps mapping service.
@@ -87,7 +87,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		$this->icons = array();
 
 		if(!$key) {
-			$domainmgr = t3lib_div::makeInstance('tx_wecmap_domainmgr');
+			$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_domainmgr');
 			$this->key = $domainmgr->getKey();
 		} else {
 			$this->key = $key;
@@ -136,7 +136,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	function addControl($name) {
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': adding control '.$name, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': adding control '.$name, 'wec_map_api');
 		}
 		// devlog end
 		switch ($name)
@@ -177,7 +177,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 			default:
 				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': ' . $name . '  not supported for addControl()', 'wec_map_api');
+					\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': ' . $name . '  not supported for addControl()', 'wec_map_api');
 				}
 				break;
 		}
@@ -241,14 +241,14 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': starting map drawing', 'wec_map_api');
-			t3lib_div::devLog($this->mapName.': API key: '.$this->key, 'wec_map_api');
-			t3lib_div::devLog($this->mapName.': domain: '.t3lib_div::getIndpEnv('HTTP_HOST'), 'wec_map_api');
-			t3lib_div::devLog($this->mapName.': map type: '.$this->type, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': starting map drawing', 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': API key: '.$this->key, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': domain: '.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST'), 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': map type: '.$this->type, 'wec_map_api');
 		}
 		// devlog end
 
-		$lang = t3lib_div::readLLfile('EXT:wec_map/map_service/google/locallang.xml',$this->lang);
+		$lang = \TYPO3\CMS\Core\Utility\GeneralUtility::readLLfile('EXT:wec_map/map_service/google/locallang.xml',$this->lang);
 
 		$hasThingsToDisplay = $this->hasThingsToDisplay();
 		$hasHeightWidth = $this->hasHeightWidth();
@@ -261,14 +261,14 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 			$htmlContent .= $this->mapDiv();
 
-			$get = t3lib_div::_GPmerged('tx_wecmap_api');
+			$get = \TYPO3\CMS\Core\Utility\GeneralUtility::_GPmerged('tx_wecmap_api');
 
 			// if we're forcing static display, skip the js
 			if($this->static && ($this->staticMode == 'force' || ($this->staticUrlParam && intval($get['static']) == 1))) {
 				return $htmlContent;
 			}
 
-			$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
+			$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
 //			$apiURL = tx_wecmap_backend::getExtConf('apiURL');
 //			$apiURL = sprintf($apiURL, $this->lang);
@@ -277,9 +277,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 			if(tx_wecmap_backend::getExtConf('useOwnJS'))
 			{
-				$mmURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/markermanager.js';
-				$ibURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/infobubble.js';
-				$omURL  = t3lib_extMgm::siteRelPath('wec_map') . 'contribJS/oms.min.js';
+				$mmURL  = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'contribJS/markermanager.js';
+				$ibURL  = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'contribJS/infobubble.js';
+				$omURL  = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'contribJS/oms.min.js';
 			}
 			else
 			{
@@ -289,13 +289,13 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			}
 
 			if (TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': loading API from URL: '.$apiURL, 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': loading API from URL: '.$apiURL, 'wec_map_api');
 			}
 
 			/* If we're in the frontend, use TSFE.  Otherwise, include JS manually. */
 			$jsDir = tx_wecmap_backend::getExtConf('jsDir');
 			if ( empty( $jsDir ) )
-				$jsDir = t3lib_extMgm::siteRelPath('wec_map') . 'res/';
+				$jsDir = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'res/';
 			$jsFile  = $jsDir . 'wecmap.js';
 			$jsFile2 = $jsDir . 'copyrights.js';
 			$jsFile3 = $jsDir . 'wecmap_backend.js';
@@ -312,9 +312,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				$htmlContent .= '<script src="'.$apiURL.'" type="text/javascript"></script>';
 				if(tx_wecmap_backend::getExtConf('useOwnJS'))
 				{
-					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $mmURL . '" type="text/javascript"></script>';
-					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $ibURL . '" type="text/javascript"></script>';
-					$htmlContent .= '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $omURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $mmURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $ibURL . '" type="text/javascript"></script>';
+					$htmlContent .= '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $omURL . '" type="text/javascript"></script>';
 				}
 				else
 				{
@@ -322,9 +322,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 					$htmlContent .= '<script src="' . $ibURL . '" type="text/javascript"></script>';
 					$htmlContent .= '<script src="' . $omURL . '" type="text/javascript"></script>';
 				}
-				$htmlContent .= ( $jsFile  ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
-				              . ( $jsFile2 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )
-				              . ( $jsFile3 ? '<script src="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') . $jsFile3 . '" type="text/javascript"></script>' : '' )
+				$htmlContent .= ( $jsFile  ? '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $jsFile  . '" type="text/javascript"></script>' : '' )
+				              . ( $jsFile2 ? '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $jsFile2 . '" type="text/javascript"></script>' : '' )
+				              . ( $jsFile3 ? '<script src="' . \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL') . $jsFile3 . '" type="text/javascript"></script>' : '' )
 				              ;
 			}
 
@@ -344,7 +344,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 				foreach ($this->groups as $key => $group ) {
 					// TODO: devlog start
 					if(TYPO3_DLOG) {
-						t3lib_div::devLog($this->mapName.': adding '. $group->getMarkerCount() .' markers from group '.$group->id, 'wec_map_api');
+						\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': adding '. $group->getMarkerCount() .' markers from group '.$group->id, 'wec_map_api');
 					}
 					// devlog end
 					$jsContent = array_merge($jsContent, $group->drawMarkerJS());
@@ -357,11 +357,11 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$jsContent[] = $this->js_loadCalls();
 			$jsContent[] = $this->js_drawMapEnd();
 
-//echo t3lib_div::debug( $jsContent );
+//echo \TYPO3\CMS\Core\Utility\GeneralUtility::debug( $jsContent );
 
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': finished map drawing', 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': finished map drawing', 'wec_map_api');
 			}
 			// devlog end
 
@@ -369,7 +369,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 			$jsContentString = implode(chr(10), $jsContent);
 
 			// then return it
-			return $htmlContent.t3lib_div::wrapJS($jsContentString);
+			return $htmlContent.\TYPO3\CMS\Core\Utility\GeneralUtility::wrapJS($jsContentString);
 
 		} else if (!$hasThingsToDisplay) {
 			$error = '<p>'.$this->getLL($lang, 'error_nothingToDisplay' ).'</p>';
@@ -378,7 +378,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		}
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': finished map drawing with errors', 'wec_map_api', 2);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': finished map drawing with errors', 'wec_map_api', 2);
 		}
 		return $error;
 	}
@@ -427,7 +427,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return void
 	 **/
 	function generateStaticMap($markers, $center = true, $alt = '') {
-		$scheme = (t3lib_div::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
+		$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 
 		if($center) {
 			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
@@ -452,10 +452,9 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -473,7 +472,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 **/
-	function &addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByStringWithTabs($string, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		// first split the string into it's components. It doesn't need to be perfect, it's just
 		// put together on the other end anyway
@@ -481,8 +480,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		list($street, $city, $state, $country) = $address;
 
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -500,11 +498,11 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @param	integer		Maximum zoom level for marker to appear.
 	 * @return	marker object
 	 **/
-	function &addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByTCAWithTabs($table, $uid, $tabLabels, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		$uid = intval($uid);
 
 		// first get the mappable info from the TCA
-		t3lib_div::loadTCA($table);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 		$tca = $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map'];
 
 		if(!$tca) return false;
@@ -533,8 +531,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 		}
 
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -552,7 +549,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	 * @return	marker object
 	 * @todo	Zoom levels are very Google specific.  Is there a generic way to handle this?
 	 */
-	function &addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
+	function addMarkerByLatLongWithTabs($lat, $long, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
@@ -564,7 +561,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 		if($lat != '' && $long != '') {
 			$group = $this->addGroup($minzoom, $maxzoom);
-			$marker = t3lib_div::makeInstance(
+			$marker = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
 			                          $this->getMarkerClassName(),
 			                          $group->getMarkerCount(),
 									  $lat,
@@ -637,8 +634,7 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 	function setCenterByAddress($street, $city, $state, $zip, $country = null) {
 
 		/* Geocode the address */
-		$lookupTable = t3lib_div::makeInstance('tx_wecmap_cache');
-		$latlong = $lookupTable->lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country, $this->key);
 		$this->lat = $latlong['lat'];
 		$this->long = $latlong['long'];
 	}
@@ -670,22 +666,22 @@ class tx_wecmap_map_google extends tx_wecmap_map {
 
 		return '
 function InitWecMapGoogleV3Labels() {
-	WecMap.labels.startaddress = "' . $this->getLL($lang, 'startaddress') .'";
-	WecMap.labels.endaddress = "'   . $this->getLL($lang, 'endaddress')   .'";
-	WecMap.labels.OSM = "'          . $this->getLL($lang, 'OSM')          .'";
-	WecMap.labels.OSM_alt = "'      . $this->getLL($lang, 'OSM-alt')      .'";
-	WecMap.labels.OSM_bike = "'     . $this->getLL($lang, 'OSM-bike')     .'";
-	WecMap.labels.OSM_bike_alt = "' . $this->getLL($lang, 'OSM-bike-alt') .'";
-	WecMap.labels.locale =  "'      . $this->lang . '";
+	WecMap.labels.startaddress = ' . json_encode( $this->getLL($lang, 'startaddress') ) .';
+	WecMap.labels.endaddress = '   . json_encode( $this->getLL($lang, 'endaddress') )   .';
+	WecMap.labels.OSM = '          . json_encode( $this->getLL($lang, 'OSM') )          .';
+	WecMap.labels.OSM_alt = '      . json_encode( $this->getLL($lang, 'OSM-alt') )      .';
+	WecMap.labels.OSM_bike = '     . json_encode( $this->getLL($lang, 'OSM-bike') )     .';
+	WecMap.labels.OSM_bike_alt = ' . json_encode( $this->getLL($lang, 'OSM-bike-alt') ) .';
+	WecMap.labels.locale =  '      . json_encode( $this->lang ) . ';
 	// error messages
-	WecMap.labels.INVALID_REQUEST = "'        . $this->getLL($lang, 'INVALID_REQUEST') .'";
-	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = "' . $this->getLL($lang, 'MAX_WAYPOINTS_EXCEEDED') .'";
-	WecMap.labels.NOT_FOUND = "'              . $this->getLL($lang, 'NOT_FOUND') .'";
-	WecMap.labels.OK = "'                     . $this->getLL($lang, 'OK') .'";
-	WecMap.labels.OVER_QUERY_LIMIT = "'       . $this->getLL($lang, 'OVER_QUERY_LIMIT') .'";
-	WecMap.labels.REQUEST_DENIED = "'         . $this->getLL($lang, 'REQUEST_DENIED') .'";
-	WecMap.labels.UNKNOWN_ERROR = "'          . $this->getLL($lang, 'UNKNOWN_ERROR') .'";
-	WecMap.labels.ZERO_RESULTS = "'           . $this->getLL($lang, 'ZERO_RESULTS') .'";
+	WecMap.labels.INVALID_REQUEST = '        . json_encode( $this->getLL($lang, 'INVALID_REQUEST') ) .';
+	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = ' . json_encode( $this->getLL($lang, 'MAX_WAYPOINTS_EXCEEDED') ) .';
+	WecMap.labels.NOT_FOUND = '              . json_encode( $this->getLL($lang, 'NOT_FOUND') ) .';
+	WecMap.labels.OK = '                     . json_encode( $this->getLL($lang, 'OK') ) . ';
+	WecMap.labels.OVER_QUERY_LIMIT = '       . json_encode( $this->getLL($lang, 'OVER_QUERY_LIMIT') ) .';
+	WecMap.labels.REQUEST_DENIED = '         . json_encode( $this->getLL($lang, 'REQUEST_DENIED') ) .';
+	WecMap.labels.UNKNOWN_ERROR = '          . json_encode( $this->getLL($lang, 'UNKNOWN_ERROR') ) .';
+	WecMap.labels.ZERO_RESULTS = '           . json_encode( $this->getLL($lang, 'ZERO_RESULTS') ) .';
 
 	WecMap.osmMapType.name = WecMap.labels.OSM;
 	WecMap.osmMapType.alt = WecMap.labels.OSM_alt;
@@ -799,9 +795,9 @@ function js_setMapType($type) {
 	function js_icons() {
 		/* If we're in the backend, get an absolute path.  Frontend can use a relative path. */
 		if (TYPO3_MODE=='BE')	{
-			$path = t3lib_div::getIndpEnv('TYPO3_SITE_URL').t3lib_extMgm::siteRelPath('wec_map');
+			$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map');
 		} else {
-			$path = t3lib_extMgm::siteRelPath('wec_map');
+			$path = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map');
 		}
 		// add default-icon
 		$this->addMarkerIcon(array(
@@ -872,7 +868,7 @@ function js_setMapType($type) {
 		if(!isset($this->lat) or !isset($this->long)) {
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': setting center to '.$lat.', '.$long, 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': setting center to '.$lat.', '.$long, 'wec_map_api');
 			}
 			// devlog end
 			$this->setCenter($lat, $long);
@@ -891,11 +887,11 @@ function js_setMapType($type) {
 			$hooks =& $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_api']['centerAndZoomHook'];
 			$hookReference = null;
 			foreach ($hooks as $hookFunction)	{
-				t3lib_div::callUserFunction($hookFunction, $hookParameters, $hookReference);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($hookFunction, $hookParameters, $hookReference);
 				// devlog start
 				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': Called hook. Potentially new lat/long/zoom', 'wec_map_api', 2);
-					t3lib_div::devLog($this->mapName.': Lat: '.$this->lat.' Long: '.$this->long.' Zoom: '.$this->zoom, 'wec_map_api', 2);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Called hook. Potentially new lat/long/zoom', 'wec_map_api', 2);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Lat: '.$this->lat.' Long: '.$this->long.' Zoom: '.$this->zoom, 'wec_map_api', 2);
 				}
 				// devlog end
 			}
@@ -921,7 +917,7 @@ function js_setMapType($type) {
 		}
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': set zoom '.$zoom, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': set zoom '.$zoom, 'wec_map_api');
 		}
 		// devlog end
 		return $zoom;
@@ -985,14 +981,14 @@ function js_setMapType($type) {
 		if(!empty($this->width) && !empty($this->height)) {
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': height: '.$this->height.', width: '.$this->width, 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': height: '.$this->height.', width: '.$this->width, 'wec_map_api');
 			}
 			// devlog end
 			return true;
 		} else {
 			// TODO: devlog start
 			if(TYPO3_DLOG) {
-				t3lib_div::devLog($this->mapName.': width or height missing', 'wec_map_api', 3);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': width or height missing', 'wec_map_api', 3);
 			}
 			// devlog end
 			return false;
@@ -1012,13 +1008,13 @@ function js_setMapType($type) {
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
 			if($prefillAddress && $divID) {
-				t3lib_div::devLog($this->mapName.': enabling directions with prefill and written dirs', 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': enabling directions with prefill and written dirs', 'wec_map_api');
 			} else if($prefillAddress && !$divID) {
-				t3lib_div::devLog($this->mapName.': enabling directions with prefill and without written dirs', 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': enabling directions with prefill and without written dirs', 'wec_map_api');
 			} else if(!$prefillAddress && $divID) {
-				t3lib_div::devLog($this->mapName.': enabling directions without prefill but with written dirs', 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': enabling directions without prefill but with written dirs', 'wec_map_api');
 			} else if(!$prefillAddress && !$divID) {
-				t3lib_div::devLog($this->mapName.': enabling directions without prefill and written dirs', 'wec_map_api');
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': enabling directions without prefill and written dirs', 'wec_map_api');
 			}
 		}
 		// devlog end
@@ -1049,7 +1045,7 @@ function js_setMapType($type) {
 
 		// devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': Enabling static maps: '.$mode.':'.$extent.':'.$urlParam.':'.$limit, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Enabling static maps: '.$mode.':'.$extent.':'.$urlParam.':'.$limit, 'wec_map_api');
 		}
 		// devlog end
 	}
@@ -1065,7 +1061,7 @@ function js_setMapType($type) {
 
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': Showing info bubble on load', 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Showing info bubble on load', 'wec_map_api');
 		}
 		// devlog end
 	}
