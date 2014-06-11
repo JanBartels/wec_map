@@ -209,17 +209,17 @@ class tx_wecmap_backend {
 
 		/* If the new lat/long are empty, delete our cached entry */
 		if (empty($newlat) && empty($newlong) && !empty($origlat) && !empty($origlong)) {
-			$cache->delete($street, $city, $state, $zip, $country);
+			tx_wecmap_cache::delete($street, $city, $state, $zip, $country);
 		}
 
 		/* If the lat/long changed, then insert a new entry into the cache or update it. */
 		if((($newlat != $origlat) or ($newlong != $origlong)) and (!empty($newlat) && !empty($newlong)) and (is_numeric($newlat) && is_numeric($newlong))) {
-			$cache->insert($street, $city, $state, $zip, $country, $newlat, $newlong);
+			tx_wecmap_cache::insert($street, $city, $state, $zip, $country, $newlat, $newlong);
 		}
 
 		/* Get the lat/long and status from the geocoder */
-		$latlong = $cache->lookup($street, $city, $state, $zip, $country);
-		$status = $cache->status($street, $city, $state, $zip, $country);
+		$latlong = tx_wecmap_cache::lookup($street, $city, $state, $zip, $country);
+		$status = tx_wecmap_cache::status($street, $city, $state, $zip, $country);
 
 		switch($status) {
 			case -1:
