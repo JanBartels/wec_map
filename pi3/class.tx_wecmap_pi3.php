@@ -327,10 +327,8 @@ class tx_wecmap_pi3 extends tslib_pibase {
 						$marker = $map->addMarkerByTCA($table, $data['uid'], $title, $desc, 0, 18, $tconf['icon.']['iconID']);
 					}
 
-t3lib_div::debug("vorher", $marker );
 					if ( $overlappingMarkerLatDev && $overlappingMarkerLongDev )
 						$map->handleOverlappingMarker( $marker, $overlappingMarkerLatDev, $overlappingMarkerLongDev );
-t3lib_div::debug("nachher", $marker );
 
 					// build parameters to pass to the hook
 					$params = array('table' => $table, 'data' => $data, 'markerObj' => &$marker, 'conf' => $tconf );
