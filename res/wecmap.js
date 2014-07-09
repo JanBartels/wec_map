@@ -625,7 +625,8 @@ WecMapGoogleV3.prototype.openDirectionsToHere = function( groupId, markerId ) {
 	form.style.display = "none";
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "block";
-	this.infoWindow.draw();
+        this.infoWindow.setContent(document.getElementById(this.mapId + '_marker_' + groupId + '_' + markerId));
+        this.infoWindow.open();
 	var input = document.getElementById( 'tx-wecmap-directions-from-' + this.mapId );
 	this.autocomplete = new google.maps.places.Autocomplete(input);
 	this.autocomplete.bindTo('bounds', this.map);
@@ -638,7 +639,8 @@ WecMapGoogleV3.prototype.openDirectionsFromHere = function( groupId, markerId ) 
 	form.style.display = "block";
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "none";
-	this.infoWindow.draw();
+        this.infoWindow.setContent(document.getElementById(this.mapId + '_marker_' + groupId + '_' + markerId));
+        this.infoWindow.open();
 	var input = document.getElementById( 'tx-wecmap-directions-to-' + this.mapId );
 	this.autocomplete = new google.maps.places.Autocomplete(input);
 	this.autocomplete.bindTo('bounds', this.map);
