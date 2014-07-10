@@ -158,6 +158,11 @@ class tx_wecmap_cache {
 				$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('cn_short_en', 'static_countries', 'cn_iso_3='.$GLOBALS['TYPO3_DB']->fullQuoteStr($country,static_countries));
 				$newCountry = $rows[0]['cn_short_en'];
 				if(!empty($newCountry)) $country = $newCountry;
+			} else {
+				// try to find a country with that two character code
+				$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('cn_short_en', 'static_countries', 'cn_short_local='.$GLOBALS['TYPO3_DB']->fullQuoteStr($country,static_countries));
+				$newCountry = $rows[0]['cn_short_en'];
+				if(!empty($newCountry)) $country = $newCountry;
 			}
 		}
 
