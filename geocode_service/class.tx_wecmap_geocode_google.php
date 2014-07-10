@@ -69,7 +69,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 		{
 			// format address for Google search based on local address-format for given $country
 
-			if(TYPO3_DLOG || 1) {
+			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Google V3 lookup', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country ) );
 			}
 
@@ -79,7 +79,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 
 			// convert $country to ISO3
 			$countryCodeType = tx_staticinfotables_div::isoCodeType($country);
-			if(TYPO3_DLOG || 1) {
+			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Google V3: countryCodeType for '.$country, 'wec_map_geocode', -1, array( countryCodeType => $countryCodeType ) );
 			}
 			if       ($countryCodeType == 'nr') {
@@ -113,7 +113,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 				}
 			}
 
-			if(TYPO3_DLOG || 1) {
+			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Google V3: countryArray for '.$country, 'wec_map_geocode', -1, $countryArray);
 			}
 
@@ -125,7 +125,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 
 			// format address accordingly
 			$addressString = $this->formatAddress(',', $street, $city, $zip, $state, $country);  // $country: alpha-3 ISO-code (e. g. DEU)
-			if(TYPO3_DLOG || 1) {
+			if(TYPO3_DLOG) {
 				t3lib_div::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
 			}
 		}
@@ -160,7 +160,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 		*/
 
 		// request Google-service and parse JSON-response
-		if(TYPO3_DLOG || 1) {
+		if(TYPO3_DLOG) {
 			t3lib_div::devLog('Google V3: URL '.$url, 'wec_map_geocode', -1 );
 		}
 
@@ -179,7 +179,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 		} while ($attempt <= 3 && $response_obj['status'] == 'OVER_QUERY_LIMIT');
 
 		$latlong = array();
-		if(TYPO3_DLOG || 1) {
+		if(TYPO3_DLOG) {
 			$addressArray = array(
 				'street' => $street,
 				'city' => $city,
@@ -199,7 +199,7 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 			if (TYPO3_DLOG) t3lib_div::devLog('Google V3 Answer successful', 'wec_map_geocode', -1 );
 			$latlong['lat'] = $response_obj['results'][0]['geometry']['location']['lat'];
 			$latlong['long'] = $response_obj['results'][0]['geometry']['location']['lng'];
-			if (TYPO3_DLOG || 1) t3lib_div::devLog('Google V3 Answer', 'wec_map_geocode', -1, $latlong);
+			if (TYPO3_DLOG) t3lib_div::devLog('Google V3 Answer', 'wec_map_geocode', -1, $latlong);
 		}
 		else if (  $response_obj['status'] == 'REQUEST_DENIED'
 		        || $response_obj['status'] == 'INVALID_REQUEST'
