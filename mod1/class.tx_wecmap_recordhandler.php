@@ -132,8 +132,9 @@ class tx_wecmap_recordhandler {
 	 * @return String
 	 **/
 	function getJS() {
-		global $LANG;
+		global $LANG,$BACK_PATH;
 		$recordHandlerPath = t3lib_extMgm::extRelPath('wec_map') . 'mod1/tx_wecmap_recordhandler_ai.php';
+		$ajaxHandlerPath = $BACK_PATH . 'ajax.php';
 		$js = '<script type="text/javascript" src="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'typo3/contrib/prototype/prototype.js"></script>'.chr(10).
 			  '<script type="text/javascript" src="' . $GLOBALS['BACK_PATH'] . '../' . t3lib_extMgm::siteRelPath('wec_map') . 'contrib/tablesort/fastinit.js"></script>'.chr(10).
 			  '<script type="text/javascript" src="' . $GLOBALS['BACK_PATH'] . '../' . t3lib_extMgm::siteRelPath('wec_map') . 'contrib/tablesort/tablesort.js"></script>'.chr(10).
@@ -207,15 +208,16 @@ class tx_wecmap_recordhandler {
 
 				function deleteAll() {
 					// Setup the parameters and make the ajax call
-					var pars = \'?cmd=deleteAll\';
-				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', \'' . $recordHandlerPath .'\',
-				          {method: \'post\', parameters: pars, onComplete:clearTable});
+					var ajaxUrl = \''.$ajaxHandlerPath.'?ajaxID=txwecmapM1::deleteAll\';
+				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', ajaxUrl,
+				          {method: \'post\', onComplete:clearTable});
 				}
 
 				function deleteRecord(id) {
 					// Setup the parameters and make the ajax call
-					var pars = \'?cmd=deleteSingle&record=\'+id;
-				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', \'' . $recordHandlerPath .'\',
+					var ajaxUrl = \''.$ajaxHandlerPath.'?ajaxID=txwecmapM1::deleteSingle\';
+					var pars = { record: id };
+				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', ajaxUrl,
 				          {method: \'post\', parameters: pars, onComplete:clearRow(id)});
 				}
 
@@ -257,8 +259,9 @@ class tx_wecmap_recordhandler {
 					var link = getEditLink(id);
 					editButton.update(link);
 					// Setup the parameters and make the ajax call
-					var pars = \'?cmd=saveRecord&record=\'+id+\'&latitude=\'+latValue+\'&longitude=\'+longValue;
-				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', \'' . $recordHandlerPath .'\',
+					var ajaxUrl = \''.$ajaxHandlerPath.'?ajaxID=txwecmapM1::saveRecord\';
+					var pars = { record: id, latitude: latValue, longitude: longValue };
+				    var myAjax = new Ajax.Updater(\'deleteAllStatus\', ajaxUrl,
 				          {method: \'post\', parameters: pars, onComplete:unEdit(id,longValue,latValue)});
 				}
 
@@ -312,10 +315,12 @@ class tx_wecmap_recordhandler {
 				function updatePagination(page) {
 					var count = $(\'recordCount\');
 					var number = count.innerHTML;
-					var pars = \'?cmd=updatePagination&page=\'+page+\'&itemsPerPage='. $this->itemsPerPage .'&count=\'+number;
-				    var myAjax = new Ajax.Updater(\'pagination\', \'' . $recordHandlerPath .'\',
+					var ajaxUrl = \''.$ajaxHandlerPath.'?ajaxID=txwecmapM1::updatePagination\';
+					var pars = { page: page, itemsPerPage:'. $this->itemsPerPage .', count: number };
+				    var myAjax = new Ajax.Updater(\'pagination\', ajaxUrl,
 				          {method: \'post\', parameters: pars});
 				}
+
 			</script>';
 
 		return $js;

@@ -31,6 +31,13 @@ t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi1', 'FILE:EXT:wec_map/pi1/flexform
 t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi2', 'FILE:EXT:wec_map/pi2/flexform_ds.xml');
 t3lib_extMgm::addPiFlexFormValue($_EXTKEY.'_pi3', 'FILE:EXT:wec_map/pi3/flexform_ds.xml');
 
+// register Ajax scripts
+$TYPO3_CONF_VARS['BE']['AJAX']['txwecmapM1::deleteAll'       ] = t3lib_extMgm::extPath($_EXTKEY).'mod1/ajax.php:tx_wecmap_module1_ajax->ajaxDeleteAll';
+$TYPO3_CONF_VARS['BE']['AJAX']['txwecmapM1::deleteSingle'    ] = t3lib_extMgm::extPath($_EXTKEY).'mod1/ajax.php:tx_wecmap_module1_ajax->ajaxDeleteSingle';
+$TYPO3_CONF_VARS['BE']['AJAX']['txwecmapM1::updatePagination'] = t3lib_extMgm::extPath($_EXTKEY).'mod1/ajax.php:tx_wecmap_module1_ajax->ajaxUpdatePagination';
+$TYPO3_CONF_VARS['BE']['AJAX']['txwecmapM1::saveRecord'      ] = t3lib_extMgm::extPath($_EXTKEY).'mod1/ajax.php:tx_wecmap_module1_ajax->ajaxSaveRecord';
+$TYPO3_CONF_VARS['BE']['AJAX']['txwecmapM1::batchGeocode'    ] = t3lib_extMgm::extPath($_EXTKEY).'mod1/ajax.php:tx_wecmap_module1_ajax->ajaxBatchGeocode';
+
 /* Add static TS template for plugins */
 t3lib_extMgm::addStaticFile($_EXTKEY,'static/','WEC Map API');
 t3lib_extMgm::addStaticFile($_EXTKEY,'pi3/static/','WEC Table Map');

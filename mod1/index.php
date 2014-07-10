@@ -357,13 +357,16 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 							$(\'startGeocoding\').disable();
 							$(\'status\').setStyle({display: \'block\'});
 
-							updater = new Ajax.PeriodicalUpdater(\'status\', \'' . $updaterPath . '\', { method: \'get\', frequency: 5, decay: 10 });
+							var ajaxUrl = \''.$this->doc->backPath . 'ajax.php?ajaxID=txwecmapM1::batchGeocode\';
+							updater = new Ajax.PeriodicalUpdater(\'status\', ajaxUrl, { method: \'get\', frequency: 5, decay: 10 });
+
 						}
 						</script>';
 
-		require_once(t3lib_extMgm::extPath('wec_map').'mod1/class.tx_wecmap_batchgeocode_util.php');
-		$content[] = tx_wecmap_batchgeocode_util::getStatusBar($processedAddresses, $totalAddresses, false);
+		require_once(t3lib_extMgm::extPath('wec_map').'mod1/ajax.php');
+		$content[] = tx_wecmap_module1_ajax::getStatusBar($processedAddresses, $totalAddresses, false);
 		$content[] = '<input id="startGeocoding" type="submit" value="'.$LANG->getLL('startGeocoding').'" onclick="startGeocode(); return false;"/>';
+
 
 		return implode(chr(10), $content);
 	}
