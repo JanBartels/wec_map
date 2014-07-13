@@ -257,8 +257,8 @@ class tx_wecmap_geocode_google extends t3lib_svbase {
 			 * Geocoding worked!
 			 */
 			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 Answer successful', 'wec_map_geocode', -1 );
-			$latlong['lat'] = $response_obj['results'][0]['geometry']['location']['lat'];
-			$latlong['long'] = $response_obj['results'][0]['geometry']['location']['lng'];
+			$latlong['lat'] = floatval( $response_obj['results'][0]['geometry']['location']['lat'] );
+			$latlong['long'] = floatval( $response_obj['results'][0]['geometry']['location']['lng'] );
 			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 Answer', 'wec_map_geocode', -1, $latlong);
 		}
 		else if (  $response_obj['status'] == 'REQUEST_DENIED'
