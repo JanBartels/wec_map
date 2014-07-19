@@ -28,9 +28,9 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_marker.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_backend.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_marker.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_backend.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Marker implementation for the Google Maps mapping service.
@@ -72,8 +72,8 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 
 		global $LANG;
 		if(!is_object($LANG)) {
-			require_once(t3lib_extMgm::extPath('lang').'lang.php');
-			$LANG = t3lib_div::makeInstance('language');
+			#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lang').'lang.php');
+			$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 
 			if(TYPO3_MODE == 'BE') {
 				$LANG->init($BE_USER->uc['lang']);
@@ -96,18 +96,18 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 
 		if(is_array($title)) {
 			foreach( $title as $value ) {
-				$this->title[] = addslashes($value);
+				$this->title[] = $value;
 			}
 		} else {
-			$this->title[] = addslashes($title);
+			$this->title[] = $title;
 		}
 
 		if(is_array($description)) {
 			foreach($description as $value ) {
-				$this->description[] = $this->filterNL2BR(addslashes($value));
+				$this->description[] = $this->filterNL2BR($value);
 			}
 		} else {
-			$this->description[] = $this->filterNL2BR(addslashes($description));
+			$this->description[] = $this->filterNL2BR($description);
 		}
 
 		$this->color = $color;
@@ -131,7 +131,11 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 	function writeJS() {
 		$markerContent = array();
 		foreach ($this->tabLabels as $index => $label) {
-			$markerContent[] = $this->title[$index] . $this->description[$index];
+			$markerContent[] = json_encode( $this->title[$index] ) . '+' . json_encode( $this->description[$index] );
+		}
+		$tabLabels = array();
+		foreach ($this->tabLabels as $index => $label) {
+			$tabLabels[] = json_encode( $label );
 		}
 
 		if ($this->directions) {
@@ -143,11 +147,21 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 						   'longitude' => $this->longitude,
 						   'dirTitle' => htmlspecialchars(strip_tags($this->title[0]))
 						 );
-			$markerContent[0] .= tx_wecmap_shared::render( $data, $this->directionsMenuConf );
+
+			if ( is_array( $this->directionsMenuConf ) )
+				$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $this->directionsMenuConf ) );
+			else
+			{
+				// Workaround for EXT:cal
+				// get default directionsMenu
+				$directionsMenuConf = $GLOBALS['TSFE']->tmpl->setup['tx_wecmap_api.']['directionsMenu.'];
+				if ( is_array( $directionsMenuConf ) )
+					$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $directionsMenuConf ) );
+			}
 		}
 
 		return '
-WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->index . ', [\''  . implode('\',\'', $this->tabLabels) . '\'], [\'' . implode('\',\'', $markerContent) . '\']);';
+WecMap.addBubble( "' . $this->mapName . '", ' . $this->groupId . ', ' . $this->index . ', ['  . implode(',', $tabLabels) . '], [' . implode(',', $markerContent) . ']);';
 	}
 
 	/**
@@ -169,9 +183,16 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 		if (empty($this->title[0]) && $this->directions) {
 			$this->title[0] = 'Address';
 		}
-		$js = 'WecMap.addMarker("'. $this->mapName . '", "' . $this->index . '", [' . $this->latitude . ',' . $this->longitude . '], "' . $this->iconID . '", \''. htmlspecialchars(strip_tags($this->title[0])) .'\', '.$this->groupId.', \''.$this->getUserAddress().'\');';
+		$js = "WecMap.addMarker( "
+		                       . "'". $this->mapName . "', " . $this->index . ", "
+		                       . "[" . $this->latitude . "," . $this->longitude . "], "
+		                       . "'" . $this->iconID . "', "
+		                       . json_encode(htmlspecialchars(strip_tags($this->title[0]))) .", "
+		                       . $this->groupId . ", "
+		                       . json_encode($this->getUserAddress())
+		                     .");";
 		if ( $this->isDraggable )
-			$js .= 'WecMap.setDraggable("'. $this->mapName . '", ' . $this->groupId . ', "' . $this->index . '", true);';
+			$js .= "WecMap.setDraggable('". $this->mapName . "', " . $this->groupId . ", " . $this->index . ", true);";
 		return $js;
 	}
 
@@ -204,12 +225,12 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 			$this->tabLabels = array($GLOBALS['LANG']->getLL('info'));
 		}
 
-		$this->tabLabels[] = addslashes($tabLabel);
-		$this->title[] = addslashes($title);
-		$this->description[] = addslashes($description);
+		$this->tabLabels[] = $tabLabel;
+		$this->title[] = $title;
+		$this->description[] = $description;
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': manually adding tab to marker '.$this->index.' with title '. $title, 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': manually adding tab to marker '.$this->index.' with title '. $title, 'wec_map_api');
 		}
 		// devlog end
 	}
@@ -235,7 +256,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 
 
 					$select = $streetField.', '.$cityField.', '.$stateField.', '.$zipField.', '.$country;
-					$selectArray = t3lib_div::trimExplode(',', $select, true);
+					$selectArray = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $select, true);
 					$select = implode(',', $selectArray);
 
 					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.intval($feuser_id));
@@ -256,7 +277,7 @@ WecMap.addBubble("' . $this->mapName . '", ' . $this->groupId . ', ' . $this->in
 	function getClickJS() {
 		// TODO: devlog start
 		if(TYPO3_DLOG) {
-			t3lib_div::devLog($this->mapName.': adding marker '.$this->index.'('.strip_tags($this->title[0]).strip_tags($this->description[0]).') to sidebar', 'wec_map_api');
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': adding marker '.$this->index.'('.strip_tags($this->title[0]).strip_tags($this->description[0]).') to sidebar', 'wec_map_api');
 		}
 		// devlog end
 		return 'WecMap.jumpTo(\'' . $this->mapName . '\', ' . $this->groupId . ', ' . $this->index . ', ' . $this->calculateClickZoom() . ');';

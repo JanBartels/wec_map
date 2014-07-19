@@ -27,8 +27,8 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map') . 'class.tx_wecmap_backend.php');
-require_once(PATH_t3lib . 'class.t3lib_install.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map') . 'class.tx_wecmap_backend.php');
+#require_once(PATH_t3lib . 'class.t3lib_install.php');
 
 /**
  * Domain <=> API Key manager class for the WEC Map extension.  This class
@@ -55,7 +55,7 @@ class tx_wecmap_domainmgr {
 		if($isOld) return $keyConfig;
 
 		// get current domain
-		if($domain == null)	$domain = t3lib_div::getIndpEnv('HTTP_HOST');
+		if($domain == null)	$domain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 
 		// loop through all the domain->key pairs we have to find the right one
 		$found = false;
@@ -87,7 +87,7 @@ class tx_wecmap_domainmgr {
 		if(is_array($keyConfig)) return false;
 
 		$key = $keyConfig;
-		$domain = t3lib_div::getIndpEnv('HTTP_HOST');
+		$domain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 		$this->saveApiKey(array($domain => $key));
 
 		return true;
@@ -141,7 +141,7 @@ class tx_wecmap_domainmgr {
 	 */
 	function getApiKeys() {
 
-		require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_backend.php');
+#		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_backend.php');
 		$apiKeys = tx_wecmap_backend::getExtConf('apiKey.google');
 
 		return $apiKeys;
@@ -159,15 +159,22 @@ class tx_wecmap_domainmgr {
 		$extConf['apiKey.']['google'] = $dataArray;
 
 		// Instance of install tool
-		$instObj = t3lib_div::makeInstance('t3lib_install');
-		$instObj->allowUpdateLocalConf = 1;
-		$instObj->updateIdentity = $this->extKey;
+		#$instObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_install');
+		#$instObj->allowUpdateLocalConf = 1;
+		#$instObj->updateIdentity = $this->extKey;
 
 		// Get lines from localconf file
-		$lines = $instObj->writeToLocalconf_control();
+		#$lines = $instObj->writeToLocalconf_control();
 
-		$instObj->setValueInLocalconfFile($lines, '$TYPO3_CONF_VARS[\'EXT\'][\'extConf\'][\''.$this->extKey.'\']', serialize($extConf));
-		$instObj->writeToLocalconf_control($lines);
+		#$instObj->setValueInLocalconfFile($lines, '$TYPO3_CONF_VARS[\'EXT\'][\'extConf\'][\''.$this->extKey.'\']', serialize($extConf));
+		#$instObj->writeToLocalconf_control($lines);
+
+        $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+        $instObj = $this->objectManager->get('TYPO3\CMS\Core\Configuration\ConfigurationManager');
+        // Get lines from localconf file
+        $lines = $instObj->getLocalConfigurationFileLocation();
+        $instObj->removeLocalConfigurationKeysByPath( array( 'EXT/extConf/'.$this->extKey ) ) ;
+        $instObj->setLocalConfigurationValueByPath( 'EXT/extConf/'.$this->extKey , serialize($extConf) );
 	}
 
 	/**
@@ -214,7 +221,7 @@ class tx_wecmap_domainmgr {
 	 **/
 	function getRequestDomain() {
 		// get domain from the current http request
-		$requestDomain = t3lib_div::getIndpEnv('HTTP_HOST');
+		$requestDomain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 
 		return array($requestDomain => '');
 	}

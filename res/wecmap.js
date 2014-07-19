@@ -246,7 +246,7 @@ function WecMapGoogleV3( mapId )
 	this.mmGroupZoom = [];
 	this.directionsRenderer = null;
 	this.directionsDivId = "";
-
+	this.autocomplete = null;
 	return this;
 }
 
@@ -573,6 +573,15 @@ WecMapGoogleV3.prototype.setDirections = function( fromAddr, toAddr) {
 			this.directionsDivId = this.mapId + '_directions';
 		this.directionsRenderer = new google.maps.DirectionsRenderer();
 		this.directionsRenderer.setMap( this.map );
+		if ( !document.getElementById( this.directionsDivId ) )
+		{
+			// Workaround for EXT:cal
+			// if directions-DIV doesn't exist, create and append it
+			var newDiv = document.createElement('div');
+		        newDiv.id = this.directionsDivId;
+		        var map = document.getElementById( this.mapId )
+        		map.parentNode.insertBefore(newDiv,map.nextSibling);
+        	}
 		this.directionsRenderer.setPanel( document.getElementById( this.directionsDivId ) );
 	}
 
@@ -616,7 +625,11 @@ WecMapGoogleV3.prototype.openDirectionsToHere = function( groupId, markerId ) {
 	form.style.display = "none";
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "block";
-	this.infoWindow.draw();
+        this.infoWindow.setContent(document.getElementById(this.mapId + '_marker_' + groupId + '_' + markerId));
+        this.infoWindow.open();
+	var input = document.getElementById( 'tx-wecmap-directions-from-' + this.mapId );
+	this.autocomplete = new google.maps.places.Autocomplete(input);
+	this.autocomplete.bindTo('bounds', this.map);
 	return false;
 }
 
@@ -626,7 +639,11 @@ WecMapGoogleV3.prototype.openDirectionsFromHere = function( groupId, markerId ) 
 	form.style.display = "block";
 	var form = document.getElementById( this.mapId + '_fromdirform_' + groupId + '_' + markerId );
 	form.style.display = "none";
-	this.infoWindow.draw();
+        this.infoWindow.setContent(document.getElementById(this.mapId + '_marker_' + groupId + '_' + markerId));
+        this.infoWindow.open();
+	var input = document.getElementById( 'tx-wecmap-directions-to-' + this.mapId );
+	this.autocomplete = new google.maps.places.Autocomplete(input);
+	this.autocomplete.bindTo('bounds', this.map);
 	return false;
 }
 

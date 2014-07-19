@@ -58,7 +58,7 @@
       </label>
       <label index="wecApiTemplateNotIncluded">
                 <![CDATA[
-          <p>Please include the WEC Map API static template on your page and make sure it's included before (above) any other WEC Map static templates.</p>
+          <p>Please include the WEC Map API static template on your page and make sure it&apos;s included before (above) any other WEC Map static templates.</p>
                 ]]>
       </label>
 
@@ -220,7 +220,7 @@
       <label index="berecord_maplabel">Carte</label>
       <label index="berecord_geocodelabel">Coordonnées</label>
       <label index="geocodeFailed">Échec du géocodage</label>
-      <label index="geocodeNotPerformed">Le géocodage n'a pas été effectué pour cette adresse</label>
+      <label index="geocodeNotPerformed">Le géocodage n&apos;a pas été effectué pour cette adresse</label>
       <label index="geocodeSuccessful">Géocodage réussi!</label>
       <label index="geocodeNoAddress">Impossible de déterminer la longitude et la latitude. Entrer une adresse et sauvegarder.</label>
       <label index="latitude">Latitude</label>
@@ -234,7 +234,7 @@
       <label index="startaddress">Lieu de départ</label>
       <label index="radius">Rayon</label>
       <label index="unit">Unité:</label>
-      <label index="endaddress">Lieu d'arrivée</label>
+      <label index="endaddress">Lieu d&apos;arrivée</label>
       <label index="OSM">OSM</label>
       <label index="OSM-bike">OSM-bike</label>
       <label index="OSM-alt">OpenStreetmap layer</label>
@@ -242,7 +242,7 @@
       <label index="pi1TemplateNotIncluded">Please include the WEC Simple Map static template on your page.</label>
       <label index="pi2TemplateNotIncluded">Please include the WEC Frontend User Map static template on your page.</label>
       <label index="pi3TemplateNotIncluded">Please include the WEC Table Map static template on your page.</label>
-      <label index="wecApiTemplateNotIncluded">&lt;p&gt;Please include the WEC Map API static template on your page and make sure it's included before (above) any other WEC Map static templates.</label>
+      <label index="wecApiTemplateNotIncluded">&lt;p&gt;Please include the WEC Map API static template on your page and make sure it&apos;s included before (above) any other WEC Map static templates.</label>
       <label index="tt_content.pi_flexform.title">Titre</label>
       <label index="tt_content.pi_flexform.description">Description</label>
       <label index="tt_content.pi_flexform.street">Adresse</label>
@@ -258,8 +258,8 @@
       <label index="tt_content.pi_flexform.controlsTitle">Contrôle de carte</label>
       <label index="tt_content.pi_flexform.conType">Afficher le type de carte</label>
       <label index="tt_content.pi_flexform.conNone">Aucun</label>
-      <label index="tt_content.pi_flexform.conScale">Afficher l'échelle</label>
-      <label index="tt_content.pi_flexform.conOverview">Afficher la vue d'ensemble</label>
+      <label index="tt_content.pi_flexform.conScale">Afficher l&apos;échelle</label>
+      <label index="tt_content.pi_flexform.conOverview">Afficher la vue d&apos;ensemble</label>
       <label index="tt_content.pi_flexform.conLargeMap">Taille des contrôles de carte</label>
       <label index="tt_content.pi_flexform.conLargeMapL">Grande</label>
       <label index="tt_content.pi_flexform.conLargeMapS">Petite</label>
@@ -275,12 +275,12 @@
       <label index="tt_content.pi_flexform.typeOCM">OpenCycleMap</label>
       <label index="tt_content.pi_flexform.tables">Table sur laquelle puiser les données</label>
       <label index="tt_content.pi_flexform.showDirs">Afficher les directions</label>
-      <label index="tt_content.pi_flexform.showInfoOnLoad">Afficher l'info bulle automatiquement</label>
-      <label index="tt_content.pi_flexform.showWrittenDirs">Afficher l'itinéraire</label>
+      <label index="tt_content.pi_flexform.showInfoOnLoad">Afficher l&apos;info bulle automatiquement</label>
+      <label index="tt_content.pi_flexform.showWrittenDirs">Afficher l&apos;itinéraire</label>
       <label index="tt_content.pi_flexform.showRadiusSearch">Afficher la recherche par rayon</label>
       <label index="tt_content.pi_flexform.kml">KML à insérer</label>
       <label index="tt_content.pi_flexform.showSidebar">Afficher les contrôles verticaux</label>
-      <label index="tt_content.pi_flexform.prefillAddress">Inclure l'adresse à partir des informations d'usager</label>
+      <label index="tt_content.pi_flexform.prefillAddress">Inclure l&apos;adresse à partir des informations d&apos;usager</label>
     </languageKey>
   </data>
   <orig_hash type="array">

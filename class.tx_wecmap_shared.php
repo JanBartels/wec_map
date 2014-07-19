@@ -38,10 +38,10 @@
  */
 class tx_wecmap_shared {
 
-	function render($data, $conf, $table = '') {
-		if (!defined('PATH_tslib')) define('PATH_tslib', t3lib_extMgm::extPath('cms').'tslib/');
-		require_once(PATH_tslib.'class.tslib_content.php');
-		$local_cObj = t3lib_div::makeInstance('tslib_cObj'); // Local cObj.
+	static function render($data, $conf, $table = '') {
+		#if (!defined('PATH_tslib')) define('PATH_tslib', \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('cms').'tslib/');
+		#require_once(PATH_tslib.'class.tslib_content.php');
+		$local_cObj =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tslib_cObj'); // Local cObj.
 		$local_cObj->start($data, $table );
     //$output = tx_wecmap_shared::cObjGet($conf, $local_cObj);
     $output = $local_cObj->cObjGet($conf);
@@ -49,7 +49,7 @@ class tx_wecmap_shared {
 		return $output;
 	}
 
-	function cObjGet($setup, &$cObj, $addKey='')	{
+	static function cObjGet($setup, &$cObj, $addKey='')	{
 		if (is_array($setup))	{
 
 			$sKeyArray = $setup;
@@ -67,9 +67,9 @@ class tx_wecmap_shared {
 	}
 
 
-	function listQueryFromCSV($field, $values, $table, $mode = 'AND') {
+	static function listQueryFromCSV($field, $values, $table, $mode = 'AND') {
 		$where = ' AND (';
-		$csv = t3lib_div::trimExplode(',', $values);
+		$csv = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $values);
 		for ( $i=0; $i < count($csv); $i++ ) {
 			if($i >= 1) {
 				$where .= ' '. $mode .' ';
@@ -80,13 +80,13 @@ class tx_wecmap_shared {
 		return $where.')';
 	}
 
-	function getAddressField($table, $field) {
-		t3lib_div::loadTCA($table);
+	static function getAddressField($table, $field) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
  		return $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map']['addressFields'][$field];
 	}
 
-	function getLatLongField($table, $field) {
-		t3lib_div::loadTCA($table);
+	static function getLatLongField($table, $field) {
+		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
  		return $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map']['latlongFields'][$field];
 	}
 }

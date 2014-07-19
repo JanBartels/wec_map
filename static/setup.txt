@@ -28,13 +28,13 @@ tx_wecmap_api {
 	directionsMenu = COA
 	directionsMenu {
 		10 = TEXT
-		10.value = <br class="dirmenu"/><div id="{field:map_id}_dirmenu_{field:groupId}_{field:index}" class="dirmenu" style="white-space: nowrap;">{LLL:EXT:wec_map/locallang_db.xml:directions}: <a href="#" class="dirmenutohere"  onclick="WecMap.openDirectionsToHere(\'{field:map_id}\', {field:groupId}, {field:index});return false;">{LLL:EXT:wec_map/locallang_db.xml:toHereFrom}</a> - <a href="#" class="dirmenufromhere" onclick="WecMap.openDirectionsFromHere(\'{field:map_id}\', {field:groupId}, {field:index});return false;">{LLL:EXT:wec_map/locallang_db.xml:fromHereTo}</a></div>
+		10.value = <br class="dirmenu"/><div id="{field:map_id}_dirmenu_{field:groupId}_{field:index}" class="dirmenu" style="white-space: nowrap;">{LLL:EXT:wec_map/locallang_db.xml:directions}: <a href="#" class="dirmenutohere"  onclick="WecMap.openDirectionsToHere('{field:map_id}', {field:groupId}, {field:index});return false;">{LLL:EXT:wec_map/locallang_db.xml:toHereFrom}</a> - <a href="#" class="dirmenufromhere" onclick="WecMap.openDirectionsFromHere('{field:map_id}', {field:groupId}, {field:index});return false;">{LLL:EXT:wec_map/locallang_db.xml:fromHereTo}</a></div>
 		10.insertData = true
 
-		20 = COA_INT
+		20 = COA
 		20 {
 			10 = TEXT
-			10.value = <div id="{field:map_id}_todirform_{field:groupId}_{field:index}" class="todirform" style="display:none"><br class="todirform" /><form action="#" class="todirform" onsubmit="WecMap.setDirections(\'{field:map_id}\', [{field:latitude}, {field:longitude}], document.getElementById(\'tx-wecmap-directions-to-{field:map_id}\').value, \'{field:dirTitle}\');return false;">
+			10.value = <div id="{field:map_id}_todirform_{field:groupId}_{field:index}" class="todirform" style="display:none"><br class="todirform" /><form action="#" class="todirform" onsubmit="WecMap.setDirections('{field:map_id}', [{field:latitude}, {field:longitude}], document.getElementById('tx-wecmap-directions-to-{field:map_id}').value, '{field:dirTitle}');return false;">
 			10.insertData = true
 
 			20 = TEXT
@@ -46,10 +46,10 @@ tx_wecmap_api {
 			30.insertData = true
 		}
 
-		30 = COA_INT
+		30 = COA
 		30 {
 			10 = TEXT
-			10.value = <div id="{field:map_id}_fromdirform_{field:groupId}_{field:index}" class="fromdirform" style="display:none"><br class="fromdirform" /><form action="#" class="fromdirform" onsubmit="WecMap.setDirections(\'{field:map_id}\', document.getElementById(\'tx-wecmap-directions-from-{field:map_id}\').value, [{field:latitude}, {field:longitude}], \'{field:dirTitle}\');return false;">
+			10.value = <div id="{field:map_id}_fromdirform_{field:groupId}_{field:index}" class="fromdirform" style="display:none"><br class="fromdirform" /><form action="#" class="fromdirform" onsubmit="WecMap.setDirections('{field:map_id}', document.getElementById('tx-wecmap-directions-from-{field:map_id}').value, [{field:latitude}, {field:longitude}], '{field:dirTitle}');return false;">
 			10.insertData = true
 
 			20 = TEXT
@@ -60,7 +60,6 @@ tx_wecmap_api {
 			30.value = <input class="startendaddresssubmit" type="submit" name="submit" value="{LLL:EXT:wec_map/locallang_db.xml:directionsMenuForm.submit}" /></form></div>
 			30.insertData = true
 		}
-		
 	}
 	
 	sidebar = COA
@@ -151,7 +150,7 @@ tx_wecmap_api {
 	
 	_CSS_DEFAULT_STYLE (
 		.tx-wecmap_map .sidebar {display:block; overflow: auto;}
-		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%;}
+		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%; width:100%; }
 		.tx-wecmap-map .infotitle { font-weight: bold; font-size: 110%;}
 		.tx-wecmap-map #copyright-control a:link,
 		.tx-wecmap-map #copyright-control a:visited,
