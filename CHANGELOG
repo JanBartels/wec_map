@@ -1,5 +1,8 @@
 3.0.5
 [FIX] marker-references corrected (issue #58808)
+[FIX] add region-parameter to geocoder-request (issue #59640)
+[FIX] Reopen info bubble after displaying the directions form. Thanks to Mathias Bruckmoser. (issue #55504)
+[NEW] ajax-calls use standard ajaxID
 
 3.0.4
 [NEW] support of autocompletion/Google places
