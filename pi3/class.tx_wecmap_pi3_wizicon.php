@@ -39,7 +39,7 @@ class tx_wecmap_pi3_wizicon {
         $LL = $this->includeLocalLang();
 
         $wizardItems['plugins_tx_wecmap_pi3'] = array(
-            'icon'=>t3lib_extMgm::extRelPath('wec_map').'pi3/ce_wiz.gif',
+            'icon'=>\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('wec_map').'pi3/ce_wiz.gif',
             'title'=>$LANG->getLLL('pi3_title',$LL),
             'description'=>$LANG->getLLL('pi3_plus_wiz_description',$LL),
             'params'=>'&defVals[tt_content][CType]=list&defVals[tt_content][list_type]=wec_map_pi3'
@@ -47,14 +47,10 @@ class tx_wecmap_pi3_wizicon {
         return $wizardItems;
     }
     function includeLocalLang()    {
-        $llFile = t3lib_extMgm::extPath('wec_map').'pi3/locallang.xml';
-		if (class_exists('t3lib_l10n_parser_Llxml')) {
-			$l10nParser = t3lib_div::makeInstance('t3lib_l10n_parser_Llxml');
-			$LOCAL_LANG = $l10nParser->getParsedData($llFile, $GLOBALS['LANG']->lang);
-		} else {
-			$LOCAL_LANG = t3lib_div::readLLXMLfile($llFile, $GLOBALS['LANG']->lang);
-		}
-		return $LOCAL_LANG;
+        $llFile = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'pi3/locallang.xml';
+		$localLanguageParser = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Localization\\Parser\\LocallangXmlParser');
+		$LOCAL_LANG = $localLanguageParser->getParsedData($llFile, $GLOBALS['LANG']->lang);
+        return $LOCAL_LANG;
     }
 }
 

@@ -28,17 +28,10 @@
 ***************************************************************/
 
 	// DEFAULT initialization of a module [BEGIN]
-require_once($GLOBALS['BACK_PATH'] . 'template.php');
-require_once(PATH_t3lib . 'class.t3lib_install.php');
-require_once(PATH_t3lib . 'class.t3lib_extmgm.php');
 $LANG->includeLLFile('EXT:wec_map/mod1/locallang.xml');
-require_once(PATH_t3lib . 'class.t3lib_scbase.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('backend') . 'Classes/Module/BaseScriptClass.php');
 $BE_USER->modAccess($MCONF, 1);	// This checks permissions and exits if the users has no permission for entry.
 	// DEFAULT initialization of a module [END]
-
-require_once(t3lib_extMgm::extPath('wec_map') . 'class.tx_wecmap_cache.php');
-require_once(t3lib_extMgm::extPath('wec_map') . 'class.tx_wecmap_domainmgr.php');
-
 
 /**
  * Module 'WEC Map Admin' for the 'wec_map' extension.
@@ -61,8 +54,8 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 		parent::init();
 
 		/*
-		if (t3lib_div::_GP('clear_all_cache'))	{
-			$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('clear_all_cache'))	{
+			#$this->include_once[] = PATH_t3lib.'class.t3lib_tcemain.php';
 		}
 		*/
 	}
@@ -96,13 +89,13 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 
 		// Access check!
 		// The page will show only if there is a valid page and if this page may be viewed by the user
-		$this->pageinfo = t3lib_BEfunc::readPageAccess($this->id,$this->perms_clause);
+		$this->pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($this->id,$this->perms_clause);
 		$access = is_array($this->pageinfo) ? 1 : 0;
 
 		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
 
 				// Draw the header.
-			$this->doc = t3lib_div::makeInstance('mediumDoc');
+			$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
 			$this->doc->form='<form action="" method="POST">';
 
@@ -122,12 +115,12 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 				</script>
 			';
 
-			$headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.t3lib_div::fixed_lgd_cs($this->pageinfo['_thePath'],-50);
+			$headerSection = $this->doc->getHeader('pages',$this->pageinfo,$this->pageinfo['_thePath']).'<br />'.$LANG->sL('LLL:EXT:lang/locallang_core.xml:labels.path').': '.\TYPO3\CMS\Core\Utility\GeneralUtility::fixed_lgd_cs($this->pageinfo['_thePath'],-50);
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
 			$this->content.=$this->doc->header($LANG->getLL('title'));
 			$this->content.=$this->doc->spacer(5);
-			$this->content.=$this->doc->section('',$this->doc->funcMenu($headerSection,t3lib_BEfunc::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
+			$this->content.=$this->doc->section('',$this->doc->funcMenu($headerSection,\TYPO3\CMS\Backend\Utility\BackendUtility::getFuncMenu($this->id,'SET[function]',$this->MOD_SETTINGS['function'],$this->MOD_MENU['function'])));
 			$this->content.=$this->doc->divider(5);
 
 			// Render content:
@@ -142,7 +135,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 		} else {
 				// If no access or if ID == zero
 
-			$this->doc = t3lib_div::makeInstance('mediumDoc');
+			$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
 			$this->doc->backPath = $BACK_PATH;
 
 			$this->content.=$this->doc->startPage($LANG->getLL('title'));
@@ -186,7 +179,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 	}
 
 	function linkSelf($addParams)	{
-		return htmlspecialchars('index.php?id='.$this->pObj->id.'&showLanguage='.rawurlencode(strip_tags(t3lib_div::_GP('showLanguage'))).$addParams);
+		return htmlspecialchars('index.php?id='.$this->pObj->id.'&showLanguage='.rawurlencode(strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('showLanguage'))).$addParams);
 	}
 
 	/**
@@ -200,12 +193,12 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 		$count 	= $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT(*)', 'tx_wecmap_cache','');
 		$count = $count[0]['COUNT(*)'];
 
-		require_once(t3lib_extMgm::extPath('wec_map') . 'mod1/class.tx_wecmap_recordhandler.php');
-		$recordHandler = t3lib_div::makeInstance('tx_wecmap_recordhandler', $count);
+#		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map') . 'mod1/class.tx_wecmap_recordhandler.php');
+		$recordHandler = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_recordhandler', $count);
 
 		global $LANG;
 
-		$cmd       = t3lib_div::_GP('cmd');
+		$cmd       = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
 
 		$output   = $recordHandler->displaySearch();
 		$output  .= $recordHandler->displayTable();
@@ -226,11 +219,11 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 	function apiKeyAdmin() {
 		global $TYPO3_CONF_VARS, $LANG;
 
-		$domainmgr = t3lib_div::makeInstance('tx_wecmap_domainmgr');
+		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_domainmgr');
 
 		$blankDomainValue = 'Enter domain....';
 
-		$cmd = t3lib_div::_GP('cmd');
+		$cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
 
 		switch($cmd) {
 			case 'setkey' :
@@ -326,9 +319,9 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 		global $TCA, $LANG;
 		$content = array();
 
-	 	require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_batchgeocode.php');
+#	 	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_batchgeocode.php');
 		/* Set the geocoding limit to 1 so that we only get the count, rather than actually geocoding addresses */
-		$batchGeocode = t3lib_div::makeInstance('tx_wecmap_batchgeocode', 1);
+		$batchGeocode = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_batchgeocode', 1);
 		$batchGeocode->addAllTables();
 		$batchGeocode->geocode();
 
@@ -347,9 +340,8 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 			}
 		}
 		$content[] = '</ul>';
-		$content[] = '<script type="text/javascript" src="'.t3lib_div::getIndpEnv('TYPO3_SITE_URL').'typo3/contrib/prototype/prototype.js"></script>';
+		$content[] = '<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').'typo3/contrib/prototype/prototype.js"></script>';
 
-		$updaterPath = t3lib_extMgm::extRelPath('wec_map') . 'mod1/tx_wecmap_batchgeocode_ai.php';
 		$content[] = '<script type="text/javascript">
 						function startGeocode() {
 							var updater;
@@ -357,12 +349,13 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 							$(\'startGeocoding\').disable();
 							$(\'status\').setStyle({display: \'block\'});
 
-							updater = new Ajax.PeriodicalUpdater(\'status\', \'' . $updaterPath . '\', { method: \'get\', frequency: 5, decay: 10 });
+							var ajaxUrl = TYPO3.settings.ajaxUrls[\'txwecmapM1::batchGeocode\'];
+							updater = new Ajax.PeriodicalUpdater(\'status\', ajaxUrl, { method: \'get\', frequency: 5, decay: 10 });
 						}
 						</script>';
 
-		require_once(t3lib_extMgm::extPath('wec_map').'mod1/class.tx_wecmap_batchgeocode_util.php');
-		$content[] = tx_wecmap_batchgeocode_util::getStatusBar($processedAddresses, $totalAddresses, false);
+#		require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'mod1/class.tx_wecmap_batchgeocode_util.php');
+		$content[] = tx_wecmap_module1_ajax::getStatusBar($processedAddresses, $totalAddresses, false);
 		$content[] = '<input id="startGeocoding" type="submit" value="'.$LANG->getLL('startGeocoding').'" onclick="startGeocode(); return false;"/>';
 
 		return implode(chr(10), $content);
@@ -376,7 +369,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 	function downloadJSFiles()	{
 		global $LANG;
 
-		$cmd = t3lib_div::_GP('cmd');
+		$cmd = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
 
 		$content = array();
 
@@ -413,10 +406,10 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
     protected function download($sourceUrl, $destFile)    {
 		global $LANG;
 
-		$destDir = t3lib_div::getFileAbsFileName('EXT:wec_map/contribJS/');
+		$destDir = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName('EXT:wec_map/contribJS/');
 
 			// Get file and cancel if not existing/accessible
-		$remoteFileContent = t3lib_div::getURL($sourceUrl);
+		$remoteFileContent = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($sourceUrl);
 		if ($remoteFileContent === FALSE) {
 			return $LANG->getLL('downloadError') . $sourceUrl . '<br />';
 		}
@@ -433,6 +426,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 
 		return $LANG->getLL('downloadSuccess') . $destFile . '<br />';
     }
+
 }
 
 
@@ -441,10 +435,8 @@ include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wec_map/mod1/index.php'
 }
 
 
-
-
 // Make instance:
-$SOBE = t3lib_div::makeInstance('tx_wecmap_module1');
+$SOBE = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_module1');
 $SOBE->init();
 
 // Include files?

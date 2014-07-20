@@ -35,8 +35,8 @@
  */
 
 
-require_once(PATH_tslib.'class.tslib_pibase.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(PATH_tslib.'class.tslib_pibase.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Simple frontend plugin for displaying an address on a map.
@@ -66,14 +66,14 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		if(empty($conf['templateIncluded'])) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
-				$LANG = t3lib_div::makeInstance('language');
+#				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lang').'lang.php');
+				$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
 			$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
 			$out .= $LANG->getLL('pi3TemplateNotIncluded');
 			// syslog start
-				t3lib_div::sysLog('WEC Map API template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog('WEC Map API template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
 			// syslog end
 			return $out;
 		}
@@ -82,14 +82,14 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		if(empty($conf['output']) && !empty($conf['templateIncluded'])) {
 			global $LANG;
 			if(!is_object($LANG)) {
-				require_once(t3lib_extMgm::extPath('lang').'lang.php');
-				$LANG = t3lib_div::makeInstance('language');
+#				require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('lang').'lang.php');
+				$LANG = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('language');
 				$LANG->init($GLOBALS['TSFE']->config['config']['language']);
 			}
 			$LANG->includeLLFile('EXT:wec_map/locallang_db.xml');
 			$out .= $LANG->getLL('wecApiTemplateNotIncluded');
 			// syslog start
-				t3lib_div::sysLog('WEC Table Map template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::sysLog('WEC Table Map template not included on page id '.$GLOBALS['TSFE']->id, 'wec_map', 3);
 			// syslog end
 			return $out;
 		}
@@ -177,8 +177,8 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		$this->mapName = $mapName;
 
 		/* Create the Map object */
-		include_once(t3lib_extMgm::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
-		$map = t3lib_div::makeInstance('tx_wecmap_map_google', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
+		#include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
+		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_map_google', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// get kml urls for each included record
 		if(!empty($kml)) {
@@ -187,7 +187,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			foreach( $res as $key => $url ) {
 				$link = trim($url['url']);
 				$oldAbs = $GLOBALS['TSFE']->absRefPrefix;
-				$GLOBALS['TSFE']->absRefPrefix = t3lib_div::getIndpEnv('TYPO3_SITE_URL');
+				$GLOBALS['TSFE']->absRefPrefix = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 				$linkConf = Array(
 					'parameter' => $link,
 					'returnLast' => 'url'
@@ -227,15 +227,15 @@ class tx_wecmap_pi3 extends tslib_pibase {
 		if($showRadiusSearch) {
 
 			// check for POST vars for our map. If there are any, proceed.
-			$pRadius = intval(t3lib_div::_POST($mapName.'_radius'));
+			$pRadius = intval(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_radius'));
 
 			if(!empty($pRadius)) {
-				$pAddress    = strip_tags(t3lib_div::_POST($mapName.'_address'));
-				$pCity       = strip_tags(t3lib_div::_POST($mapName.'_city'));
-				$pState      = strip_tags(t3lib_div::_POST($mapName.'_state'));
-				$pZip        = strip_tags(t3lib_div::_POST($mapName.'_zip'));
-				$pCountry    = strip_tags(t3lib_div::_POST($mapName.'_country'));
-				$pKilometers = intval(t3lib_div::_POST($mapName.'_kilometers'));
+				$pAddress    = strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_address'));
+				$pCity       = strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_city'));
+				$pState      = strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_state'));
+				$pZip        = strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_zip'));
+				$pCountry    = strip_tags(\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_country'));
+				$pKilometers = intval    (\TYPO3\CMS\Core\Utility\GeneralUtility::_POST($mapName.'_kilometers'));
 
 				$data = array(
 					'street' => $pAddress,
@@ -254,18 +254,18 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			}
 		}
 
+		if(!empty($pid)) {
+			$pidList = $this->pi_getPidList($pid, $recursive);
+			$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
+		} else {
+			$pidWhere = '1=1';
+		}
+
 		// there are two ways of buiding the SQL query:
 		// 1. from the data given via flexform
 		// 2. all manually from TS
 		// So we check whether it's set via TS, and if not we use FF data
 		if(empty($conf['tables.'])) {
-
-			if(!empty($pid)) {
-				$pidList = $this->pi_getPidList($pid, $recursive);
-				$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
-			} else {
-				$pidWhere = '1=1';
-			}
 
 			foreach( $tables as $table ) {
 
@@ -363,7 +363,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 					$select = '*';
 				}
 
-				$where .= $this->cObj->enableFields($table);
+				$where .= ' AND ' . $pidWhere . $this->cObj->enableFields($table);
 
 				$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, $from, $where, $groupBy, $orderBy, $limit);
 
@@ -421,10 +421,10 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			$hooks =& $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['tx_wecmap_pi3']['markerHook'];
 			$hookReference = null;
 			foreach ($hooks as $hookFunction)	{
-				t3lib_div::callUserFunction($hookFunction, $hookParameters, $hookReference);
+				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($hookFunction, $hookParameters, $hookReference);
 				// devlog start
 				if(TYPO3_DLOG) {
-					t3lib_div::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
+					\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
 				}
 				// devlog end
 			}
@@ -478,7 +478,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			$params['row'] = $row;
 			$params['title'] = '';
 
-			t3lib_div::callUserFunction($TCA[$table]['ctrl']['label_userFunc'],$params,$this);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($TCA[$table]['ctrl']['label_userFunc'],$params,$this);
 			$t = $params['title'];
 		} else {
 
@@ -486,7 +486,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 			$t = $row[$TCA[$table]['ctrl']['label']];
 
 			if ($TCA[$table]['ctrl']['label_alt'] && ($TCA[$table]['ctrl']['label_alt_force'] || !strcmp($t,'')))   {
-				$altFields=t3lib_div::trimExplode(',',$TCA[$table]['ctrl']['label_alt'],1);
+				$altFields=\TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',',$TCA[$table]['ctrl']['label_alt'],1);
 				$tA=array();
 				$tA[]=$t;
 				if ($TCA[$table]['ctrl']['label_alt_force'])    {
@@ -519,7 +519,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addSidebarItem(&$marker, $data) {
+	function addSidebarItem($marker, $data) {
 		if(!($this->showSidebar && is_object($marker))) return;
 		$data['onclickLink'] = $marker->getClickJS();
 		$this->sidebarLinks[] = tx_wecmap_shared::render($data, $this->conf['sidebarItem.']);
@@ -542,7 +542,7 @@ class tx_wecmap_pi3 extends tslib_pibase {
 	 *
 	 * @return void
 	 **/
-	function addDirectionsMenu(&$marker) {
+	function addDirectionsMenu($marker) {
 		if(!($this->showDirections && is_object($marker))) return;
 		$marker->setDirectionsMenuConf( $this->conf['directionsMenu.'] );
 	}

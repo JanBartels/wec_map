@@ -27,8 +27,8 @@
 * This copyright notice MUST APPEAR in all copies of the file!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_cache.php');
-require_once(t3lib_extMgm::extPath('wec_map').'class.tx_wecmap_shared.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_cache.php');
+#require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'class.tx_wecmap_shared.php');
 
 /**
  * Performs autmated geocoding for any address information.
@@ -116,7 +116,7 @@ class tx_wecmap_batchgeocode {
 			'country' => tx_wecmap_shared::getAddressField($table, 'country'),
 		);
 
-		$where = "1=1".t3lib_befunc::deleteClause($table);
+		$where = "1=1".\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($table);
 		$result = $TYPO3_DB->exec_SELECTquery('*', $table, $where);
 		while($row = $TYPO3_DB->sql_fetch_assoc($result)) {
 
@@ -206,7 +206,7 @@ class tx_wecmap_batchgeocode {
 		$recordCount = 0;
 
 		foreach($this->tables as $table) {
-			$where = "1=1".t3lib_befunc::deleteClause($table);
+			$where = "1=1".\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($table);
 			$result = $TYPO3_DB->exec_SELECTquery('COUNT(*)', $table, $where);
 			$row = $TYPO3_DB->sql_fetch_assoc($result);
 			$recordCount += $row['COUNT(*)'];

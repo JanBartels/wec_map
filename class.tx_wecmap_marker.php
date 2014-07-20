@@ -151,15 +151,6 @@ class tx_wecmap_marker {
 	}
 
 	/**
-	 * Setter for map this marker is a part of
-	 *
-	 * @return void
-	 **/
-	function setMap( &$map) {
-		$this->map = $map;
-	}
-
-	/**
 	 * set the id of the group this marker belongs to
 	 *
 	 * @return void

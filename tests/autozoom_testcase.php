@@ -61,8 +61,8 @@ class tx_wecmap_autozoom_testcase extends tx_phpunit_testcase {
 	}
 
 	public function createMap() {
-		include_once(t3lib_extMgm::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
-		$map = t3lib_div::makeInstance('tx_wecmap_map_google', null, 500, 500, 39.842286, -96.855469, null,'name');
+		#include_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map').'map_service/google/class.tx_wecmap_map_google.php');
+		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_map_google', null, 500, 500, 39.842286, -96.855469, null,'name');
 		$map->addMarkerByLatLong(39.842286,-96.855469);
 		return $map;
 	}
