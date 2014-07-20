@@ -1,21 +1,67 @@
 tx_wecmap_api {
 	addressForm = COA_INT
 	addressForm {
-		20 = FORM
-		20.layout = <tr><td>###LABEL###</td><td> ###FIELD### </td></tr>
-		20.data (
-			{LLL:EXT:wec_map/locallang_db.xml:radius} | {field:map_id}_radius=select | 10=10, 25=25, 50=50, 100=100, 250=250
-			{LLL:EXT:wec_map/locallang_db.xml:unit} | {field:map_id}_kilometers=select | *{LLL:EXT:wec_map/locallang_db.xml:unit.miles}=0, {LLL:EXT:wec_map/locallang_db.xml:unit.kilometers}=1
-			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.street}: | {field:map_id}_address=input
-			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.city}: | {field:map_id}_city=input
-			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.state}: | {field:map_id}_state=input
-			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.zip}: | {field:map_id}_zip=input
-			{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.country}: | {field:map_id}_country=input
-			| {field:map_id}_submit=submit | {LLL:EXT:wec_map/locallang_db.xml:submit}
-		) 
-		20.data.insertData = 1
-		20.noValueInsert = 0
-		20.stdWrap.dataWrap = <table id="{field:map_id}_radiusform" class="radiusform" style="display: none;">|</table>
+		20 = TEXT
+		20.value (
+			<form action="" enctype="multipart/form-data" method="post">
+				<table id="{field:map_id}_radiusform" class="radiusform" style="display: none;">
+				
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:radius}</td>
+						<td> 
+							<select name="{field:map_id}_radius" size="1">
+								<option value="10">10</option>
+								<option value="25">25</option>
+								<option value="50">50</option>
+								<option value="100">100</option>
+								<option value="250">250</option>
+							</select> 
+						</td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:unit}</td>
+						<td> 
+							<select name="{field:map_id}_kilometers" size="1">
+								<option value="0" selected="selected">{LLL:EXT:wec_map/locallang_db.xml:unit.miles}</option>
+								<option value="1">{LLL:EXT:wec_map/locallang_db.xml:unit.kilometers}</option>
+							</select> 
+						</td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.street}: </td>
+						<td> <input type="text" name="{field:map_id}_address" size="20" value="" /></td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.city}: </td>
+						<td> <input type="text" name="{field:map_id}_city" size="20" value="" /> </td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.state}: </td>
+						<td> <input type="text" name="{field:map_id}_state" size="20" value="" /> </td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.zip}: </td>
+						<td> <input type="text" name="{field:map_id}_zip" size="20" value="" /> </td>
+					</tr>
+					
+					<tr>
+						<td>{LLL:EXT:wec_map/locallang_db.xml:tt_content.pi_flexform.country}: </td>
+						<td> <input type="text" name="{field:map_id}_country" size="20" value="" /> </td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td> <input type="submit" name="{field:map_id}_submit" value="{LLL:EXT:wec_map/locallang_db.xml:submit}" /> </td>
+					</tr>
+				</table>
+			</form>	
+		)
+		20.insertData = 1
 	}
 	
 	directions = COA
