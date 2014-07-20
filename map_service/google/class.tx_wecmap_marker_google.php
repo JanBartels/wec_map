@@ -131,11 +131,11 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 	function writeJS() {
 		$markerContent = array();
 		foreach ($this->tabLabels as $index => $label) {
-			$markerContent[] = json_encode( $this->title[$index] ) . '+' . json_encode( $this->description[$index] );
+			$markerContent[] = json_encode( $this->title[$index] ) . '+' . json_encode( $this->description[$index], JSON_HEX_APOS );
 		}
 		$tabLabels = array();
 		foreach ($this->tabLabels as $index => $label) {
-			$tabLabels[] = json_encode( $label );
+			$tabLabels[] = json_encode( $label, JSON_HEX_APOS );
 		}
 
 		if ($this->directions) {
@@ -149,14 +149,14 @@ class tx_wecmap_marker_google extends tx_wecmap_marker {
 						 );
 
 			if ( is_array( $this->directionsMenuConf ) )
-				$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $this->directionsMenuConf ) );
+				$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $this->directionsMenuConf ), JSON_HEX_APOS );
 			else
 			{
 				// Workaround for EXT:cal
 				// get default directionsMenu
 				$directionsMenuConf = $GLOBALS['TSFE']->tmpl->setup['tx_wecmap_api.']['directionsMenu.'];
 				if ( is_array( $directionsMenuConf ) )
-					$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $directionsMenuConf ) );
+					$markerContent[0] .= '+' . json_encode( tx_wecmap_shared::render( $data, $directionsMenuConf ), JSON_HEX_APOS );
 			}
 		}
 
@@ -187,9 +187,9 @@ WecMap.addBubble( "' . $this->mapName . '", ' . $this->groupId . ', ' . $this->i
 		                       . "'". $this->mapName . "', " . $this->index . ", "
 		                       . "[" . $this->latitude . "," . $this->longitude . "], "
 		                       . "'" . $this->iconID . "', "
-		                       . json_encode(htmlspecialchars(strip_tags($this->title[0]))) .", "
+		                       . json_encode(htmlspecialchars(strip_tags($this->title[0])), JSON_HEX_APOS ) .", "
 		                       . $this->groupId . ", "
-		                       . json_encode($this->getUserAddress())
+		                       . json_encode($this->getUserAddress(), JSON_HEX_APOS )
 		                     .");";
 		if ( $this->isDraggable )
 			$js .= "WecMap.setDraggable('". $this->mapName . "', " . $this->groupId . ", " . $this->index . ", true);";

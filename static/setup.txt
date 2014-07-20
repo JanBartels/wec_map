@@ -82,7 +82,7 @@ tx_wecmap_api {
 	
 	output = COA
 	output {
-		20       = HTML
+		20       = TEXT
 		20.value  = <table><tr>
 		30       = TEXT
 		30.field = map
@@ -90,7 +90,7 @@ tx_wecmap_api {
 		40       = TEXT
 		40.field = sidebar
 		40.wrap  = <td style="vertical-align: top;">|</td>
-		50       = HTML
+		50       = TEXT
 		50.value = </tr></table>
 		60       = TEXT
 		60.field = directions
