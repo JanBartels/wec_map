@@ -92,7 +92,7 @@ class  tx_wecmap_module1 extends t3lib_SCbase {
 		$this->pageinfo = \TYPO3\CMS\Backend\Utility\BackendUtility::readPageAccess($this->id,$this->perms_clause);
 		$access = is_array($this->pageinfo) ? 1 : 0;
 
-		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id))	{
+		if (($this->id && $access) || ($BE_USER->user['admin'] && !$this->id) || ($BE_USER->user['uid'] && !$this->id)) {
 
 				// Draw the header.
 			$this->doc = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('mediumDoc');
