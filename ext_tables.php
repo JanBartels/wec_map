@@ -102,6 +102,20 @@ if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address')) {
 	);
 }
 
+if(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('nn_address')) {
+	\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA('nn_address');
+	$TCA['tx_nnaddress_domain_model_address']['ctrl']['EXT']['wec_map'] = array (
+		'isMappable' => 1,
+		'addressFields' => array (
+			'street' => 'street',
+			'city' => 'city',
+			'state' => 'region',
+			'zip' => 'zip',
+			'country' => 'country',
+		),
+	);
+}
+
 /* If we want to show a map in frontend user records, add it to the TCA */
 if(tx_wecmap_backend::getExtConf('feUserRecordMap')) {
 	$mapTCA = array (
