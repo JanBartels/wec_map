@@ -40,6 +40,9 @@ $EM_CONF[$_EXTKEY] = array(
 		'conflicts' => array(
 		),
 		'suggests' => array(
+			'tt_address'         => '2.3.4-0.0.0',
+			'nn_address'         => '2.3.0-0.0.0',
+            'sr_feuser_register' => '',
 		),
 	),
 	'suggests' => array(
