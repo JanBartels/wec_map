@@ -3,6 +3,7 @@
 [NEW] TCA for nn_address
 [FIX] French translation updated. Thanks to Sébastien Convers.
 [FIX] Load Order of extensions. Thanks to Thorsten Krieger and Stefan Wobbe. (issue #62582)
+[FIX] HTML5 Markup Error on URL for Google APIs. Thanks to  DMK E-BUSINESS GmbH. (issue #62496)
 
 3.1.1
 [FIX] addressForm for radius-search is not displayed. Please check your TypoScript setup. (issue #60419)
