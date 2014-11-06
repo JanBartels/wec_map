@@ -24,6 +24,8 @@
         <languageKey index="it" type="array">
         </languageKey>
         <languageKey index="fr" type="array">
+            <label index="pi3_title">WEC Map carte tableau</label>
+            <label index="pi3_plus_wiz_description">Ajoute une carte pour afficher tout type d'enregistrement.</label>
         </languageKey>
         <languageKey index="es" type="array">
         </languageKey>

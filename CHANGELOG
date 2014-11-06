@@ -1,6 +1,7 @@
 3.1.2
 [FIX] Backend-User without Admin-Flag don't have access to WEC Map Admin (issue #61239)
 [NEW] TCA for nn_address
+[FIX] French translation. Thanks to Sébastien Convers
 
 3.1.1
 [FIX] addressForm for radius-search is not displayed. Please check your TypoScript setup. (issue #60419)

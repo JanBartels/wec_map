@@ -239,10 +239,26 @@
       <label index="OSM-bike">OSM-bike</label>
       <label index="OSM-alt">OpenStreetmap layer</label>
       <label index="OSM-bike-alt">OpenCycleMap layer</label>
-      <label index="pi1TemplateNotIncluded">Please include the WEC Simple Map static template on your page.</label>
-      <label index="pi2TemplateNotIncluded">Please include the WEC Frontend User Map static template on your page.</label>
-      <label index="pi3TemplateNotIncluded">Please include the WEC Table Map static template on your page.</label>
-      <label index="wecApiTemplateNotIncluded">&lt;p&gt;Please include the WEC Map API static template on your page and make sure it&apos;s included before (above) any other WEC Map static templates.</label>
+      <label index="pi1TemplateNotIncluded">
+          <![CDATA[
+          <p>Please include the WEC Simple Map static template on your page.</p>
+          ]]>
+      </label>
+      <label index="pi2TemplateNotIncluded">
+          <![CDATA[
+          <p>Please include the WEC Frontend User Map static template on your page.</p>
+          ]]>
+      </label>
+      <label index="pi3TemplateNotIncluded">
+          <![CDATA[
+          <p>Please include the WEC Table Map static template on your page.</p>
+          ]]>
+      </label>
+      <label index="wecApiTemplateNotIncluded">
+                <![CDATA[
+          <p>Please include the WEC Map API static template on your page and make sure it&apos;s included before (above) any other WEC Map static templates.</p>
+                ]]>
+      </label>
       <label index="tt_content.pi_flexform.title">Titre</label>
       <label index="tt_content.pi_flexform.description">Description</label>
       <label index="tt_content.pi_flexform.street">Adresse</label>
@@ -281,6 +297,7 @@
       <label index="tt_content.pi_flexform.kml">KML à insérer</label>
       <label index="tt_content.pi_flexform.showSidebar">Afficher les contrôles verticaux</label>
       <label index="tt_content.pi_flexform.prefillAddress">Inclure l&apos;adresse à partir des informations d&apos;usager</label>
+      <label index="submit">Envoyer</label>
     </languageKey>
   </data>
   <orig_hash type="array">

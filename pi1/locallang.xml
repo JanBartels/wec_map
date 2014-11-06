@@ -23,6 +23,8 @@
         <languageKey index="it" type="array">
         </languageKey>
         <languageKey index="fr" type="array">
+            <label index="pi1_title">WEC Map carte simple</label>
+            <label index="pi1_plus_wiz_description">Affiche une carte avec un marqueur au centre.</label>
         </languageKey>
         <languageKey index="es" type="array">
         </languageKey>

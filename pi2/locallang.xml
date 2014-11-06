@@ -33,6 +33,8 @@
         <languageKey index="it" type="array">
         </languageKey>
         <languageKey index="fr" type="array">
+            <label index="pi2_title">WEC Map carte des utilisateurs Frontend</label>
+            <label index="pi2_plus_wiz_description">Affiche une carte avec les utilisateurs Frontend. Restriction par groupe possible.</label>
         </languageKey>
         <languageKey index="es" type="array">
         </languageKey>
