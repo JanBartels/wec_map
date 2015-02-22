@@ -905,6 +905,9 @@ function js_setMapType($type) {
 	 **/
 	function getAutoZoom($latSpan, $longSpan) {
 
+		if ( $longSpan <= 0 || $latSpan <= 0 )
+			return $this->maxAutoZoom;
+
 		$wZoom = log($this->width, 2) - log($longSpan, 2);
 		$hZoom = log($this->height, 2) - log($latSpan, 2);
 
