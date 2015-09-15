@@ -329,11 +329,22 @@ class tx_wecmap_pi2 extends tslib_pibase {
 			$where .= tx_wecmap_shared::listQueryFromCSV('pid', $pid, 'fe_users', 'OR');
 		}
 
+		// additional condition set by TypoScript
+		$additionalWhere = $this->cObj->stdWrap($conf['table.']['additionalWhere'], $conf['table.']['additionalWhere.']);
+		if ( $additionalWhere )
+			$where .= 'AND (' . $additionalWhere . ') ';
+
 		// filter out records that shouldn't be shown, e.g. deleted, hidden
 		$where .= $this->cObj->enableFields('fe_users');
 
+		// sorting
+		$orderBy = $this->cObj->stdWrap($conf['table.']['orderBy'], $conf['table.']['orderBy.']);
+
+		// limit
+		$limit = $this->cObj->stdWrap($conf['table.']['limit'], $conf['table.']['limit.']);
+
 		/* Select all frontend users */
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', $where);
+		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', $where, '', $orderBy, $limit);
 
 		// create country and zip code array to keep track of which country and state we already added to the map.
 		// the point is to create only one marker per country on a higher zoom level to not
@@ -386,6 +397,9 @@ class tx_wecmap_pi2 extends tslib_pibase {
 					$countWhere = $cityField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$cityField], 'fe_users' );
 					if ( $zipField )
 						$countWhere .= ' AND ' . $zipField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$zipField], 'fe_users' );
+					if ( $additionalWhere )
+						$countWhere .= 'AND (' . $additionalWhere . ') ';
+
 					$count = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(*)', 'fe_users', $countWhere);
 					$count = $count[0]['count(*)'];
 
