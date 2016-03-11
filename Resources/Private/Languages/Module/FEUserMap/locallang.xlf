@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T19:28:33Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="title" xml:space="preserve">
+				<source>FE User Map</source>
+			</trans-unit>
+			<trans-unit id="function1" xml:space="preserve">
+				<source>Map</source>
+			</trans-unit>
+			<trans-unit id="function2" xml:space="preserve">
+				<source>Settings</source>
+			</trans-unit>
+			<trans-unit id="function3" xml:space="preserve">
+				<source>Function #3</source>
+			</trans-unit>
+			<trans-unit id="editrecord" xml:space="preserve">
+				<source>Edit User Record</source>
+			</trans-unit>
+			<trans-unit id="country_zoominfo_desc" xml:space="preserve">
+				<source>Zoom in to see more users from %s</source>
+			</trans-unit>
+			<trans-unit id="country_zoominfo_title" xml:space="preserve">
+				<source>Info</source>
+			</trans-unit>
+			<trans-unit id="area_zoominfo_desc" xml:space="preserve">
+				<source>Zoom in to see more users from this area.</source>
+			</trans-unit>
+			<trans-unit id="area_zoominfo_title" xml:space="preserve">
+				<source>Info</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

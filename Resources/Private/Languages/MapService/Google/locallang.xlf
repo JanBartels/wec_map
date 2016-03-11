@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T17:58:18Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="error_nothingToDisplay" xml:space="preserve">
+				<source>
+				There doesn't seem to be anything to display. Make sure the map is
+				configured correctly and there are users or markers set.
+			</source>
+			</trans-unit>
+			<trans-unit id="error_noHeightWidth" xml:space="preserve">
+				<source>
+				The map didn't have a height or width set. Make sure that height and width
+				are set correctly in either the Flexform or via TypoScript.
+			</source>
+			</trans-unit>
+			<trans-unit id="endaddress" xml:space="preserve">
+				<source>End Address</source>
+			</trans-unit>
+			<trans-unit id="startaddress" xml:space="preserve">
+				<source>Start Address</source>
+			</trans-unit>
+			<trans-unit id="OSM" xml:space="preserve">
+				<source>OSM</source>
+			</trans-unit>
+			<trans-unit id="OSM-alt" xml:space="preserve">
+				<source>OpenStreetmap layer</source>
+			</trans-unit>
+			<trans-unit id="OSM-bike" xml:space="preserve">
+				<source>OSM-bike</source>
+			</trans-unit>
+			<trans-unit id="OSM-bike-alt" xml:space="preserve">
+				<source>OpenCycleMap layer</source>
+			</trans-unit>
+			<trans-unit id="INVALID_REQUEST" xml:space="preserve">
+				<source>The DirectionsRequest provided was invalid.</source>
+			</trans-unit>
+			<trans-unit id="MAX_WAYPOINTS_EXCEEDED" xml:space="preserve">
+				<source>Too many DirectionsWaypoints were provided in the DirectionsRequest. The total allowed waypoints is 8, plus the origin and destination. Maps API for Business customers are allowed 23 waypoints, plus the origin, and destination.</source>
+			</trans-unit>
+			<trans-unit id="NOT_FOUND" xml:space="preserve">
+				<source>At least one of the origin, destination, or waypoints could not be geocoded.</source>
+			</trans-unit>
+			<trans-unit id="OK" xml:space="preserve">
+				<source>The response contains a valid DirectionsResult.</source>
+			</trans-unit>
+			<trans-unit id="OVER_QUERY_LIMIT" xml:space="preserve">
+				<source>The webpage has gone over the requests limit in too short a period of time.</source>
+			</trans-unit>
+			<trans-unit id="REQUEST_DENIED" xml:space="preserve">
+				<source>The webpage is not allowed to use the directions service.</source>
+			</trans-unit>
+			<trans-unit id="UNKNOWN_ERROR" xml:space="preserve">
+				<source>A directions request could not be processed due to a server error. The request may succeed if you try again.</source>
+			</trans-unit>
+			<trans-unit id="ZERO_RESULTS" xml:space="preserve">
+				<source>No route could be found between the origin and destination.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

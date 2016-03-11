@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-09-16T19:28:20Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="title" xml:space="preserve" approved="yes">
+				<source>WEC Map Admin</source>
+				<target>WEC-Kartenverwaltung</target>
+			</trans-unit>
+			<trans-unit id="function1" xml:space="preserve" approved="yes">
+				<source>Geocode Admin</source>
+				<target>Geocode-Verwaltung</target>
+			</trans-unit>
+			<trans-unit id="function2" xml:space="preserve" approved="yes">
+				<source>API Key Settings</source>
+				<target>Einstellungen API-Schlüssel</target>
+			</trans-unit>
+			<trans-unit id="function3" xml:space="preserve" approved="yes">
+				<source>Batch Geocode</source>
+				<target>Geocode-Stapelverarbeitung</target>
+			</trans-unit>
+			<trans-unit id="function4" xml:space="preserve" approved="yes">
+				<source>Download JS-Files</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="editAddress" xml:space="preserve" approved="yes">
+				<source>Edit address</source>
+				<target>Adresse bearbeiten</target>
+			</trans-unit>
+			<trans-unit id="deleteAddress" xml:space="preserve" approved="yes">
+				<source>Delete address</source>
+				<target>Adresse löschen</target>
+			</trans-unit>
+			<trans-unit id="updateAddress" xml:space="preserve" approved="yes">
+				<source>Update address</source>
+				<target>Adressen aktualisieren</target>
+			</trans-unit>
+			<trans-unit id="cancelUpdate" xml:space="preserve" approved="yes">
+				<source>Cancel Update</source>
+				<target>Aktualisierung abbrechen</target>
+			</trans-unit>
+			<trans-unit id="address" xml:space="preserve" approved="yes">
+				<source>Address</source>
+				<target>Adresse</target>
+			</trans-unit>
+			<trans-unit id="latitude" xml:space="preserve" approved="yes">
+				<source>Latitude</source>
+				<target>Breitengrad</target>
+			</trans-unit>
+			<trans-unit id="longitude" xml:space="preserve" approved="yes">
+				<source>Longitude</source>
+				<target>Längengrad</target>
+			</trans-unit>
+			<trans-unit id="totalCachedAddresses" xml:space="preserve" approved="yes">
+				<source>Total cached addresses</source>
+				<target>Gesamte zwischengespeicherte Adressen</target>
+			</trans-unit>
+			<trans-unit id="deleteCache" xml:space="preserve" approved="yes">
+				<source>Delete all cached addresses!</source>
+				<target>Alle zwischengespeicherten Adressen löschen!</target>
+			</trans-unit>
+			<trans-unit id="alreadySavedDomains" xml:space="preserve" approved="yes">
+				<source>
+				
+				The Domains and API keys below have already been saved and are being used.
+				
+			</source>
+				<target>Die untenstehenden Domänen und API-Schlüssel sind bereits gespeichert und werden verwendet.</target>
+			</trans-unit>
+			<trans-unit id="suggestedDomains" xml:space="preserve" approved="yes">
+				<source>
+				
+				Below is a suggested list of domains that you may want to add API keys for.
+				
+			</source>
+				<target>Untenstehend ist ein Liste von Domänen, denen API-Schlüssel zugewiesen werden können.</target>
+			</trans-unit>
+			<trans-unit id="apiInstructions" xml:space="preserve" approved="yes">
+				<source>
+				
+				In order to use the WEC Map extension you must have a Google 
+				Maps API Key. You can sign up for this key at
+				&lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;
+				http://code.google.com/apis/maps/signup.html&lt;/a&gt;.
+				
+			</source>
+				<target>Um die WEC-Kartenerweiterung benutzen zu können, wird ein Schlüssel für das Google-Maps-API benötigt. Sie können sich zur Generierung des Schlüssels unter &lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;http://code.google.com/apis/maps/signup.html&lt;/a&gt; anmelden.</target>
+			</trans-unit>
+			<trans-unit id="googleMapsApiKey" xml:space="preserve" approved="yes">
+				<source>Google Maps API Key</source>
+				<target>Schlüssel für Google-Maps-API</target>
+			</trans-unit>
+			<trans-unit id="submit" xml:space="preserve" approved="yes">
+				<source>Save</source>
+				<target>Speichern</target>
+			</trans-unit>
+			<trans-unit id="downloadInstructions" xml:space="preserve" approved="yes">
+				<source>
+				
+				wec_map uses some additional libraries which cannot be included for license reasons. 
+				If you want to host them on your own server, you can download them here. 
+				Please remember to change the settings of wec_map afterwards. 
+				
+			</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="download" xml:space="preserve" approved="yes">
+				<source>Download</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="downloadError" xml:space="preserve" approved="yes">
+				<source>Download error: </source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="downloadSuccess" xml:space="preserve" approved="yes">
+				<source>Download successful: </source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="batchGeocode" xml:space="preserve" approved="yes">
+				<source>Batch Geocode</source>
+				<target>Geocode-Stapelverarbeitung</target>
+			</trans-unit>
+			<trans-unit id="batchInstructions" xml:space="preserve" approved="yes">
+				<source>
+				The batch geocoder is used to quickly calculate the latitude and
+				longitude for a large number of addresses.  Without batch geocoding,
+				this does not occur until the address is accessed, either from the
+				frontend or the backend.  This can significantly increase page
+				loading time when many addresses are displayed so the batch geocoder
+				can be used to avoid this problem.
+			</source>
+				<target>Die Geocode-Stapelverarbeitung dient zum schnellen Berechnen von Längen- und Breitengraden einer großen Anzahl Adressen. Ohne die Stapelverarbeitung werden die Koordinaten erst beim Abruf der Adresse berechnet, egal ob der Zugriff aus dem Backend oder Frontend geschieht. Dies kann die Zeit zum Abrufen einer Seite signifikant erhöhen, besonders wenn viele Adressen angezeigt werden. Die Geocode-Stapelverarbeitung dient zum Umgehen dieses Problems.</target>
+			</trans-unit>
+			<trans-unit id="batchTables" xml:space="preserve" approved="yes">
+				<source>
+				The following tables contain address related data.  When you begin
+				the batch geocoding process, all records in these tables will
+				be geocoded.
+			</source>
+				<target>Die folgenden Tabellen enthalten Adressdaten. Während der Geocode-Stapelverarbeitung werden für alle Einträge in diesen Tabellen mittels Geocode die Koordinaten berechnet.</target>
+			</trans-unit>
+			<trans-unit id="startGeocoding" xml:space="preserve" approved="yes">
+				<source>Start Geocoding</source>
+				<target>Geocoding starten</target>
+			</trans-unit>
+			<trans-unit id="processedStart" xml:space="preserve" approved="yes">
+				<source>Processed</source>
+				<target>Berechnet</target>
+			</trans-unit>
+			<trans-unit id="processedMid" xml:space="preserve" approved="yes">
+				<source>records of</source>
+				<target>Einträge von</target>
+			</trans-unit>
+			<trans-unit id="searchFilter" xml:space="preserve" approved="yes">
+				<source>Filter records...</source>
+				<target>Einträge filtern...</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

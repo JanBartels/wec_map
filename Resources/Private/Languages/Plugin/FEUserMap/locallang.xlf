@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T19:53:55Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="pi2_title" xml:space="preserve">
+				<source>WEC Frontend User Map</source>
+			</trans-unit>
+			<trans-unit id="pi2_plus_wiz_description" xml:space="preserve">
+				<source>Adds a map to display frontend users. This map can display all users or only certain frontend groups.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

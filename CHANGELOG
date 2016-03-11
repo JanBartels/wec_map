@@ -4,6 +4,8 @@
 [FIX] French translation updated. Thanks to Sébastien Convers.
 [FIX] Load Order of extensions. Thanks to Thorsten Krieger and Stefan Wobbe. (issue #62582)
 [FIX] HTML5 Markup Error on URL for Google APIs. Thanks to  DMK E-BUSINESS GmbH. (issue #62496)
+[NEW] pi2-TypoScript-options: table.additionalWhere, table.orderBy, table.limit
+[FIX] Use Configuration/TCA/override to extend 3rd-party tables (issue #64171)
 
 3.1.1
 [FIX] addressForm for radius-search is not displayed. Please check your TypoScript setup. (issue #60419)

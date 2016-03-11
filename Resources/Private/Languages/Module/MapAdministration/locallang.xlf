@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T19:28:20Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="title" xml:space="preserve">
+				<source>WEC Map Admin</source>
+			</trans-unit>
+			<trans-unit id="function1" xml:space="preserve">
+				<source>Geocode Admin</source>
+			</trans-unit>
+			<trans-unit id="function2" xml:space="preserve">
+				<source>API Key Settings</source>
+			</trans-unit>
+			<trans-unit id="function3" xml:space="preserve">
+				<source>Batch Geocode</source>
+			</trans-unit>
+			<trans-unit id="function4" xml:space="preserve">
+				<source>Download JS-Files</source>
+			</trans-unit>
+			<trans-unit id="editAddress" xml:space="preserve">
+				<source>Edit address</source>
+			</trans-unit>
+			<trans-unit id="deleteAddress" xml:space="preserve">
+				<source>Delete address</source>
+			</trans-unit>
+			<trans-unit id="updateAddress" xml:space="preserve">
+				<source>Update address</source>
+			</trans-unit>
+			<trans-unit id="cancelUpdate" xml:space="preserve">
+				<source>Cancel Update</source>
+			</trans-unit>
+			<trans-unit id="address" xml:space="preserve">
+				<source>Address</source>
+			</trans-unit>
+			<trans-unit id="latitude" xml:space="preserve">
+				<source>Latitude</source>
+			</trans-unit>
+			<trans-unit id="longitude" xml:space="preserve">
+				<source>Longitude</source>
+			</trans-unit>
+			<trans-unit id="totalCachedAddresses" xml:space="preserve">
+				<source>Total cached addresses</source>
+			</trans-unit>
+			<trans-unit id="deleteCache" xml:space="preserve">
+				<source>Delete all cached addresses!</source>
+			</trans-unit>
+			<trans-unit id="alreadySavedDomains" xml:space="preserve">
+				<source>
+				
+				The Domains and API keys below have already been saved and are being used.
+				
+			</source>
+			</trans-unit>
+			<trans-unit id="suggestedDomains" xml:space="preserve">
+				<source>
+				
+				Below is a suggested list of domains that you may want to add API keys for.
+				
+			</source>
+			</trans-unit>
+			<trans-unit id="apiInstructions" xml:space="preserve">
+				<source>
+				
+				In order to use the WEC Map extension you must have a Google 
+				Maps API Key. You can sign up for this key at
+				&lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;
+				http://code.google.com/apis/maps/signup.html&lt;/a&gt;.
+				
+			</source>
+			</trans-unit>
+			<trans-unit id="googleMapsApiKey" xml:space="preserve">
+				<source>Google Maps API Key</source>
+			</trans-unit>
+			<trans-unit id="submit" xml:space="preserve">
+				<source>Save</source>
+			</trans-unit>
+			<trans-unit id="downloadInstructions" xml:space="preserve">
+				<source>
+				
+				wec_map uses some additional libraries which cannot be included for license reasons. 
+				If you want to host them on your own server, you can download them here. 
+				Please remember to change the settings of wec_map afterwards. 
+				
+			</source>
+			</trans-unit>
+			<trans-unit id="download" xml:space="preserve">
+				<source>Download</source>
+			</trans-unit>
+			<trans-unit id="downloadError" xml:space="preserve">
+				<source>Download error: </source>
+			</trans-unit>
+			<trans-unit id="downloadSuccess" xml:space="preserve">
+				<source>Download successful: </source>
+			</trans-unit>
+			<trans-unit id="batchGeocode" xml:space="preserve">
+				<source>Batch Geocode</source>
+			</trans-unit>
+			<trans-unit id="batchInstructions" xml:space="preserve">
+				<source>
+				The batch geocoder is used to quickly calculate the latitude and
+				longitude for a large number of addresses.  Without batch geocoding,
+				this does not occur until the address is accessed, either from the
+				frontend or the backend.  This can significantly increase page
+				loading time when many addresses are displayed so the batch geocoder
+				can be used to avoid this problem.
+			</source>
+			</trans-unit>
+			<trans-unit id="batchTables" xml:space="preserve">
+				<source>
+				The following tables contain address related data.  When you begin
+				the batch geocoding process, all records in these tables will
+				be geocoded.
+			</source>
+			</trans-unit>
+			<trans-unit id="startGeocoding" xml:space="preserve">
+				<source>Start Geocoding</source>
+			</trans-unit>
+			<trans-unit id="processedStart" xml:space="preserve">
+				<source>Processed</source>
+			</trans-unit>
+			<trans-unit id="processedMid" xml:space="preserve">
+				<source>records of</source>
+			</trans-unit>
+			<trans-unit id="searchFilter" xml:space="preserve">
+				<source>Filter records...</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

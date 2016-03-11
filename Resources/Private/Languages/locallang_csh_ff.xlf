@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T17:54:14Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="title.description" xml:space="preserve">
+				<source>The title of the marker</source>
+			</trans-unit>
+			<trans-unit id="description.description" xml:space="preserve">
+				<source>The description of the marker</source>
+			</trans-unit>
+			<trans-unit id="coord.description" xml:space="preserve">
+				<source>Shows the latitude and longitude of the address given.</source>
+			</trans-unit>
+			<trans-unit id="coord.details" xml:space="preserve">
+				<source>Lat and long can be changed manually if desired. If the address couldn't be resolved, lat and long won't be available.</source>
+			</trans-unit>
+			<trans-unit id="showWrittenDirections.description" xml:space="preserve">
+				<source>This will print out written directions additional to showing the route graphically on the map.</source>
+			</trans-unit>
+			<trans-unit id="overviewMap.description" xml:space="preserve">
+				<source>Shows a minimap in the corner for better navigating around the map.</source>
+			</trans-unit>
+			<trans-unit id="mapType.description" xml:space="preserve">
+				<source>Shows the map type control that can be used to toggle normal, satellite, or hybrid view.</source>
+			</trans-unit>
+			<trans-unit id="showRadiusSearch.description" xml:space="preserve">
+				<source>Shows an address form and radius selector that can be used to filter the markers on the map to only show those within the given radius from the given address.</source>
+			</trans-unit>
+			<trans-unit id="showSidebar.description" xml:space="preserve">
+				<source>Shows a sidebar with a list of all the markers that, when clicked, will pan and zoom to the marker it corresponds to.</source>
+			</trans-unit>
+			<trans-unit id="privacy.description" xml:space="preserve">
+				<source>Only shows how many users are in a city instead of showing individual markers. This can be used to protect users' privacy.</source>
+			</trans-unit>
+			<trans-unit id="kml.description" xml:space="preserve">
+				<source>Selects which additional KML data should be shown on the map. The information is taken from WEC Map External Resource records.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

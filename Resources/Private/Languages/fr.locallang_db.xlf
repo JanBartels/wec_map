@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="fr" datatype="plaintext" original="messages" date="2015-09-15T18:32:03Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="OSM" xml:space="preserve" approved="yes">
+				<source>OSM</source>
+				<target>OSM</target>
+			</trans-unit>
+			<trans-unit id="OSM-alt" xml:space="preserve" approved="yes">
+				<source>OpenStreetmap layer</source>
+				<target>OpenStreetmap layer</target>
+			</trans-unit>
+			<trans-unit id="OSM-bike" xml:space="preserve" approved="yes">
+				<source>OSM-bike</source>
+				<target>OSM-bike</target>
+			</trans-unit>
+			<trans-unit id="OSM-bike-alt" xml:space="preserve" approved="yes">
+				<source>OpenCycleMap layer</source>
+				<target>OpenCycleMap layer</target>
+			</trans-unit>
+			<trans-unit id="berecord_geocodelabel" xml:space="preserve" approved="yes">
+				<source>Coords</source>
+				<target>Coordonnées</target>
+			</trans-unit>
+			<trans-unit id="berecord_maplabel" xml:space="preserve" approved="yes">
+				<source>Map</source>
+				<target>Carte</target>
+			</trans-unit>
+			<trans-unit id="directions" xml:space="preserve" approved="yes">
+				<source>Directions</source>
+				<target>Directions</target>
+			</trans-unit>
+			<trans-unit id="endaddress" xml:space="preserve" approved="yes">
+				<source>End Address</source>
+				<target>Lieu d'arrivée</target>
+			</trans-unit>
+			<trans-unit id="fromHereTo" xml:space="preserve" approved="yes">
+				<source>From here</source>
+				<target>Vers ce lieu</target>
+			</trans-unit>
+			<trans-unit id="geocodeFailed" xml:space="preserve" approved="yes">
+				<source>Geocoding failed.</source>
+				<target>Échec du géocodage</target>
+			</trans-unit>
+			<trans-unit id="geocodeNoAddress" xml:space="preserve" approved="yes">
+				<source>Cannot determine latitude and longitude.  Please enter an address and save.</source>
+				<target>Impossible de déterminer la longitude et la latitude. Entrer une adresse et sauvegarder.</target>
+			</trans-unit>
+			<trans-unit id="geocodeNotPerformed" xml:space="preserve" approved="yes">
+				<source>Geocoding has not been performed for this address.</source>
+				<target>Le géocodage n'a pas été effectué pour cette adresse</target>
+			</trans-unit>
+			<trans-unit id="geocodeSuccessful" xml:space="preserve" approved="yes">
+				<source>Geocoding successful!</source>
+				<target>Géocodage réussi!</target>
+			</trans-unit>
+			<trans-unit id="getDirections" xml:space="preserve" approved="yes">
+				<source>Get Directions</source>
+				<target>Itinéraire</target>
+			</trans-unit>
+			<trans-unit id="info" xml:space="preserve" approved="yes">
+				<source>Info</source>
+				<target>Info</target>
+			</trans-unit>
+			<trans-unit id="latitude" xml:space="preserve" approved="yes">
+				<source>Latitude</source>
+				<target>Latitude</target>
+			</trans-unit>
+			<trans-unit id="location" xml:space="preserve" approved="yes">
+				<source>Location</source>
+				<target>Lieu</target>
+			</trans-unit>
+			<trans-unit id="longitude" xml:space="preserve" approved="yes">
+				<source>Longitude</source>
+				<target>Longitude</target>
+			</trans-unit>
+			<trans-unit id="radius" xml:space="preserve" approved="yes">
+				<source>Radius: </source>
+				<target>Rayon</target>
+			</trans-unit>
+			<trans-unit id="startaddress" xml:space="preserve" approved="yes">
+				<source>Start Address</source>
+				<target>Lieu de départ</target>
+			</trans-unit>
+			<trans-unit id="toHereFrom" xml:space="preserve" approved="yes">
+				<source>To here</source>
+				<target>À partir de ce lieu</target>
+			</trans-unit>
+			
+			<trans-unit id="travelmode" xml:space="preserve" approved="yes">
+				<source>Travel mode</source>
+				<target>Moyen de locomotion</target>
+			</trans-unit>
+			<trans-unit id="travelmode.DRIVING" xml:space="preserve" approved="yes">
+				<source>car</source>
+				<target>Voiture</target>
+			</trans-unit>
+			<trans-unit id="travelmode.BICYCLING" xml:space="preserve" approved="yes">
+				<source>bike</source>
+				<target>Vélo</target>
+			</trans-unit>
+			<trans-unit id="travelmode.TRANSIT" xml:space="preserve" approved="yes">
+				<source>public transport</source>
+				<target>Transport en commun</target>
+			</trans-unit>
+			<trans-unit id="travelmode.WALKING" xml:space="preserve" approved="yes">
+				<source>walking</source>
+				<target>Marche à pied</target>
+			</trans-unit>			
+			<trans-unit id="directionsMenuForm.submit" xml:space="preserve" approved="yes">
+				<source>Go</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type_pi1" xml:space="preserve" approved="yes">
+				<source>WEC Simple Map</source>
+				<target>WEC Map carte simple</target>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type_pi2" xml:space="preserve" approved="yes">
+				<source>WEC Frontend User Map</source>
+				<target>WEC carte Frontend User</target>
+			</trans-unit>
+			<trans-unit id="tt_content.list_type_pi3" xml:space="preserve" approved="yes">
+				<source>WEC Table Map</source>
+				<target>WEC carte tableau</target>
+			</trans-unit>
+			<trans-unit id="tx_wecmap_external" xml:space="preserve" approved="yes">
+				<source>WEC Map External Resource</source>
+				<target>WEC Map ressource externe</target>
+			</trans-unit>
+			<trans-unit id="tx_wecmap_external.title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+				<target>Titre</target>
+			</trans-unit>
+			<trans-unit id="tx_wecmap_external.url" xml:space="preserve" approved="yes">
+				<source>URL</source>
+				<target>URL</target>
+			</trans-unit>
+			<trans-unit id="unit" xml:space="preserve" approved="yes">
+				<source>Unit: </source>
+				<target>Unité:</target>
+			</trans-unit>
+			<trans-unit id="unit.miles" xml:space="preserve" approved="yes">
+				<source>miles</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="unit.kilometers" xml:space="preserve" approved="yes">
+				<source>kilometers</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="submit" xml:space="preserve" approved="yes">
+				<source>Submit</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="pi1TemplateNotIncluded" xml:space="preserve" approved="yes">
+				<source>
+          
+          &lt;p&gt;Please include the WEC Simple Map static template on your page.&lt;/p&gt;
+          
+      </source>
+				<target>Please include the WEC Simple Map static template on your page.</target>
+			</trans-unit>
+			<trans-unit id="pi2TemplateNotIncluded" xml:space="preserve" approved="yes">
+				<source>
+          
+          &lt;p&gt;Please include the WEC Frontend User Map static template on your page.&lt;/p&gt;
+          
+      </source>
+				<target>Please include the WEC Frontend User Map static template on your page.</target>
+			</trans-unit>
+			<trans-unit id="pi3TemplateNotIncluded" xml:space="preserve" approved="yes">
+				<source>
+          
+          &lt;p&gt;Please include the WEC Table Map static template on your page.&lt;/p&gt;
+          
+      </source>
+				<target>Please include the WEC Table Map static template on your page.</target>
+			</trans-unit>
+			<trans-unit id="wecApiTemplateNotIncluded" xml:space="preserve" approved="yes">
+				<source>
+                
+          &lt;p&gt;Please include the WEC Map API static template on your page and make sure it&amp;apos;s included before (above) any other WEC Map static templates.&lt;/p&gt;
+                
+      </source>
+				<target>&lt;p&gt;Please include the WEC Map API static template on your page and make sure it's included before (above) any other WEC Map static templates.</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.apiKey" xml:space="preserve" approved="yes">
+				<source>Google Maps API Key</source>
+				<target>Clé Google Maps API Key</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.city" xml:space="preserve" approved="yes">
+				<source>City</source>
+				<target>Ville</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conLargeMap" xml:space="preserve" approved="yes">
+				<source>Size of Map Controls</source>
+				<target>Taille des contrôles de carte</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conLargeMapL" xml:space="preserve" approved="yes">
+				<source>Large</source>
+				<target>Grande</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conLargeMapS" xml:space="preserve" approved="yes">
+				<source>Small</source>
+				<target>Petite</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conLargeMapZ" xml:space="preserve" approved="yes">
+				<source>Zoom only</source>
+				<target>Zoom seulement</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conNone" xml:space="preserve" approved="yes">
+				<source>None</source>
+				<target>Aucun</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conOverview" xml:space="preserve" approved="yes">
+				<source>Show Overview Map</source>
+				<target>Afficher la vue d'ensemble</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conScale" xml:space="preserve" approved="yes">
+				<source>Show Scale</source>
+				<target>Afficher l'échelle</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.conType" xml:space="preserve" approved="yes">
+				<source>Show Map Type</source>
+				<target>Afficher le type de carte</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.controlsTitle" xml:space="preserve" approved="yes">
+				<source>Map Controls</source>
+				<target>Contrôle de carte</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.coord" xml:space="preserve" approved="yes">
+				<source>Coords</source>
+				<target>Coordonnées</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.country" xml:space="preserve" approved="yes">
+				<source>Country</source>
+				<target>Pays</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.description" xml:space="preserve" approved="yes">
+				<source>Description</source>
+				<target>Description</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.initialMapType" xml:space="preserve" approved="yes">
+				<source>Initial Map Type</source>
+				<target>Type de carte initial</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.kml" xml:space="preserve" approved="yes">
+				<source>KML to overlay</source>
+				<target>KML à insérer</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.mapHeight" xml:space="preserve" approved="yes">
+				<source>Height (pixels)</source>
+				<target>Hauteur (pixels)</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.mapTitle" xml:space="preserve" approved="yes">
+				<source>Map Details</source>
+				<target>Détails de la carte</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.mapWidth" xml:space="preserve" approved="yes">
+				<source>Width (pixels)</source>
+				<target>Largeur (pixels)</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.prefillAddress" xml:space="preserve" approved="yes">
+				<source>Prefill Address from User Info</source>
+				<target>Inclure l'adresse à partir des informations d'usager</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.privacy" xml:space="preserve" approved="yes">
+				<source>Sensitive geocode (no address)</source>
+				<target>Géocode sans adresse</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.sheet" xml:space="preserve" approved="yes">
+				<source>Address</source>
+				<target>Adresse</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.showDirs" xml:space="preserve" approved="yes">
+				<source>Show Directions</source>
+				<target>Afficher les directions</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.showInfoOnLoad" xml:space="preserve" approved="yes">
+				<source>Show Info Bubble On Load</source>
+				<target>Afficher l'info bulle automatiquement</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.showRadiusSearch" xml:space="preserve" approved="yes">
+				<source>Show Radius Search</source>
+				<target>Afficher la recherche par rayon</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.showSidebar" xml:space="preserve" approved="yes">
+				<source>Show Marker Sidebar</source>
+				<target>Afficher les contrôles verticaux</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.showWrittenDirs" xml:space="preserve" approved="yes">
+				<source>Show Written Directions</source>
+				<target>Afficher l'itinéraire</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.state" xml:space="preserve" approved="yes">
+				<source>State</source>
+				<target>État / Province</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.street" xml:space="preserve" approved="yes">
+				<source>Address</source>
+				<target>Adresse</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.tables" xml:space="preserve" approved="yes">
+				<source>Tables to map data from</source>
+				<target>Table sur laquelle puiser les données</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.title" xml:space="preserve" approved="yes">
+				<source>Title</source>
+				<target>Titre</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typeHybrid" xml:space="preserve" approved="yes">
+				<source>Hybrid</source>
+				<target>Hybride</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typeNormal" xml:space="preserve" approved="yes">
+				<source>Normal</source>
+				<target>Normal</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typeOCM" xml:space="preserve" approved="yes">
+				<source>OpenCycleMap</source>
+				<target>OpenCycleMap</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typeOSM" xml:space="preserve" approved="yes">
+				<source>OpenStreetMap</source>
+				<target>OpenStreetMap</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typePhysical" xml:space="preserve" approved="yes">
+				<source>Terrain</source>
+				<target>Terrain</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.typeSatellite" xml:space="preserve" approved="yes">
+				<source>Satellite</source>
+				<target>Satellite</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.userGroup" xml:space="preserve" approved="yes">
+				<source>Filter by FE user group (default: all)</source>
+				<target>Filtrer par FE user (tous par défaut)</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.zip" xml:space="preserve" approved="yes">
+				<source>ZIP</source>
+				<target>Code postal</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.recursive.I.1" xml:space="preserve" approved="yes">
+				<source>1 level</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.recursive.I.2" xml:space="preserve" approved="yes">
+				<source>2 levels</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.recursive.I.3" xml:space="preserve" approved="yes">
+				<source>3 levels</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.recursive.I.4" xml:space="preserve" approved="yes">
+				<source>4 levels</source>
+				<target></target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.recursive.I.5" xml:space="preserve" approved="yes">
+				<source>unlimited</source>
+				<target></target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

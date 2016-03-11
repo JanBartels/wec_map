@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-09-16T19:53:55Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="pi1_title" xml:space="preserve" approved="yes">
+				<source>WEC Simple Map</source>
+				<target>WEC-Einfache-Karte</target>
+			</trans-unit>
+			<trans-unit id="pi1_plus_wiz_description" xml:space="preserve" approved="yes">
+				<source>Adds a simple map displaying one location at the center.</source>
+				<target>Fügt eine Karte hinzu, die nur einen Ort anzeigt.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

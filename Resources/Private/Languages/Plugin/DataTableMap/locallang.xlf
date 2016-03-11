@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-09-16T19:53:55Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="pi3_title" xml:space="preserve">
+				<source>WEC Table Map</source>
+			</trans-unit>
+			<trans-unit id="pi3_plus_wiz_description" xml:space="preserve">
+				<source>Adds a simple map displaying all kinds of records.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
