@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2011-2016 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -358,9 +359,10 @@ $pageRenderer->addJsFile( '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUti
 
 		switch($cmd) {
 			case 'downloadJS' :
-				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js', 'markermanager.js' );
-				$content[] = $this->download( 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js', 'infobubble.js' );
-				$content[] = $this->download( 'http://jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js', 'oms.min.js' );
+				$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
+				$content[] = $this->download( 'https://' . $extConf['mmURL'], 'markermanager.js' );
+				$content[] = $this->download( 'https://' . $extConf['ibURL'], 'infobubble.js' );
+				$content[] = $this->download( 'https://' . $extConf['omURL'], 'oms.min.js' );
 				$content[] = '<br />';
 				break;
 

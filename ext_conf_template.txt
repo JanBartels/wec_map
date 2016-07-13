@@ -10,3 +10,9 @@ apiURL = http://maps.google.com/maps?file=api&amp;v=%s&amp;key=%s&amp;hl=%s
 useOwnJS = 0
 # cat=basic; type=input; label=Directory for own JS-files for wec_map (including trailing slash)
 jsDir = 
+# cat=basic; type=input; label=URL of markermanager (without protocol-prefix)
+mmURL = cdn.rawgit.com/googlemaps/v3-utility-library/master/markermanager/src/markermanager.js
+# cat=basic; type=input; label=URL of infobubble (without protocol-prefix)
+ibURL = cdn.rawgit.com/googlemaps/js-info-bubble/gh-pages/src/infobubble.js
+# cat=basic; type=input; label=URL of OverlappingMarkerSpiderfier (without protocol-prefix)
+omURL = jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js

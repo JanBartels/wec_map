@@ -192,7 +192,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 		// build URL
 		$lookupstr = trim( $addressString );
 
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?sensor=false&address=' . urlencode( $lookupstr );
+		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode( $lookupstr );
 		if ( $region )
 			$url .= '&region=' . urlencode( $region );
 

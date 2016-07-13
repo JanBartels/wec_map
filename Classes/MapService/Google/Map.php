@@ -249,9 +249,10 @@ class Map extends \JBartels\WecMap\MapService\Map {
 			}
 			else
 			{
-				$mmURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/tags/markermanager/1.0/src/markermanager.js';
-				$ibURL  = $scheme . 'google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js';
-				$omURL  = $scheme . 'jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js';
+				$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
+				$mmURL  = $scheme . $extConf['mmURL'];
+				$ibURL  = $scheme . $extConf['ibURL'];
+				$omURL  = $scheme . $extConf['omURL'];
 			}
 
 			if (TYPO3_DLOG) {
