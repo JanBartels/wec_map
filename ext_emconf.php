@@ -43,6 +43,11 @@ $EM_CONF[$_EXTKEY] = array(
             'static_info_tables' => '',
 		),
 	),
+	'autoload' => array(
+		'psr-4' => array(
+			  'JBartels\\WecMap\\' => 'Classes',
+		),
+	),
 );
 
 ?>
