@@ -160,7 +160,7 @@ tx_wecmap_api {
 		30.wrap  = <td>|</td>
 		40       = TEXT
 		40.field = sidebar
-		40.wrap  = <td style="vertical-align: top;">|</td>
+		40.wrap  = <td class="sidebar">|</td>
 		50       = TEXT
 		50.value = </tr></table>
 		60       = TEXT
@@ -220,7 +220,8 @@ tx_wecmap_api {
 	}
 	
 	_CSS_DEFAULT_STYLE (
-		.tx-wecmap_map .sidebar {display:block; overflow: auto;}
+		.tx-wecmap-pi1 td.sidebar,  .tx-wecmap-pi2 td.sidebar,  .tx-wecmap-pi3 td.sidebar  { vertical-align: top; }
+		.tx-wecmap-pi1 div.sidebar, .tx-wecmap-pi2 div.sidebar, .tx-wecmap-pi3 div.sidebar {display:block; overflow: auto; }
 		.tx-wecmap-map .startendaddress {display: block; color: grey; font-size: 85%; width:100%; }
 		.tx-wecmap-map .infotitle { font-weight: bold; font-size: 110%;}
 		.tx-wecmap-map #copyright-control a:link,
