@@ -239,7 +239,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 
 			$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
-			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?sensor=false&amp;language=' . $this->lang . '&amp;libraries=places';
+			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?language=' . $this->lang . '&amp;libraries=places';
 
 			if(\JBartels\WecMap\Utility\Backend::getExtConf('useOwnJS'))
 			{
@@ -391,9 +391,9 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 
 		if($center) {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'" />';
 		} else {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'&sensor=false" />';
+			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'" />';
 		}
 
 	}
