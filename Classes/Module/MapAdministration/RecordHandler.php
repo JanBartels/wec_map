@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2015 J. Bartels
+* (c) 2011-2016 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -63,7 +63,7 @@ class RecordHandler {
 		// Select rows:
 		$displayRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_wecmap_cache','', 'address', 'address', $limit);
 
-		$output = '';
+		$tablebody = '';
 		foreach($displayRows as $row) {
 
 			// Add icon/title and ID:
@@ -78,15 +78,14 @@ class RecordHandler {
 			$cells[] = '<td class="deleteButton"><a href="#" onclick="deleteRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"').' title="'.$LANG->getLL('deleteAddress').'" alt="'.$LANG->getLL('deleteAddress').'" /></a></td>';
 
 			// Compile Row:
-			$output .= '
-				<tr id="item_'. $row['address_hash'] .'" class="bgColor'.($cc%2 ? '-20':'-10').'">
-					'.implode('
-					',$cells).'
-				</tr>';
-			$cc++;
+			$tablebody .= '<tr id="item_'. $row['address_hash'] .'">'.implode('',$cells).'</tr>';
 
 			$this->countDisplayed++;
 		}
+
+		$output = $this->getTotalCountHeader($this->count)
+		        . '<br />'
+		        ;
 
 		// Create header:
 		$headerCells = array();
@@ -95,17 +94,13 @@ class RecordHandler {
 		$headerCells[] = '<th style="width: 6em;">'.$LANG->getLL('longitude').'</th>';
 		$headerCells[] = '<th colspan="2">Actions</th>';
 
-		$output = '
-			<thead class="bgColor5 tableheader"><tr>
-				'.implode('
-				',$headerCells).'
-			</tr></thead>'.$output;
+		$output .= '<table id="tx-wecmap-cache">'
+		         . '<thead><tr>'. implode('',$headerCells) . '</tr></thead>'
+				 . '<tbody>'.$tablebody.'</tbody>'
+				 . '</table>'
+				 ;
 
-		$output = $this->getTotalCountHeader($this->count).
-		'<br /><div id="recordTable">'.
-		// $pager.
-		'<br/>'.
-		'<table border="0" cellspacing="1" cellpadding="3" id="tx-wecmap-cache" class="sortable">'.$output.'</table></div>';
+//		$pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 
 		return $output;
 	}
@@ -132,14 +127,7 @@ class RecordHandler {
 #			$cells[] = '<td class="editButton"><a href="#" onclick="editRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('editAddress').'" alt="'.$LANG->getLL('editAddress').'" /></a></td>';
 #			$cells[] = '<td class="deleteButton"><a href="#" onclick="deleteRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"').' title="'.$LANG->getLL('deleteAddress').'" alt="'.$LANG->getLL('deleteAddress').'" /></a></td>';
 
-#		$js = '<script type="text/javascript" src="'.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL').'typo3/contrib/prototype/prototype.js"></script>'.chr(10).
-#			  '<script type="text/javascript" src="' . $GLOBALS['BACK_PATH'] . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'Resources/Public/JavaScript/Contrib/tablesort/fastinit.js"></script>'.chr(10).
-#			  '<script type="text/javascript" src="' . $GLOBALS['BACK_PATH'] . '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'Resources/Public/JavaScript/Contrib/tablesort/tablesort.js"></script>'.chr(10).
-$js =
-			  '<script type="text/javascript">
-				SortableTable.setup({ rowEvenClass : \'bgColor-20\', rowOddClass : \'bgColor-10\'})
-
-			  </script>'.chr(10).
+			$js =
 			'<script>
 				function getSaveCancelLinks(id, oldLat, oldLong) {
 					var link = \'<a href="#" onclick="saveRecord(\\\'\'+id+\'\\\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/savedok.gif','width="11" height="12"') . ' title="'.$LANG->getLL('updateAddress').'" alt="'.$LANG->getLL('updateAddress').'" /></a><a href="#" onclick="unEdit(\\\'\'+id+\'\\\',\\\'\'+oldLong+\'\\\', \\\'\'+oldLat+\'\\\'); return false;"><img'.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/closedok.gif','width="11" height="12"') . ' title="'.$LANG->getLL('cancelUpdate') . '" alt="'.$LANG->getLL('cancelUpdate').'" /></a>\';

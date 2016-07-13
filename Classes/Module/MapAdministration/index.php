@@ -51,13 +51,12 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass {
 	 * @return	void
 	 */
 	function init()	{
-		global $BE_USER,$LANG,$BACK_PATH,$TCA_DESCR,$TCA,$CLIENT,$TYPO3_CONF_VARS;
-
 		parent::init();
-$pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
-//$pageRenderer->addJsFile( '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'Resources/Public/JavaScript/Contrib/TableSort/fastinit.js' );
-$pageRenderer->addJsFile( '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'Resources/Public/JavaScript/MapAdministration.js' );
+		$javaScriptDir = '../' . \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::siteRelPath('wec_map') . 'Resources/Public/JavaScript/';
 
+$pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
+		$pageRenderer->loadJquery();
+		$pageRenderer->addJsFile( $javaScriptDir . 'MapAdministration.js' );
 	}
 
 	/**
