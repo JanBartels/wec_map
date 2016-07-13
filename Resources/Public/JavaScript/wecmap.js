@@ -157,6 +157,12 @@ return( {
 		return map.openDirectionsFromHere(groupId, markerId);
 	},
 
+	// resize and recenter map for use in hidden containers accordeon, modal box, etc.
+	resizeMap: function(mapId) {
+		var map = this.get( mapId );
+		map.resizeMap();
+	},
+
 	labels: {
 		startaddress: 'startaddress: ',
 		endaddress:   'endaddress: ',
@@ -660,6 +666,14 @@ WecMapGoogleV3.prototype.openDirectionsFromHere = function( groupId, markerId ) 
 	return false;
 }
 
+// resize and recenter map for use in hidden containers accordeon, modal box, etc.
+WecMapGoogleV3.prototype.resizeMap = function () {
+	this.center = this.map.getCenter();
+	this.zoom = this.map.getZoom();
+	google.maps.event.trigger(this.map, 'resize');
+	this.map.setCenter(this.center);
+	this.map.setZoom(this.zoom);
+}
 
 // compatibility functions for V2->V3
 
