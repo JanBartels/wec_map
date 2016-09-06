@@ -15,6 +15,9 @@
 				are set correctly in either the Flexform or via TypoScript.
 			</source>
 			</trans-unit>
+			<trans-unit id="error_noBrowserKey" xml:space="preserve">
+				<source>There's no API key configured for this domain. Make sure to set an API key.</source>
+			</trans-unit>
 			<trans-unit id="endaddress" xml:space="preserve">
 				<source>End Address</source>
 			</trans-unit>

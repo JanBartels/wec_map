@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2015 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2016 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
 * (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
@@ -47,7 +47,6 @@ class Map extends \JBartels\WecMap\MapService\Map {
 	public  $mapName;
 
 	public  $js;
-	public  $key;
 	public  $control;
 	public  $type;
 	public  $directions;
@@ -84,13 +83,6 @@ class Map extends \JBartels\WecMap\MapService\Map {
 
 		// array to hold the different Icons
 		$this->icons = array();
-
-		if(!$key) {
-			$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Utility\DomainMgr::class);
-			$this->key = $domainmgr->getKey();
-		} else {
-			$this->key = $key;
-		}
 
 		$this->directions = false;
 		$this->directionsDivID = null;
@@ -214,7 +206,6 @@ class Map extends \JBartels\WecMap\MapService\Map {
 
 		if(TYPO3_DLOG) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': starting map drawing', 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': API key: '.$this->key, 'wec_map_api');
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': domain: '.\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST'), 'wec_map_api');
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': map type: '.$this->type, 'wec_map_api');
 		}
@@ -223,7 +214,10 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		$hasHeightWidth = $this->hasHeightWidth();
 
 		// make sure we have markers to display and an API key
-		if ($hasThingsToDisplay && $hasHeightWidth) {
+		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
+		$browserKey = $domainmgr->getBrowserKey();
+
+		if ($hasThingsToDisplay && $hasHeightWidth && $browserKey ) {
 
 			// auto center and zoom if necessary
 			$this->autoCenterAndZoom();
@@ -239,7 +233,8 @@ class Map extends \JBartels\WecMap\MapService\Map {
 
 			$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
-			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?language=' . $this->lang . '&amp;libraries=places';
+			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?language=' . $this->lang . '&libraries=places';
+			$apiURL = $domainmgr->addKeyToUrl( $apiURL, $browserKey, false );
 
 			if(\JBartels\WecMap\Utility\Backend::getExtConf('useOwnJS'))
 			{
@@ -337,6 +332,8 @@ class Map extends \JBartels\WecMap\MapService\Map {
 			$error = '<p>'.$this->getLL( 'error_nothingToDisplay' ).'</p>';
 		} else if (!$hasHeightWidth) {
 			$error = '<p>'.$this->getLL('error_noHeightWidth' ).'</p>';
+		} else if (!$browserKey) {
+			$error = '<p>'.$this->getLL($lang, 'error_noBrowserKey' ).'</p>';
 		}
 		if(TYPO3_DLOG) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': finished map drawing with errors', 'wec_map_api', 2);
@@ -391,11 +388,13 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 
 		if($center) {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'" />';
+			$url = $scheme . 'maps.googleapis.com/maps/api/staticmap?center='.$this->lat .','.$this->long .'&zoom='.$this->zoom.'&size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.urlencode($markers);
 		} else {
-			return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $scheme . 'maps.google.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.$markers .'" />';
+			$url = $scheme . 'maps.googleapis.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.urlencode($markers);
 		}
-
+		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
+		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getBrowserKey(), true );
+		return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $url .'" />';
 	}
 	/**
 	 * Adds an address to the currently list of markers rendered on the map. Support tabs.
@@ -415,7 +414,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 	 */
 	function addMarkerByAddressWithTabs($street, $city, $state, $zip, $country, $tabLabels = null, $title=null, $description=null, $minzoom = 0, $maxzoom = 18, $iconID = '') {
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -441,7 +440,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		list($street, $city, $state, $country) = $address;
 
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -491,7 +490,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		}
 
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLongWithTabs($latlong['lat'], $latlong['long'], $tabLabels, $title, $description, $minzoom, $maxzoom, $iconID);
@@ -593,7 +592,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 	function setCenterByAddress($street, $city, $state, $zip, $country = null) {
 
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 		$this->lat = $latlong['lat'];
 		$this->long = $latlong['long'];
 	}
@@ -913,19 +912,6 @@ WecMap.createMap("'. $this->mapName . '" );';
 
         return $valid;
     }
-
-	/**
-	 * Checks if an API key has been entered and displays an error message instead of the map if not.
-	 *
-	 * @return boolean
-	 **/
-	function hasKey() {
-		if($this->key) {
-            return true;
-        } else {
-			return false;
-		}
-	}
 
 	/**
 	 * Checks whether the map has a height and width set.

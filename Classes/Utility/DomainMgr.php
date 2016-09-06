@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2013-2015 J. Bartels
+* (c) 2013-2016 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -46,7 +46,28 @@ class DomainMgr {
 	 */
 	protected $objectManager;
 
-	function getKey($domain = null) {
+	function addKeyToUrl( $url, $key, $addSecret ) {
+		$apiKey = explode( ',', $key );
+		$url .= '&key=' .$apiKey[ 0 ];
+		if ( $apiKey[ 1 ] && $addSecret )
+			return $this->signurl( $url, $apiKey[ 1 ] );
+		else
+			return $url;
+	}
+
+	function getBrowserKey($domain = null) {
+		$value = $this->getKey( $domain );
+		$values = explode( '&', $value );
+		return $values[ 0 ];
+	}
+
+	function getServerKey($domain = null) {
+		$value = $this->getKey( $domain );
+		$values = explode( '&', $value );
+		return $values[ 1 ];
+	}
+
+	protected function getKey($domain = null) {
 
 		// check to see if this is an update from the old config schema and convert to the new
 		$isOld = $this->checkForOldConfig();
@@ -104,18 +125,16 @@ class DomainMgr {
 		$extconfArray = array();
 		$returnArray = array();
 
-		// get total number of domain->key pairs
-		$number = count($post)/2;
-
 		// loop through all the pairs
-		for ( $i=0; $i < $number; $i++ ) {
+		for ( $i=0; array_key_exists( 'domain_' . $i, $post ); $i++ ) {
 
 			// get the domain and key
-			$curKey = $post[$i+$number];
-			$curDomain = $post[$i];
+			$curDomain = $post[ 'domain_' . $i];
+			$browserKey = $post[ 'browserkey_' . $i];
+			$serverKey = $post[ 'serverkey_' . $i];
 
 			// if there is no key, we don't want to save it in extconf
-			if(!empty($curKey) && !empty($curDomain)) $extconfArray[$curDomain] = $curKey;
+			if(!( empty($browserKey) && empty($serverKey) ) && !empty($curDomain)) $extconfArray[$curDomain] = $browserKey . '&' . $serverKey;
 
 			// get all but manually added domains
 			$domains1 = $this->getRequestDomain();
@@ -124,7 +143,7 @@ class DomainMgr {
 
 			// if there is no domain, or we want to delete a domain, we won't return it.
 			// we also make sure not to recommend domains that were just deleted but manually added before
-			if(!empty($curDomain) && !(!empty($allDomains[$curDomain]) && empty($curKey) && !in_array($curDomain, $domains))) $returnArray[$curDomain] = $curKey;
+			if(!empty($curDomain) && !(!empty($allDomains[$curDomain]) && empty($browserKey) && empty($serverKey) && !in_array($curDomain, $domains))) $returnArray[$curDomain] = $browserKey . '&' . $serverKey;;
 
 
 		}
@@ -282,6 +301,22 @@ class DomainMgr {
 		asort($temp4);
 
 		return array_reverse($temp4);
+	}
+
+	function signurl( $url, $privatekey )
+	{
+		// sign only path and query without host and protocol
+		$url = parse_url( $url );
+		$urlToSign =  $url[ 'path' ] . "?" . $url[ 'query' ];
+
+		// Decode the private key
+		$decodedKey = base64_decode( str_replace( array( '-', '_' ), array( '+', '/' ), $privatekey ) );
+
+		// Create a HMAC SHA1 signature and encode it
+		$signature = hash_hmac( "sha1", $urlToSign, $decodedKey, true );
+		$encodedSignature = str_replace( array( '+', '/' ), array( '-', '_' ), base64_encode( $signature ) );
+
+		return $url[ 'scheme' ] . "://" . $url[ 'host' ] . $url[ 'path' ] . "?" . $url[ 'query' ] . "&signature=" . urlencode( $encodedSignature );
 	}
 
 }

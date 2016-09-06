@@ -52,7 +52,6 @@ class Map {
 	public $groupCount = 0;
 	public $groups;
 	public $js;
-	public $key;
 
 	public $mapOptions = array();
 
@@ -273,7 +272,7 @@ class Map {
 	function addMarkerByAddress($street, $city, $state, $zip, $country, $title='', $description='', $minzoom = 0, $maxzoom = 18, $iconID='') {
 
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
@@ -349,7 +348,7 @@ class Map {
 		$country = $address[3];
 
 		/* Geocode the address */
-		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+		$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 		/* Create a marker at the specified latitude and longitdue */
 		return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);
@@ -401,7 +400,7 @@ class Map {
 			}
 
 			/* Geocode the address */
-			$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country, $this->key);
+			$latlong = \JBartels\WecMap\Utility\Cache::lookup($street, $city, $state, $zip, $country);
 
 			/* Create a marker at the specified latitude and longitude */
 			return $this->addMarkerByLatLong($latlong['lat'], $latlong['long'], $title, $description, $minzoom, $maxzoom, $iconID);

@@ -1,3 +1,6 @@
+3.1.3
+[FIX] Reintroduced API-keys (fixes #77491)
+
 3.1.2
 [FIX] Backend-User without Admin-Flag don't have access to WEC Map Admin (issue #61239)
 [NEW] TCA for nn_address

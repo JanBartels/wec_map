@@ -42,9 +42,9 @@ namespace JBartels\WecMap\Utility;
  */
 class Cache {
 
-	static function lookup($street, $city, $state, $zip, $country, $key='', $forceLookup=false) {
+	static function lookup($street, $city, $state, $zip, $country, $forceLookup=false) {
 		$fakeObject = null;
-		return self::lookupWithCallback($street, $city, $state, $zip, $country, $key, $forceLookup, $fakeObject);
+		return self::lookupWithCallback($street, $city, $state, $zip, $country, $forceLookup, $fakeObject);
 	}
 
 	/**
@@ -56,11 +56,10 @@ class Cache {
 	 * @param	string		The state name.
 	 * @param	string		This ZIP code.
 	 * @param	string		The country name.
-	 * @param	string		The optional API key to use in the lookup.
 	 * @param	boolean		Force a new lookup for address.
 	 * @return	array		Lat/long array for specified address.  Null if lookup fails.
 	 */
-	static function lookupWithCallback($street, $city, $state, $zip, $country, $key='', $forceLookup=false, &$pObj) {
+	static function lookupWithCallback($street, $city, $state, $zip, $country, $forceLookup=false, &$pObj) {
 
 		/* Do some basic normalization on the address */
 		self::normalizeAddress($street, $city, $state, $zip, $country);
@@ -79,7 +78,7 @@ class Cache {
 
 				while (is_object($lookupObj =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstanceService('geocode', '', $serviceChain))) {
 					$serviceChain.=','.$lookupObj->getServiceKey();
-					$latlong = $lookupObj->lookup($street, $city, $state, $zip, $country, $key);
+					$latlong = $lookupObj->lookup($street, $city, $state, $zip, $country);
 
 					if(method_exists($pObj, 'callback_lookupThroughGeocodeService')) {
 						$pObj->callback_lookupThroughGeocodeService();
@@ -119,7 +118,6 @@ class Cache {
 	 * @param	string		The state name.
 	 * @param	string		This ZIP code.
 	 * @param	string		The country name.
-	 * @param	string		The optional API key to use in the lookup.
 	 * @return	none
 	 */
 	static function normalizeAddress(&$street, &$city, &$state, &$zip, &$country) {

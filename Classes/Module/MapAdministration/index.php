@@ -71,7 +71,7 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 				'1' => $LANG->getLL('function1'),
 				'2' => $LANG->getLL('function3'),
 				'3' => $LANG->getLL('function4'),
-//				'4' => $LANG->getLL('function2'),
+				'4' => $LANG->getLL('function2'),
 			)
 		);
 		parent::menuConfig();
@@ -235,9 +235,6 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 				unset($post['x']);
 				unset($post['y']);
 
-				ksort($post);
-				$post = array_values($post);
-
 				$allDomains = $domainmgr->processPost($post);
 
 				break;
@@ -286,11 +283,20 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 				$deleteButton = null;
 			}
 
+			$values = explode( '&', $value );
+			$valuebrowser = $values[ 0 ];
+			$valueserver = $values[ 1 ];
 			$content[] = '<div class="domain-item" style="margin-bottom: 15px;">';
 			$content[] = '<div style="width: 25em;"><strong>'. $key .'</strong> '. $deleteButton .'</div>';
-			$content[] = '<div><label style="display: none;" for="key_'. $index .'">'.$LANG->getLL('googleMapsApiKey').': </label></div>';
-			$content[] = '<div><input style="width: 58em;" id="key_'. $index .'" name="key_'. $index .'" value="'.$value.'" /></div>';
+
 			$content[] = '<input type="hidden" name="domain_'.$index.'" value="'. $key .'">';
+
+			$content[] = '<div><label for="key_'. $index .'">'.$LANG->getLL('googleMapsBrowserApiKey').': </label>';
+			$content[] = '<input style="width: 29em;" id="browserkey_'. $index .'" name="browserkey_'. $index .'" value="'.$valuebrowser.'" />';
+
+			$content[] = '<label for="serverkey_'. $index .'">'.$LANG->getLL('googleMapsServerApiKey').': </label>';
+			$content[] = '<input style="width: 29em;" id="serverkey_'. $index .'" name="serverkey_'. $index .'" value="'.$valueserver.'" /></div>';
+
 			$content[] = '</div>';
 			$index++;
 		}
@@ -298,8 +304,12 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 		$content[] = '<div id="adddomainbutton" style="margin-bottom: 15px;"><a href="#" onclick="document.getElementById(\'blank-domain\').style.display = \'block\'; document.getElementById(\'adddomainbutton\').style.display = \'none\'; document.getElementById(\'domain_'.$index.'\').value=\''. $blankDomainValue .'\';">Manually add a new API key for domain</a></div>';
 		$content[] = '<div class="domain-item" id="blank-domain" style="margin-bottom: 15px; display: none;">';
 		$content[] = '<div style="width: 35em;"><label style="display: none;" for="domain_'. $index .'">Domain: </label><input style="width: 12em;" id="domain_'. $index .'" name="domain_'. $index .'" value="" onfocus="this.value=\'\';"/> <input type="image" '.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"').' onclick="document.getElementById(\'key_'. $index .'\').value = \'\'; document.getElementById(\'blank-domain\').style.display =\'none\'; document.getElementById(\'adddomainbutton\').style.display = \'block\'; return false;" /></div>';
-		$content[] = '<div><label style="display: none;" for="key_'. $index .'">'.$LANG->getLL('googleMapsApiKey').': </label></div>';
-		$content[] = '<div><input style="width: 58em;" id="key_'. $index .'" name="key_'. $index .'" value="" /></div>';
+
+		$content[] = '<div><label for="browserkey_'. $index .'">'.$LANG->getLL('googleMapsBrowserApiKey').': </label>';
+		$content[] = '<input style="width: 29em;" id="browserkey_'. $index .'" name="browserkey_'. $index .'" value="" />';
+		$content[] = '<label for="serverkey_'. $index .'">'.$LANG->getLL('googleMapsServerApiKey').': </label>';
+		$content[] = '<input style="width: 29em;" id="serverkey_'. $index .'" name="serverkey_'. $index .'" value="" /></div>';
+
 		$content[] = '</div>';
 
 		$content[] = '<input type="submit" value="'.$LANG->getLL('submit').'"/>';

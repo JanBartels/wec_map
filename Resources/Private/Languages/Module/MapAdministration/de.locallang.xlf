@@ -77,18 +77,22 @@
 			</trans-unit>
 			<trans-unit id="apiInstructions" xml:space="preserve" approved="yes">
 				<source>
-				
-				In order to use the WEC Map extension you must have a Google 
-				Maps API Key. You can sign up for this key at
-				&lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;
-				http://code.google.com/apis/maps/signup.html&lt;/a&gt;.
-				
+				<p>In order to use the WEC Map extension you must have a Google 
+				Maps API Key. You can sign up for this key at the 
+				<a href="https://console.developers.google.com" target="_new">
+				Google API Console (https://console.developers.google.com</a>).</p>
+				<p>Enter the API key below. For the browser API Key append the secret
+				for the Static Maps API separated by a comma.</p>
 			</source>
 				<target>Um die WEC-Kartenerweiterung benutzen zu können, wird ein Schlüssel für das Google-Maps-API benötigt. Sie können sich zur Generierung des Schlüssels unter &lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;http://code.google.com/apis/maps/signup.html&lt;/a&gt; anmelden.</target>
 			</trans-unit>
-			<trans-unit id="googleMapsApiKey" xml:space="preserve" approved="yes">
-				<source>Google Maps API Key</source>
-				<target>Schlüssel für Google-Maps-API</target>
+			<trans-unit id="googleMapsBrowserApiKey" xml:space="preserve">
+				<source>Google Maps Browser API Key</source>
+				<target>Google Maps Browser API Key</target>
+			</trans-unit>
+			<trans-unit id="googleMapsServerApiKey" xml:space="preserve">
+				<source>Google Maps Server API Key</source>
+				<target>Google Maps Server API Key</target>
 			</trans-unit>
 			<trans-unit id="submit" xml:space="preserve" approved="yes">
 				<source>Save</source>

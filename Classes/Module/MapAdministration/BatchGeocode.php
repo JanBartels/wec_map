@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2015 J. Bartels
+* (c) 2010-2016 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -145,7 +145,7 @@ class BatchGeocode {
 		// increment total count
 		$this->processedAddresses++;
 
-		tx_wecmap_cache::lookupWithCallback($street, $city, $state, $zip, $country, '', false, $this);
+		tx_wecmap_cache::lookupWithCallback($street, $city, $state, $zip, $country, false, $this);
 	}
 
 	/**

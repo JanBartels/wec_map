@@ -61,16 +61,19 @@
 			</trans-unit>
 			<trans-unit id="apiInstructions" xml:space="preserve">
 				<source>
-				
-				In order to use the WEC Map extension you must have a Google 
-				Maps API Key. You can sign up for this key at
-				&lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;
-				http://code.google.com/apis/maps/signup.html&lt;/a&gt;.
-				
+				<p>In order to use the WEC Map extension you must have a Google 
+				Maps API Key. You can sign up for this key at the 
+				<a href="https://console.developers.google.com" target="_new">
+				Google API Console (https://console.developers.google.com</a>).</p>
+				<p>Enter the API key below. For the browser API Key append the secret
+				for the Static Maps API separated by a comma.</p>
 			</source>
 			</trans-unit>
-			<trans-unit id="googleMapsApiKey" xml:space="preserve">
-				<source>Google Maps API Key</source>
+			<trans-unit id="googleMapsBrowserApiKey" xml:space="preserve">
+				<source>Google Maps Browser API Key</source>
+			</trans-unit>
+			<trans-unit id="googleMapsServerApiKey" xml:space="preserve">
+				<source>Google Maps Server API Key</source>
 			</trans-unit>
 			<trans-unit id="submit" xml:space="preserve">
 				<source>Save</source>

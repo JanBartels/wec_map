@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2015 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2016 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * parts from static_info_tables:
 *  (c) 2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
@@ -121,10 +121,9 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 	 * @param	string	The city name.
 	 * @param	string	The state name.
 	 * @param	string	The ZIP code.
-	 * @param	string	Optional API key for accessing third party geocoder.
 	 * @return	array		Array containing latitude and longitude.  If lookup failed, empty array is returned.
 	 */
-	function lookup($street, $city, $state, $zip, $country, $key='')	{
+	function lookup($street, $city, $state, $zip, $country)	{
 
 		$addressString = '';
 		$region = '';
@@ -192,22 +191,12 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 		// build URL
 		$lookupstr = trim( $addressString );
 
-		$url = 'http://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode( $lookupstr );
+		$url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' . urlencode( $lookupstr );
 		if ( $region )
 			$url .= '&region=' . urlencode( $region );
 
-		/*
-		// Digital signatures for Premier Accounts not yet supported!
-		if(!$key) {
-			$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('tx_wecmap_domainmgr');
-			$key = $domainmgr->getKeyV3();
-		}
-		$url .= 'clientId=' . $clientId;
-		$signature = modified_base64( hmac( ... $key ... $url ... ) )
-		// see http://gmaps-samples.googlecode.com/svn/trunk/urlsigning/UrlSigner.php-source
-
-		$url .= '&signature=' . $signature;
-		*/
+		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
+		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getServerKey(), false );
 
 		// request Google-service and parse JSON-response
 		if(TYPO3_DLOG) {
