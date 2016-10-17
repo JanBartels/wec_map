@@ -61,7 +61,7 @@ class Marker {
 	 *
 	 * @return void
 	 **/
-	function Marker() {}
+	function __construct() {}
 
 	/**
 	 * Getter for internal index for this marker.

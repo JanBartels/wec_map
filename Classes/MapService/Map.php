@@ -59,7 +59,7 @@ class Map {
 	 * Class constructor stub.  Override in the map_service classes. Look there for
 	 * examples.
 	 */
-	function Map() {}
+	function __construct() {}
 
 	/**
 	 * Stub for the drawMap function.  Individual map services should implement

@@ -47,15 +47,6 @@ class MarkerGroup {
 	public $minzoom;			// min zoom level for this group
 	public $maxzoom;			// max zoom level for this group
 
-	/**
-	 * PHP4 Constructor
-	 * @param int unique id of this group
-	 *
-	 * @return void
-	 **/
-	function MarkerGroup($id, $minzoom, $maxzoom) {
-		$this->__construct($id, $minzoom, $maxzoom);
-	}
 
 	/**
 	 * PHP5 constructor
