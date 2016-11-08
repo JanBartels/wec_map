@@ -385,7 +385,7 @@ class Backend {
 	 * @return	string	The specified portion of the address.
 	 */
 	static function getFieldValueFromFF($key, $PA) {
-		$flexForm = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($PA['row']['pi_flexform']);
+		$flexForm = $PA['row']['pi_flexform'];
 		if(is_array($flexForm)) {
 			$flexForm = $flexForm['data']['default']['lDEF'];
 
