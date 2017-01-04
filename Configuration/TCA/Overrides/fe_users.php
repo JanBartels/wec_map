@@ -33,8 +33,7 @@ if(\JBartels\WecMap\Utility\Backend::getExtConf('feUserRecordMap')) {
 			'exclude' => 1,
 			'label' => 'LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:berecord_maplabel',
 			'config' => array (
-				'type' => 'passthrough',
-				'form_type' => 'user',
+				'type' => 'user',
 				'userFunc' => '\\JBartels\\WecMap\\Utility\\Backend->drawMap',
 			),
 		),
@@ -53,8 +52,7 @@ if(\JBartels\WecMap\Utility\Backend::getExtConf('geocodingStatus')) {
 			'exclude' => 1,
 			'label' => 'LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:berecord_geocodelabel',
 			'config' => array(
-				'type' => 'passthrough',
-				'form_type' => 'user',
+				'type' => 'user',
 				'userFunc' => '\\JBartels\\WecMap\\Utility\\Backend->checkGeocodeStatus',
 			),
 		),

@@ -8,10 +8,7 @@ return array(
 		'tstamp' => 'tstamp',
 		'crdate' => 'crdate',
 		'delete' => 'deleted',
-		'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('wec_map').'Resources/Public/Images/icon_tx_wecmap_external_resource.gif',
-	),
-	'feInterface' => Array (
-		'fe_admin_fieldList' => 'title, url',
+		'iconfile' => 'EXT:wec_map/Resources/Public/Images/icon_tx_wecmap_external_resource.gif',
 	),
 	"interface" => Array (
 		"showRecordFieldList" => "title,url"
@@ -34,16 +31,17 @@ return array(
 				"size" => "32",
 				"max" => "128",
 				'wizards' => Array(
-				        '_PADDING' => 2,
 				        'link' => Array(
 				                'type' => 'popup',
 				                'title' => 'Link',
 				                'icon' => 'link_popup.gif',
-				                'script' => 'browse_links.php?mode=wizard',
+								'module' => [
+									'name' => 'wizard_link',
+								],
 				                'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1',
 								'params' => Array(
 									'allowedExtensions' => 'kml, xml, kmz',
-									'blindLinkOptions' => 'mail, page, spec'
+									'blindLinkOptions' => 'folder, mail, page, spec, url'
 								)
 				        ),
 
