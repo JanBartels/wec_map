@@ -189,25 +189,14 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 	 */
 	function geocodeAdmin()	{
 
-		$count 	= $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('COUNT(*)', 'tx_wecmap_cache','');
-		$count = $count[0]['COUNT(*)'];
-
-		$recordHandler = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Module\MapAdministration\RecordHandler::class, $count);
+		$recordHandler = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Module\MapAdministration\RecordHandler::class );
 
 		global $LANG;
-
-		$cmd       = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('cmd');
 
 		$output   = $recordHandler->displaySearch();
 		$output  .= $recordHandler->displayTable();
 
-		if ($cmd == 'edit') {
-			$output = '<form action="" method="POST"><input name="cmd" type="hidden" value="update">'.$output.'</form>';
-		}
-
-		$js = $recordHandler->getJS();
-
-		return $js.chr(10).$output;
+		return $output;
 	}
 
 	/*

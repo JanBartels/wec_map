@@ -128,6 +128,12 @@
 			<trans-unit id="searchFilter" xml:space="preserve">
 				<source>Filter records...</source>
 			</trans-unit>
+			<trans-unit id="clearFilter" xml:space="preserve">
+				<source>Clear filter</source>
+			</trans-unit>
+			<trans-unit id="noRecords" xml:space="preserve">
+				<source>No records found.</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

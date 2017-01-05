@@ -159,6 +159,14 @@
 				<source>Filter records...</source>
 				<target>Einträge filtern...</target>
 			</trans-unit>
+			<trans-unit id="clearFilter" xml:space="preserve" approved="yes">
+				<source>Clear filter</source>
+				<target>Filter löschen</target>
+			</trans-unit>
+			<trans-unit id="noRecords" xml:space="preserve" approved="yes">
+				<source>No records found.</source>
+				<target>Keine Einträge gefunden.</target>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>

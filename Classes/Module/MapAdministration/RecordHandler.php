@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2011-2016 J. Bartels
+* (c) 2011-2017 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -33,16 +33,6 @@ namespace JBartels\WecMap\Module\MapAdministration;
 class RecordHandler {
 
 	var $itemsPerPage = 75;
-	var $count;
-
-	/**
-	 * PHP5 constructor
-	 *
-	 * @return void
-	 **/
-	function __construct($count) {
-		$this->count = $count;
-	}
 
 	/**
 	 * Displays the table with cache records
@@ -51,17 +41,33 @@ class RecordHandler {
 	 **/
 	function displayTable() {
 
-		if($this->count == 0) {
-			$content = $this->getTotalCountHeader(0).'<br />';
-			$content .= 'No Records Found.';
-			return $content;
-		}
-
 		global $LANG;
 
 		$limit = null;
 		// Select rows:
 		$displayRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_wecmap_cache','', 'address', 'address', $limit);
+
+		$iconEdit = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-open', array(
+			'title' => 'hallo' . $LANG->getLL('editAddress'),
+			'alt' => 'welt' . $LANG->getLL('editAddress')
+			)
+		);
+		$iconSave = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-save', array(
+			'title' => $LANG->getLL('editAddress'),
+			'alt' => $LANG->getLL('editAddress')
+			)
+		);
+		$iconCancel = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-document-close', array(
+			'title' => $LANG->getLL('cancelUpdate'),
+			'alt' => $LANG->getLL('cancelUpdate')
+			)
+		);
+
+		$iconDelete = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-edit-delete', array(
+			'title' => $LANG->getLL('deleteAddress'),
+			'alt' => $LANG->getLL('deleteAddress')
+			)
+		);
 
 		$tablebody = '';
 		foreach($displayRows as $row) {
@@ -69,21 +75,23 @@ class RecordHandler {
 			// Add icon/title and ID:
 			$cells = array();
 
-			$cells[] = '<td class="address">'.$row['address'].'</td>';
+			$cells[] = '<td class="address">'.htmlspecialchars( $row['address'] ).'</td>';
 
-			$cells[] = '<td class="latitude">'.$row['latitude'].'</td>';
-			$cells[] = '<td class="longitude">'.$row['longitude'].'</td>';
+			$cells[] = '<td class="latitude">'.htmlspecialchars( $row['latitude'] ).'</td>';
+			$cells[] = '<td class="longitude">'.htmlspecialchars( $row['longitude'] ).'</td>';
 
-			$cells[] = '<td class="editButton"><a href="#" onclick="editRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('editAddress').'" alt="'.$LANG->getLL('editAddress').'" /></a></td>';
-			$cells[] = '<td class="deleteButton"><a href="#" onclick="deleteRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"').' title="'.$LANG->getLL('deleteAddress').'" alt="'.$LANG->getLL('deleteAddress').'" /></a></td>';
+			$cells[] = '<td class="editButton">' .
+			             '<span class="editButton">' . $iconEdit . '</span>' .
+			             '<span class="saveButton" style="display: none;">' . $iconSave . '</span>' .
+			             '<span class="cancelButton" style="display: none;">' . $iconCancel . '</span>' .
+			           '</td>';
+			$cells[] = '<td class="deleteButton"><span class="deleteButton">' . $iconDelete . '</span></td>';
 
 			// Compile Row:
-			$tablebody .= '<tr id="item_'. $row['address_hash'] .'">'.implode('',$cells).'</tr>';
-
-			$this->countDisplayed++;
+			$tablebody .= '<tr id="item_'. $row['address_hash'] .'" data-cacheid="'. $row['address_hash'] .'" class="address">'.implode('',$cells).'</tr>';
 		}
 
-		$output = $this->getTotalCountHeader($this->count)
+		$output = $this->getTotalCountHeader()
 		        . '<br />'
 		        ;
 
@@ -98,9 +106,8 @@ class RecordHandler {
 		         . '<thead><tr>'. implode('',$headerCells) . '</tr></thead>'
 				 . '<tbody>'.$tablebody.'</tbody>'
 				 . '</table>'
+				 . '<div id="noRecords" style="display:none">' . $LANG->getLL('noRecords') . '</div>'
 				 ;
-
-//		$pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 
 		return $output;
 	}
@@ -112,36 +119,13 @@ class RecordHandler {
 	 **/
 	function displaySearch() {
 		global $LANG;
-		$content = '<div><input id="recordSearchbox" type="text" value="'.$LANG->getLL('searchFilter').'" size="20" onblur="resetSearchbox()" onfocus="clearSearchbox()" onkeyup="filter()"/><span id="resetSearchboxButton"></span></div>';
+
+		$iconFilter = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon( 'actions-document-save' );
+
+		$content = '<div><input id="recordSearchbox" type="text" placeholder="'.$LANG->getLL('searchFilter').'" size="20"/><button id="resetSearchboxButton" style="display: none;">'.$LANG->getLL('clearFilter').'</button></div>';
 		return $content;
 	}
 
-	/**
-	 * Returns the JS functions for our AJAX stuff
-	 *
-	 * @return String
-	 **/
-	function getJS() {
-		global $LANG;
-
-#			$cells[] = '<td class="editButton"><a href="#" onclick="editRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/edit2.gif','width="11" height="12"').' title="'.$LANG->getLL('editAddress').'" alt="'.$LANG->getLL('editAddress').'" /></a></td>';
-#			$cells[] = '<td class="deleteButton"><a href="#" onclick="deleteRecord(\''. $row['address_hash'] . '\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"').' title="'.$LANG->getLL('deleteAddress').'" alt="'.$LANG->getLL('deleteAddress').'" /></a></td>';
-
-			$js =
-			'<script>
-				function getSaveCancelLinks(id, oldLat, oldLong) {
-					var link = \'<a href="#" onclick="saveRecord(\\\'\'+id+\'\\\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/savedok.gif','width="11" height="12"') . ' title="'.$LANG->getLL('updateAddress').'" alt="'.$LANG->getLL('updateAddress').'" /></a><a href="#" onclick="unEdit(\\\'\'+id+\'\\\',\\\'\'+oldLong+\'\\\', \\\'\'+oldLat+\'\\\'); return false;"><img'.\TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/closedok.gif','width="11" height="12"') . ' title="'.$LANG->getLL('cancelUpdate') . '" alt="'.$LANG->getLL('cancelUpdate').'" /></a>\';
-					return link;
-				}
-
-				function getEditLink(id) {
-					var link = \'<a href="#" onclick="editRecord(\\\'\'+id+\'\\\'); return false;"><img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/edit2.gif','width="11" height="12"') . ' title="'.$LANG->getLL('editAddress') . '" alt="'.$LANG->getLL('editAddress') . '" /></a>\';
-					return link;
-				}
-			</script>';
-
-		return $js;
-	}
 
 	/**
 	 * Returns the header part that allows to delete all records and shows the
@@ -149,13 +133,15 @@ class RecordHandler {
 	 *
 	 * @return String
 	 **/
-	function getTotalCountHeader($count) {
+	function getTotalCountHeader() {
 		global $LANG;
+		$iconDelete = \TYPO3\CMS\Backend\Utility\IconUtility::getSpriteIcon('actions-edit-delete', array(
+			'title' => $LANG->getLL('deleteCache'),
+			'alt' => $LANG->getLL('deleteCache')
+			)
+		);
 		$content = $LANG->getLL('totalCachedAddresses') .
-			': <strong><span id="recordCount">'.$this->count.'</span></strong> '.
-			'<a href="#" onclick="deleteAll(); return false;">'.
-			'<img' . \TYPO3\CMS\Backend\Utility\IconUtility::skinImg($GLOBALS['BACK_PATH'],'gfx/garbage.gif','width="11" height="12"') . ' title="'.$LANG->getLL('deleteCache') . '" alt="'.$LANG->getLL('deleteCache') . '" />'.
-			'</a>';
+			': <strong><span id="recordCount">?</span></strong><span id="deleteCache">' . $iconDelete . '</span>';
 
 		return $content;
 	}

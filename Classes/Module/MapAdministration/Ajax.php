@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2014-2015 j.bartels
+* (c) 2014-2017 j.bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -29,6 +29,9 @@
 
 namespace JBartels\WecMap\Module\MapAdministration;
 
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+
 /**
  * Module 'WEC Map Admin' for the 'wec_map' extension.
  *
@@ -51,27 +54,30 @@ class  Ajax {
 	 * @param	[type]		$ajaxObj: ...
 	 * @return	[type]		...
 	 */
-	function ajaxDeleteAll($params, &$ajaxObj) {
+	function ajaxDeleteAll(ServerRequestInterface $request, ResponseInterface $response) {
 		\JBartels\WecMap\Utility\Cache::deleteAll();
-		$ajaxObj->addContent('content', '');
+		$response->getBody()->write('');
+        return $response;
 	}
 
-	function ajaxDeleteSingle($params, &$ajaxObj) {
-		$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('record');
+	function ajaxDeleteSingle(ServerRequestInterface $request, ResponseInterface $response) {
+		$hash = $request->getParsedBody()['record'];
 		\JBartels\WecMap\Utility\Cache::deleteByUID($hash);  // $hash is escaped in deleteByUID()
-		$ajaxObj->addContent('content', '');
+		$response->getBody()->write( json_encode( [ 'status' => 'ok' ] ) );
+        return $response;
 	}
 
-	function ajaxSaveRecord($params, &$ajaxObj) {
-		$hash = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('record');
-		$latitude = floatval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('latitude'));
-		$longitude = floatval(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('longitude'));
+	function ajaxSaveRecord(ServerRequestInterface $request, ResponseInterface $response) {
+		$hash = $request->getParsedBody()['record'];
+		$latitude = floatval($request->getParsedBody()['latitude']);
+		$longitude = floatval($request->getParsedBody()['longitude']);
 
 		\JBartels\WecMap\Utility\Cache::updateByUID($hash, $latitude, $longitude);   // $hash is escaped in updateByUID()
-		$ajaxObj->addContent('content', '');
+		$response->getBody()->write( json_encode( [ 'status' => 'ok' ] ) );
+        return $response;
 	}
 
-	function ajaxBatchGeocode($params, &$ajaxObj) {
+	function ajaxBatchGeocode(ServerRequestInterface $request, ResponseInterface $response) {
 
 		$batchGeocode = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Module\MapAdministration\BatchGeocode::class);
 
@@ -83,26 +89,27 @@ class  Ajax {
 		$totalAddresses = $batchGeocode->recordCount();
 
 		$content = self::getStatusBar($processedAddresses, $totalAddresses);
-		$ajaxObj->addContent('content', $content);
+		$response->getBody()->write($content);
+        return $response;
 	}
 
-	function ajaxListRecords($params, &$ajaxObj) {
+	function ajaxListRecords(ServerRequestInterface $request, ResponseInterface $response) {
 		// Select rows:
 		$limit = null;
 		$displayRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_wecmap_cache','', 'address', 'address', $limit);
 
 		$records = array();
 		foreach($displayRows as $row) {
-			$cells = array();
-			$cells['address'] = $row['address'];
-			$cells['latitude'] = $row['latitude'];
-			$cells['longitude'] = $row['longitude'];
-			$cells['address_hash'] = $row['address_hash'];
-
+			$cells = array(
+				'address' => $row['address'],
+				'latitude' => $row['latitude'],
+				'longitude' => $row['longitude'],
+				'address_hash' => $row['address_hash']
+			);
 			$records[] = $cells;
 		}
-
-		$ajaxObj->addContent('content', json_encode( $records ) );
+		$response->getBody()->write( json_encode( $records ) );
+        return $response;
 	}
 
 
