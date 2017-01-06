@@ -56,7 +56,7 @@ class  Ajax {
 	 */
 	function ajaxDeleteAll(ServerRequestInterface $request, ResponseInterface $response) {
 		\JBartels\WecMap\Utility\Cache::deleteAll();
-		$response->getBody()->write('');
+		$response->getBody()->write( json_encode( [ 'status' => 'ok' ] ) );
         return $response;
 	}
 
