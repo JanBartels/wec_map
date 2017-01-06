@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2011-2016 J. Bartels
+* (c) 2011-2017 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -316,13 +316,9 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 		global $LANG;
 		$content = array();
 
-		/* Set the geocoding limit to 1 so that we only get the count, rather than actually geocoding addresses */
 		$batchGeocode = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Module\MapAdministration\BatchGeocode::class, 1);
 		$batchGeocode->addAllTables();
-		$batchGeocode->geocode();
-
-		$processedAddresses = $batchGeocode->processedAddresses();
-		$totalAddresses = $batchGeocode->recordCount();
+		$totalAddresses = $batchGeocode->getRecordCount();
 
 		$content[] = '<h3>'.$LANG->getLL('batchGeocode').'</h3>';
 		$content[] = '<p>'.$LANG->getLL('batchInstructions').'</p>';
@@ -337,8 +333,14 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 		}
 		$content[] = '</ul>';
 
-		$content[] = \JBartels\WecMap\Module\MapAdministration\Ajax::getStatusBar($processedAddresses, $totalAddresses, false);
-		$content[] = '<input id="startGeocoding" type="submit" value="'.$LANG->getLL('startGeocoding').'" onclick="startGeocode(); return false;"/>';
+		$content[] = '<div id="status" style="margin-bottom: 5px; display:none;">';
+		$content[] =   '<div id="bar" style="width:300px; height:20px; border:1px solid black">';
+		$content[] =     '<div id="progress" style="width:0%; height:20px; background-color:red"></div>';
+		$content[] =   '</div>';
+		$content[] =   '<p>'.$LANG->getLL('processedStart').' <span id="processed">0</span> '.$LANG->getLL('processedMid').' '.$totalAddresses.'.</p>';
+		$content[] = '</div>';
+
+		$content[] = '<input id="startGeocoding" type="submit" value="'.$LANG->getLL('startGeocoding').'">';
 
 		return implode(chr(10), $content);
 	}

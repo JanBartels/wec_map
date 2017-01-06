@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2016 J. Bartels
+* (c) 2010-2017 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -50,7 +50,7 @@ class BatchGeocode {
 	 *
 	 * @return		none
 	 */
-	function tx_wecmap_batchgeocode($limit=10) {
+	function __construct($limit=10) {
 		$this->tables = array();
 		$this->geocodedAddresses = 0;
 		$this->processedAddresses = 0;
@@ -136,16 +136,15 @@ class BatchGeocode {
 	 * @return		none
 	 */
 	function geocodeRecord($row, $addressFields) {
-		$street  = $row[$addressFields['street']];
-		$city    = $row[$addressFields['city']];
-		$state   = $row[$addressFields['state']];
-		$zip     = $row[$addressFields['zip']];
-		$country = $row[$addressFields['country']];
+		$street  = $addressFields['street']  > '' ? $row[$addressFields['street']]  : '';
+		$city    = $addressFields['city']    > '' ? $row[$addressFields['city']]    : '';
+		$state   = $addressFields['state']   > '' ? $row[$addressFields['state']]   : '';
+		$zip     = $addressFields['zip']     > '' ? $row[$addressFields['zip']]     : '';
+		$country = $addressFields['country'] > '' ? $row[$addressFields['country']] : '';
 
 		// increment total count
 		$this->processedAddresses++;
-
-		tx_wecmap_cache::lookupWithCallback($street, $city, $state, $zip, $country, false, $this);
+		\JBartels\WecMap\Utility\Cache::lookupWithCallback($street, $city, $state, $zip, $country, false, $this);
 	}
 
 	/**
@@ -179,7 +178,7 @@ class BatchGeocode {
 	 * @return		The total number of addresses processed.  This includes both
 	 *				cached and non-cached.
 	 */
-	function processedAddresses() {
+	function getProcessedAddresses() {
 		return $this->processedAddresses;
 	}
 
@@ -190,7 +189,7 @@ class BatchGeocode {
 	 * @return		The total number of addresses geocoded by external services.
 	 *				This does not include cached addresses.
 	 */
-	function geocodedAddresses() {
+	function getGeocodedAddresses() {
 		return $this->geocodedAddresses;
 	}
 
@@ -199,7 +198,7 @@ class BatchGeocode {
 	 *
 	 * @return		integer		The count of all records with addresses.
 	 */
-	function recordCount() {
+	function getRecordCount() {
 		$recordCount = 0;
 
 		if ( is_array( $this->tables ) ) {

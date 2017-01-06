@@ -85,11 +85,14 @@ class  Ajax {
 		$batchGeocode->addAllTables();
 		$batchGeocode->geocode();
 
-		$processedAddresses = $batchGeocode->processedAddresses();
-		$totalAddresses = $batchGeocode->recordCount();
+		$processedAddresses = $batchGeocode->getProcessedAddresses();
+		$totalAddresses = $batchGeocode->getRecordCount();
 
-		$content = self::getStatusBar($processedAddresses, $totalAddresses);
-		$response->getBody()->write($content);
+		$response->getBody()->write( json_encode( [
+			'geocoded' => $batchGeocode->geocodedAddresses,
+			'processed' => $processedAddresses,
+			'total' => $totalAddresses
+		] ) );
         return $response;
 	}
 
@@ -111,43 +114,6 @@ class  Ajax {
 		$response->getBody()->write( json_encode( $records ) );
         return $response;
 	}
-
-
-	/**
-	 * Static function for displaying the status bar and related text.
-	 *
-	 * @param		integer		The number of addresses the Geocoder has processed.
-	 * @param		integer		The total number of addresses.
-	 * @param		boolean		True/false value for visiblity of the status bar.
-	 * @return		string		HTML output.
-	 */
-	static function getStatusBar($processedAddresses, $totalAddresses, $visible=true) {
-		if($totalAddresses == 0) {
-			$progressBarWidth = 0;
-		} else {
-			$progressBarWidth = round($processedAddresses / $totalAddresses * 100);
-		}
-
-		$langService = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Lang\LanguageService::class);
-		$langService->init( $GLOBALS['BE_USER']->uc['lang'] );
-
-		$content = array();
-		if($visible) {
-			$content[] = '<div id="status" style="margin-bottom: 5px;">';
-		} else {
-			$content[] = '<div id="status" style="margin-bottom: 5px; display:none;">';
-		}
-
-		$content[] = '<div id="bar" style="width:300px; height:20px; border:1px solid black">
-						<div id="progress" style="width:'.$progressBarWidth.'%; height:20px; background-color:red"></div>
-					</div>
-					<p>'.$langService->SL('LLL:EXT:wec_map/Resources/Private/Languages/Module/MapAdministration/locallang.xlf:processedStart').' '.$processedAddresses.' '.$langService->SL('LLL:EXT:wec_map/Resources/Private/Languages/Module/MapAdministration/locallang.xlf:processedMid').' '.$totalAddresses.'.</p>';
-
-		$content[] = '</div>';
-
-		return implode(chr(10), $content);
-	}
-
 
 }
 

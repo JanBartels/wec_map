@@ -175,27 +175,24 @@ function clearTable() {
 	TYPO3.jQuery( '#noRecords' ).show();
 }
 
-function updatePagination( page ) {
-	var countEl = TYPO3.jQuery( '#recordCount' );
-	var number = countEl.html();
-
-	var updater = new Ext.Updater( 'pagination' );
-	updater.showLoadIndicator = false;
-	updater.startAutoRefresh( 1,
-	                          TYPO3.settings.ajaxUrls['txwecmapM1::updatePagination']
-//### todo itemsPerPage
-//	                          { page: page, itemsPerPage:'. $this->itemsPerPage .', count: number }
-	                        );
-
-}
-
 function startGeocode() {
-	Ext.get('startGeocoding').setDisplayed( false );
-	Ext.get('status').setDisplayed( true );
+	TYPO3.jQuery( '#startGeocoding' ).hide();
+	TYPO3.jQuery( '#status' ).show();
 
-	var updater = new Ext.Updater( 'status' );
-	updater.showLoadIndicator = false;
-	updater.startAutoRefresh( 1, TYPO3.settings.ajaxUrls['txwecmapM1::batchGeocode'] );
+	TYPO3.jQuery.ajax({
+		url: TYPO3.settings.ajaxUrls[ 'txwecmapM1::batchGeocode' ],
+		method: 'POST',
+		success: function( response ) {
+			var processed = response.processed;
+			var total = response.total;
+			var progress = Math.round( processed / ( total ? total : 1 ) * 100 ) ;
+			TYPO3.jQuery( '#progress' ).width( progress + '%' );
+			TYPO3.jQuery( '#processed' ).html( processed );
+			if ( total > processed ) {
+				window.setTimeout( startGeocode, 1000 );
+			}
+		}
+	} );
 }
 
 TYPO3.jQuery(function() {
@@ -247,5 +244,10 @@ TYPO3.jQuery(function() {
 		TYPO3.jQuery( '#tx-wecmap-cache' ).show();
 		TYPO3.jQuery( '#noRecords' ).hide();
 	}
+
+	TYPO3.jQuery( '#startGeocoding' ).on( 'click', function( event ) {
+		event.preventDefault();
+		startGeocode();
+	} );
 
 });

@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2013-2015 Jan Bartels
+* (c) 2013-2017 Jan Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -61,13 +61,13 @@ class Cache {
 	 */
 	static function lookupWithCallback($street, $city, $state, $zip, $country, $forceLookup=false, &$pObj) {
 
-		/* Do some basic normalization on the address */
-		self::normalizeAddress($street, $city, $state, $zip, $country);
-
 		/* If we have enough address information, try to geocode. If not, return null. */
 		if(self::isEmptyAddress($street, $city, $state, $zip, $country)) {
 			$latlong = null;
 		} else {
+			/* Do some basic normalization on the address */
+			self::normalizeAddress($street, $city, $state, $zip, $country);
+
 			/* Look up the address in the cache table. */
 			$latlong = self::find($street, $city, $state, $zip, $country);
 
@@ -288,7 +288,7 @@ class Cache {
 	 * @return	none
 	 */
 	static function deleteAll() {
-		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache','');
+		$result = $GLOBALS['TYPO3_DB']->exec_TRUNCATEquery('tx_wecmap_cache');
 	}
 
 	/**
