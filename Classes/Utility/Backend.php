@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2013-2015 J. Bartels
+* (c) 2013-2017 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -277,7 +277,6 @@ class Backend {
 		$country = self::getFieldValue('country', $PA);
 
 		$description = $street.'<br />'.$city.', '.$state.' '.$zip.'<br />'.$country;
-
 		$map =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\MapService\Google\Map::class, $apiKey, $width, $height);
 		$marker = $map->addMarkerByAddress($street, $city, $state, $zip, $country, '<h1>Address</h1>', $description);
 		// enable dragging to correct lat/long interactively
@@ -354,6 +353,7 @@ class Backend {
 				$fieldName = $latlongFields[$key];
 			} else {
 				/* If the ctrl section of the TCA has a name, use it */
+				$ctrlAddressFields = $GLOBALS['TCA'][$table]['ctrl']['EXT']['wec_map']['addressFields'];
 				if(isset($ctrlAddressFields[$key])) {
 					$fieldName = \JBartels\WecMap\Utility\Shared::getAddressField($table, $key);
 				} else {

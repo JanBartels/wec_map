@@ -289,6 +289,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 			{
 				$conf = $this->loadTypoScriptForBEModule('tx_staticinfotables_pi1');
 				$staticInfoObj->init( $conf );
+				$staticInfoObj->conf = $conf;
 			}
 		}
 		return $staticInfoObj->formatAddress($delim, $streetAddress, $city, $zip, $subdivisionCode, $countryCode);
