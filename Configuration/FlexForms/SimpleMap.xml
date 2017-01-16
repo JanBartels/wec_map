@@ -197,33 +197,6 @@
 				</TCEforms>
 				<type>array</type>
 				<el>
-					<mapControlSize>
-						<TCEforms>
-							<label>LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.conLargeMap</label>
-							<config>
-								<type>radio</type>
-								<items type="array">
-									<numIndex index="0" type="array">
-										<numIndex index="0">LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.conLargeMapL</numIndex>
-										<numIndex index="1">large</numIndex>
-									</numIndex>
-									<numIndex index="1" type="array">
-										<numIndex index="0">LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.conLargeMapS</numIndex>
-										<numIndex index="1">small</numIndex>
-									</numIndex>
-									<numIndex index="2" type="array">
-										<numIndex index="0">LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.conLargeMapZ</numIndex>
-										<numIndex index="1">zoomonly</numIndex>
-									</numIndex>
-									<numIndex index="3" type="array">
-										<numIndex index="0">LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.conNone</numIndex>
-										<numIndex index="1">none</numIndex>
-									</numIndex>
-								</items>
-								<default>3</default>
-							</config>
-						</TCEforms>
-					</mapControlSize>
 						
 					<showZoom>
 						<TCEforms>
