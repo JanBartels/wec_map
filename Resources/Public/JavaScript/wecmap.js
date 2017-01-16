@@ -3,7 +3,7 @@
 //
 // (c) 2005-2009 Christian Technology Ministries International Inc.
 // All rights reserved
-// (c) 2011-2015 Jan Bartels, j.bartels@arcor.de, Google API V3
+// (c) 2011-2017 Jan Bartels, j.bartels@arcor.de, Google API V3
 //
 // This file is part of the Web-Empowered Church (WEC)
 // (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
@@ -228,10 +228,6 @@ function WecMapGoogleV3( mapId )
 		},
 		mapTypeId: google.maps.MapTypeId.ROADMAP,
 		mapTypeControl: false,
-		overviewMapControl: false,
-		overviewMapControlOptions: { },
-		panControl: false,
-		panControlOptions: { },
 		rotateControl: true,
 		rotateControlOptions: { },
 		zoomControl: false,
@@ -707,40 +703,29 @@ WecMapGoogleV3.prototype.setCenter = function( LatLng, Zoom, MapTypeId )
 	}
 }
 
-function GLargeMapControl3D() // - a large pan/zoom control as now used on Google Maps. Appears in the top left corner of the map by default.
+function GZoomControl() // Enable Zoom control
 {
 	this.modifyOptions = function( options )
 	{
-		options.panControl = true;
 		options.zoomControl = true;
-		options.zoomControlOptions.style = google.maps.ZoomControlStyle.LARGE;
 		return options;
 	}
 	return this;
 }
 
-function GLargeMapControl() // - a large pan/zoom control as now used on Google Maps. Appears in the top left corner of the map by default.
+function GLargeMapControl3D() // deprecated
 {
-	this.modifyOptions = function( options )
-	{
-		options.panControl = true;
-		options.zoomControl = true;
-		options.zoomControlOptions.style = google.maps.ZoomControlStyle.LARGE;
-		return options;
-	}
-	return this;
+	return GZoomControl();
 }
 
-function GSmallMapControl () // - a smaller pan/zoom control. Appears in the top left corner of the map by default.
+function GLargeMapControl() // deprecated
 {
-	this.modifyOptions = function( options )
-	{
-		options.panControl = true;
-		options.zoomControl = true;
-		options.zoomControlOptions.style = google.maps.ZoomControlStyle.SMALL;
-		return options;
-	}
-	return this;
+	return GZoomControl();
+}
+
+function GSmallMapControl () // deprecated
+{
+	return GZoomControl();
 }
 
 function GScaleControl() // - a simpler large pan/zoom control. Appears in the top left corner of the map by default.
@@ -753,34 +738,25 @@ function GScaleControl() // - a simpler large pan/zoom control. Appears in the t
 	return this;
 }
 
-function GSmallZoomControl3D() // - a small zoom control (with no panning controls) as now used on Google Maps.
+function GSmallZoomControl3D() // deprecated
 {
 	this.modifyOptions = function( options )
 	{
 		options.zoomControl = true;
-		options.zoomControlOptions.style = google.maps.ZoomControlStyle.SMALL;
 		return options;
 	}
 	return this;
 }
 
-function GSmallZoomControl() // - a small zoom control (with no panning controls) as now used on Google Maps.
+function GSmallZoomControl() // deprecated
 {
-	this.modifyOptions = function( options )
-	{
-		options.zoomControl = true;
-		options.zoomControlOptions.style = google.maps.ZoomControlStyle.SMALL;
-		return options;
-	}
-	return this;
+	return GZoomControl();
 }
 
-function GOverviewMapControl() // - a collapsible overview map in the corner of the screen
+function GOverviewMapControl() // deprecated
 {
 	this.modifyOptions = function( options )
 	{
-		options.overviewMapControl = true;
-		options.overviewMapControlOptions.opened = true;
 		return options;
 	}
 	return this;

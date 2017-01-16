@@ -163,8 +163,8 @@
 			<trans-unit id="tt_content.pi_flexform.conNone" xml:space="preserve">
 				<source>None</source>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conOverview" xml:space="preserve">
-				<source>Show Overview Map</source>
+			<trans-unit id="tt_content.pi_flexform.conZoom" xml:space="preserve">
+				<source>Show Zoom</source>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.conScale" xml:space="preserve">
 				<source>Show Scale</source>

@@ -140,24 +140,15 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		}
 		switch ($name)
 		{
-			case 'largeMap':
-				$this->controls[] .= $this->js_addControl('new GLargeMapControl()');
-				break;
-
-			case 'smallMap':
-				$this->controls[] .= $this->js_addControl('new GSmallMapControl()');
+			case 'zoom':
+			case 'largeMap':	// deprecated
+			case 'smallMap':	// deprecated
+			case 'smallZoom':	// deprecated
+				$this->controls[] .= $this->js_addControl('new GZoomControl()');
 				break;
 
 			case 'scale':
 				$this->controls[] .= $this->js_addControl('new GScaleControl()');
-				break;
-
-			case 'smallZoom':
-				$this->controls[] .= $this->js_addControl('new GSmallZoomControl()');
-				break;
-
-			case 'overviewMap':
-				$this->controls[] .= $this->js_addControl('new GOverviewMapControl()');
 				break;
 
 			case 'mapType':

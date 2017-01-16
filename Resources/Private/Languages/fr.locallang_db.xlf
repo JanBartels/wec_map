@@ -212,9 +212,9 @@
 				<source>None</source>
 				<target>Aucun</target>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conOverview" xml:space="preserve" approved="yes">
-				<source>Show Overview Map</source>
-				<target>Afficher la vue d'ensemble</target>
+			<trans-unit id="tt_content.pi_flexform.conZoom" xml:space="preserve" approved="yes">
+				<source>Show Zoom</source>
+				<target>Afficher zoom</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.conScale" xml:space="preserve" approved="yes">
 				<source>Show Scale</source>

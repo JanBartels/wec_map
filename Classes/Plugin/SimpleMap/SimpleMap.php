@@ -84,9 +84,6 @@ class SimpleMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$mapControlSize = $this->pi_getFFvalue($piFlexForm, 'mapControlSize', 'mapControls');
 		(empty($mapControlSize) || $mapControlSize == 'none') ? $mapControlSize = $this->cObj->stdWrap($conf['controls.']['mapControlSize'], $conf['controls.']['mapControlSize.']):null;
 
-		$overviewMap = $this->pi_getFFvalue($piFlexForm, 'overviewMap', 'mapControls');
-		empty($overviewMap) ? $overviewMap = $this->cObj->stdWrap($conf['controls.']['showOverviewMap'], $conf['controls.']['showOverviewMap.']):null;
-
 		$mapType = $this->pi_getFFvalue($piFlexForm, 'mapType', 'mapControls');
 		empty($mapType) ? $mapType = $this->cObj->stdWrap($conf['controls.']['showMapType'], $conf['controls.']['showMapType.']):null;
 
@@ -95,6 +92,9 @@ class SimpleMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 		$initialMapType = $this->pi_getFFvalue($piFlexForm, 'initialMapType', 'mapConfig');
 		empty($initialMapType) ? $initialMapType = $this->cObj->stdWrap($conf['initialMapType'], $conf['initialMapType.']):null;
+
+		$showZoom = $this->pi_getFFvalue($piFlexForm, 'showZoom', 'mapControls');
+		empty($showZoom) ? $scale = $this->cObj->stdWrap($conf['controls.']['showZoom'], $conf['controls.']['showZoom.']):null;
 
 		$scale = $this->pi_getFFvalue($piFlexForm, 'scale', 'mapControls');
 		empty($scale) ? $scale = $this->cObj->stdWrap($conf['controls.']['showScale'], $conf['controls.']['showScale.']):null;
@@ -150,19 +150,18 @@ class SimpleMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// evaluate config to see which map controls we need to show
-		if($mapControlSize == 'large') {
-			$map->addControl('largeMap');
-		} else if ($mapControlSize == 'small') {
-			$map->addControl('smallMap');
-		} else if ($mapControlSize == 'zoomonly') {
-			$map->addControl('smallZoom');
+		if(  $mapControlSize == 'large'		// deprecated
+		  || $mapControlSize == 'small'		// deprecated
+		  || $mapControlSize == 'zoomonly'	// deprecated
+		  || $showZoom
+		  ) {
+			$map->addControl('zoom');
 		}
 
 		$map->setMaxAutoZoom($maxAutoZoom);
 		if($enableOverlappingMarkerManager) $map->addOption('enableOverlappingMarkerManager',true);
 
 		if($scale) $map->addControl('scale');
-		if($overviewMap) $map->addControl('overviewMap');
 		if($mapType) $map->addControl('mapType');
 		if($initialMapType) $map->setType($initialMapType);
 		if($googleEarth) $map->addControl('googleEarth');

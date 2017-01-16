@@ -3,6 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
+* (c) 2015-2017 Jan Bartels, j.bartels@arcor.de
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -190,33 +191,28 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 		if(\TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-submit')) {
 
 			$scale = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-scale');
-
 			if($scale == 'on') {
 				$scale = 1;
 			} else {
 				$scale = 0;
 			}
 
-			$minimap = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-minimap');
-
-			if($minimap == 'on') {
-				$minimap = 1;
-			} else {
-				$minimap = 0;
-			}
-
 			$maptype = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-maptype');
-
 			if($maptype == 'on') {
 				$maptype = 1;
 			} else {
 				$maptype = 0;
 			}
 
-			$mapcontrolsize = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-mapcontrolsize');
+			$mapcontrolsize = \TYPO3\CMS\Core\Utility\GeneralUtility::_GP('tx-wecmap-mod1-mapcontrolzoom');
+			if($controlzoom == 'on') {
+				$controlzoom = 1;
+			} else {
+				$controlzoom = 0;
+			}
 
 			// build data array
-			$data = array('scale' => $scale, 'minimap' => $minimap, 'maptype' => $maptype, 'mapcontrolsize' => $mapcontrolsize);
+			$data = array('scale' => $scale, 'maptype' => $maptype, 'controlzoom' => $controlzoom);
 
 			// save to user config
 			$GLOBALS['BE_USER']->pushModuleData('tools_txwecmapM2', $data);
@@ -228,9 +224,10 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 
 		// get config options
 		$scale = $conf['scale'];
-		$minimap = $conf['minimap'];
 		$maptype = $conf['maptype'];
-		$mapcontrolsize = $conf['mapcontrolsize'];
+		$mapcontrolsize = $conf['mapcontrolsize'];	// deprecated;
+		$controlzoom = $conf['controlzoom']
+		             || ( mapcontrolsize != 'none' && !empty( $mapcontrolsize ) );	// deprecated
 
 		$form = array();
 		$form[] = '<table>';
@@ -245,16 +242,6 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 		}
 		$form[] = '</tr>';
 
-		// minimap option
-		$form[] = '<tr>';
-		$form[] = '<td><label for="tx-wecmap-mod1-minimap">Show Minimap:</label></td>';
-		if($minimap) {
-			$form[] = '<td><input type="checkbox" name="tx-wecmap-mod1-minimap" id="tx-wecmap-mod1-minimap" checked="checked"/></td>';
-		} else {
-			$form[] = '<td><input type="checkbox" name="tx-wecmap-mod1-minimap" id="tx-wecmap-mod1-minimap" /></td>';
-		}
-		$form[] = '</tr>';
-
 		// maptype option
 		$form[] = '<tr>';
 		$form[] = '<td><label for="tx-wecmap-mod1-maptype">Show Maptype:</label></td>';
@@ -266,37 +253,12 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 		$form[] = '</tr>';
 
 		$form[] = '<tr>';
-		$form[] = '<td style="vertical-align: top;">Map Control Size:</td>';
-		$form[] = '<td>';
-		if($mapcontrolsize == 'large') {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="large" checked="checked" id="mapcontrolsize_0" />';
+		$form[] = '<td><label for="tx-wecmap-mod1-controlzoom">Map Zoom Control:</label></td>';
+		if($controlzoom) {
+			$form[] = '<td><input type="checkbox" name="tx-wecmap-mod1-controlzoom" id="tx-wecmap-mod1-controlzoom" checked="checked"/></td>';
 		} else {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="large" id="mapcontrolsize_0" />';
+			$form[] = '<td><input type="checkbox" name="tx-wecmap-mod1-controlzoom" id="tx-wecmap-mod1-controlzoom" /></td>';
 		}
-		$form[] = '<label for="mapcontrolsize_0">Large</label><br />';
-
-		if($mapcontrolsize == 'small') {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="small" checked="checked" id="mapcontrolsize_1" />';
-		} else {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="small" id="mapcontrolsize_1" />';
-		}
-		$form[] = '<label for="mapcontrolsize_1">Small</label><br />';
-
-		if($mapcontrolsize == 'zoomonly') {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="zoomonly" checked="checked" id="mapcontrolsize_2" />';
-		} else {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="zoomonly" id="mapcontrolsize_2" />';
-		}
-		$form[] = '<label for="mapcontrolsize_2">Zoom only</label><br />';
-
-		if($mapcontrolsize == 'none' || empty($mapcontrolsize)) {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="none" checked="checked" id="mapcontrolsize_3" />';
-		} else {
-			$form[] = '<input type="radio" class="radio" name="tx-wecmap-mod1-mapcontrolsize" value="none" id="mapcontrolsize_3" />';
-		}
-
-		$form[] = '<label for="mapcontrolsize_3">None</label>';
-		$form[] = '</td>';
 		$form[] = '</tr>';
 
 
@@ -322,9 +284,10 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 
 		// get options
 		$scale = $conf['scale'];
-		$minimap = $conf['minimap'];
 		$maptype = $conf['maptype'];
-		$mapcontrolsize = $conf['mapcontrolsize'];
+		$mapcontrolsize = $conf['mapcontrolsize'];	// deprecated;
+		$controlzoom = $conf['controlzoom']
+		             || ( mapcontrolsize != 'none' && !empty( $mapcontrolsize ) );	// deprecated
 
 		$streetField  = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'street');
 		$cityField    = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'city');
@@ -336,26 +299,8 @@ class Module extends \TYPO3\CMS\Backend\Module\BaseScriptClass  {
 		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, $apiKey, $width, $height);
 
 		// evaluate map controls based on configuration
-		switch ($mapcontrolsize) {
-			case 'large':
-				$map->addControl('largeMap');
-				break;
-
-			case 'small':
-				$map->addControl('smallMap');
-				break;
-
-			case 'zoomonly':
-				$map->addControl('smallZoom');
-				break;
-			default:
-				// do nothing
-				break;
-		}
-
-
+		if($controlzoom) $map->addControl('zoom');
 		if($scale) $map->addControl('scale');
-		if($minimap) $map->addControl('overviewMap');
 		if($maptype) $map->addControl('mapType');
 		$map->enableDirections(false, 'directions');
 
