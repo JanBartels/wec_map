@@ -71,6 +71,20 @@
 							</config>
 						</TCEforms>						
 					</initialMapType>
+					<zoomLevel>
+						<TCEforms>
+							<label>LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.zoomLevel</label>
+							<config>
+								<type>input</type>
+								<size>3</size>
+								<eval>int</eval>
+								<range>
+									<lower>0</lower>
+									<upper>30</upper>
+								</range>
+							</config> 
+						</TCEforms>						
+					</zoomLevel>
 					<showDirections>
 						<TCEforms>
 							<label>LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.showDirs</label>

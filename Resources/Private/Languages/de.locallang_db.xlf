@@ -191,26 +191,6 @@
 				<source>City</source>
 				<target>Ort</target>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMap" xml:space="preserve" approved="yes">
-				<source>Size of Map Controls</source>
-				<target>Größe der Navigationselemente</target>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapL" xml:space="preserve" approved="yes">
-				<source>Large</source>
-				<target>Groß</target>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapS" xml:space="preserve" approved="yes">
-				<source>Small</source>
-				<target>Klein</target>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapZ" xml:space="preserve" approved="yes">
-				<source>Zoom only</source>
-				<target>Nur Zoom</target>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conNone" xml:space="preserve" approved="yes">
-				<source>None</source>
-				<target>Nichts</target>
-			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.conZoom" xml:space="preserve" approved="yes">
 				<source>Show Zoom</source>
 				<target>Zoom anzeigen</target>
@@ -242,6 +222,10 @@
 			<trans-unit id="tt_content.pi_flexform.initialMapType" xml:space="preserve" approved="yes">
 				<source>Initial Map Type</source>
 				<target>Kartentyp zu Beginn</target>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.zoomLevel" xml:space="preserve" approved="yes">
+				<source>Zoom level</source>
+				<target>Zoom level</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.kml" xml:space="preserve" approved="yes">
 				<source>KML to overlay</source>

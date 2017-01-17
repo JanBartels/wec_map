@@ -148,21 +148,6 @@
 			<trans-unit id="tt_content.pi_flexform.city" xml:space="preserve">
 				<source>City</source>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMap" xml:space="preserve">
-				<source>Size of Map Controls</source>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapL" xml:space="preserve">
-				<source>Large</source>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapS" xml:space="preserve">
-				<source>Small</source>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conLargeMapZ" xml:space="preserve">
-				<source>Zoom only</source>
-			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.conNone" xml:space="preserve">
-				<source>None</source>
-			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.conZoom" xml:space="preserve">
 				<source>Show Zoom</source>
 			</trans-unit>
@@ -186,6 +171,9 @@
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.initialMapType" xml:space="preserve">
 				<source>Initial Map Type</source>
+			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.zoomLevel" xml:space="preserve">
+				<source>Zoom level</source>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.kml" xml:space="preserve">
 				<source>KML to overlay</source>

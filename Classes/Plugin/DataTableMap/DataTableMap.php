@@ -132,7 +132,8 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 		$centerLong = $this->cObj->stdWrap($conf['centerLong'], $conf['centerLong.']);
 
-		$zoomLevel = $this->cObj->stdWrap($conf['zoomLevel'], $conf['zoomLevel.']);
+		$zoomLevel = $this->pi_getFFvalue($piFlexForm, 'zoomLevel', 'mapConfig');
+		empty($zoomLevel) || $zoomLevel == 0 ? $zoomLevel = $this->cObj->stdWrap($conf['zoomLevel'], $conf['zoomLevel.']):null;
 
 		$maxAutoZoom = $this->cObj->stdWrap($conf['maxAutoZoom'], $conf['maxAutoZoom.']);
 
