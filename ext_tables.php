@@ -17,10 +17,4 @@ $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['wec_map_pi2'
 $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['wec_map_pi3']='pi_flexform';
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::allowTableOnStandardPages('tx_wecmap_external');
-
-if( \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('tt_address')
-  && \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getExtensionVersion('tt_address')) <= TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger('2.3.5')
-  ) {
-    include_once(TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('wec_map')."Configuration/TCA/Overrides/tt_address.php");
-}
 ?>

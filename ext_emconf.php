@@ -15,7 +15,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'description' => 'Mapping extension that connects to geocoding databases and Google Maps API.',
 	'category' => 'plugin',
 	'shy' => 0,
-	'version' => '3.1.1',  // wird 3.3.x, weil 3.2.x für  Ingo Pfennigstorfs Version vorbehalten ist
+	'version' => '3.3.0',
 	'priority' => 'bottom',
 	'loadOrder' => '',
 	'module' => 'mod1,mod2',
@@ -33,14 +33,14 @@ $EM_CONF[$_EXTKEY] = array(
 	'constraints' => array(
 		'depends' => array(
 			'php' => '5.5.0-0.0.0',
-			'typo3' => '6.2.0-7.6.99',
+			'typo3' => '7.6.0-7.6.99',
 		),
 		'conflicts' => array(
 		),
 		'suggests' => array(
-			'tt_address'         => '2.3.4-0.0.0',
+			'tt_address'         => '3.2.0-0.0.0',
 			'nn_address'         => '2.3.0-0.0.0',
-            'static_info_tables' => '',
+            'static_info_tables' => '6.4.0-0.0.0',
 		),
 	),
 	'autoload' => array(
