@@ -34,6 +34,30 @@
 				                <minitems>0</minitems>
 				                <show_thumbs>1</show_thumbs>
 				            </config>
+						 <!--config>
+							<type>inline</type>
+							<maxitems>99</maxitems>
+							<foreign_table>sys_file_reference</foreign_table>
+							<foreign_field>uid_foreign</foreign_field>
+							<foreign_table_field>tablenames</foreign_table_field>
+							<foreign_label>uid_local</foreign_label>
+							<foreign_sortby>sorting_foreign</foreign_sortby>
+							<foreign_selector>uid_local</foreign_selector>
+							<foreign_selector_fieldTcaOverride type="array">
+							    <config>
+								<appearance>
+								    <elementBrowserType>file</elementBrowserType>
+								    <elementBrowserAllowed>kml</elementBrowserAllowed>
+								</appearance>
+							    </config>
+							</foreign_selector_fieldTcaOverride>
+							<foreign_match_fields type="array">
+							    <fieldname>kmlFile</fieldname>
+							</foreign_match_fields>
+							<appearance type="array">
+							    <newRecordLinkAddTitle>1</newRecordLinkAddTitle>
+							</appearance>
+						    </config-->
 						</TCEforms>
 					</kml>
 					<pid>

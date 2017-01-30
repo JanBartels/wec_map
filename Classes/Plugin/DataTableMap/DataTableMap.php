@@ -156,7 +156,7 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// get kml urls for each included record
-		if(!empty($kml)) {
+		if ($kml > 0 ) {
 			$where = 'uid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($kml).')';
 			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url', 'tx_wecmap_external', $where);
 			foreach( $res as $key => $url ) {
@@ -171,6 +171,15 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$GLOBALS['TSFE']->absRefPrefix = $oldAbs;
 				$map->addKML($link);
 			}
+/*
+			$fileRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\FileRepository');
+			$pi_uid = $this->cObj->data['uid'];
+			$fileObjects = $fileRepository->findByRelation('tt_content', 'kmlFile', $pi_uid);
+			// get file object information
+			foreach ($fileObjects as $key => $value) {
+				$map->addKML( $value->getPublicUrl() );
+			}
+*/
 		}
 
 		// evaluate map controls based on configuration
