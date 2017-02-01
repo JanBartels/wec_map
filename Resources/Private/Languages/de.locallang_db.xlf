@@ -5,19 +5,19 @@
 		<body>
 			<trans-unit id="OSM" xml:space="preserve" approved="yes">
 				<source>OSM</source>
-				<target></target>
+				<target>OSM</target>
 			</trans-unit>
 			<trans-unit id="OSM-alt" xml:space="preserve" approved="yes">
 				<source>OpenStreetmap layer</source>
-				<target></target>
+				<target>OpenStreetmap Layer</target>
 			</trans-unit>
 			<trans-unit id="OSM-bike" xml:space="preserve" approved="yes">
 				<source>OSM-bike</source>
-				<target></target>
+				<target>OSM-bike</target>
 			</trans-unit>
 			<trans-unit id="OSM-bike-alt" xml:space="preserve" approved="yes">
 				<source>OpenCycleMap layer</source>
-				<target></target>
+				<target>OpenCycleMap Layer</target>
 			</trans-unit>
 			<trans-unit id="berecord_geocodelabel" xml:space="preserve" approved="yes">
 				<source>Coords</source>
@@ -141,15 +141,15 @@
 			</trans-unit>
 			<trans-unit id="unit.miles" xml:space="preserve" approved="yes">
 				<source>miles</source>
-				<target></target>
+				<target>Meilen</target>
 			</trans-unit>
 			<trans-unit id="unit.kilometers" xml:space="preserve" approved="yes">
 				<source>kilometers</source>
-				<target></target>
+				<target>Kilometer</target>
 			</trans-unit>
 			<trans-unit id="submit" xml:space="preserve" approved="yes">
 				<source>Submit</source>
-				<target></target>
+				<target>Absenden</target>
 			</trans-unit>
 			<trans-unit id="pi1TemplateNotIncluded" xml:space="preserve" approved="yes">
 				<source>
@@ -301,11 +301,11 @@
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.typeOCM" xml:space="preserve" approved="yes">
 				<source>OpenCycleMap</source>
-				<target></target>
+				<target>OpenCycleMap</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.typeOSM" xml:space="preserve" approved="yes">
 				<source>OpenStreetMap</source>
-				<target></target>
+				<target>OpenStreetMap</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.typePhysical" xml:space="preserve" approved="yes">
 				<source>Terrain</source>
@@ -325,23 +325,23 @@
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.recursive.I.1" xml:space="preserve" approved="yes">
 				<source>1 level</source>
-				<target></target>
+				<target>1 Ebene</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.recursive.I.2" xml:space="preserve" approved="yes">
 				<source>2 levels</source>
-				<target></target>
+				<target>2 Ebenen</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.recursive.I.3" xml:space="preserve" approved="yes">
 				<source>3 levels</source>
-				<target></target>
+				<target>3 Ebenen</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.recursive.I.4" xml:space="preserve" approved="yes">
 				<source>4 levels</source>
-				<target></target>
+				<target>4 Ebenen</target>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.recursive.I.5" xml:space="preserve" approved="yes">
 				<source>unlimited</source>
-				<target></target>
+				<target>unbegrenzt</target>
 			</trans-unit>
 		</body>
 	</file>
