@@ -183,7 +183,7 @@ return( {
 		{
 			this.osmMapType = new google.maps.ImageMapType({
 				getTileUrl: function(coord, zoom) {
-					return "http://tile.openstreetmap.org/" +
+					return location.protocol + "//a.tile.openstreetmap.org/" +
 					zoom + "/" + coord.x + "/" + coord.y + ".png";
 				},
 				tileSize: new google.maps.Size(256, 256),
@@ -197,7 +197,7 @@ return( {
 		{
 			this.osmCycleMapType = new google.maps.ImageMapType({
 				getTileUrl: function(coord, zoom) {
-					return "http://a.tile.opencyclemap.org/cycle/" +
+					return location.protocol + "//a.tile.opencyclemap.org/cycle/" +
 					zoom + "/" + coord.x + "/" + coord.y + ".png";
 				},
 				tileSize: new google.maps.Size(256, 256),
