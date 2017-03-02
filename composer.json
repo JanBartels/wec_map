@@ -2,7 +2,7 @@
 	"name": "jbartels/wec-map",
 	"description": "WEC Google Maps",
 	"type": "typo3-cms-extension",
-	"version": "3.3.0-dev",
+	"version": "3.3.0",
 	"autoload": {
 		"psr-4": {
 			"JBartels\\WecMap\\": "Classes/"
