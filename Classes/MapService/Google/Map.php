@@ -324,7 +324,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		} else if (!$hasHeightWidth) {
 			$error = '<p>'.$this->getLL('error_noHeightWidth' ).'</p>';
 		} else if (!$browserKey) {
-			$error = '<p>'.$this->getLL($lang, 'error_noBrowserKey' ).'</p>';
+			$error = '<p>'.$this->getLL( 'error_noBrowserKey' ).'</p>';
 		}
 		if(TYPO3_DLOG) {
 			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': finished map drawing with errors', 'wec_map_api', 2);
