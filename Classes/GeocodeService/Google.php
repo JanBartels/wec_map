@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2016 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2018 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * parts from static_info_tables:
 *  (c) 2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
@@ -171,12 +171,12 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 
 			if ( is_array( $countryArray ) && count( $countryArray ) == 1 )
 			{
-				$country = $countryArray[0]['cn_iso_3'];
+				$country = $countryArray[0]['cn_short_local'];
 				$region = $countryArray[0]['cn_tldomain'];
 			}
 
 			// format address accordingly
-			$addressString = $this->formatAddress(',', $street, $city, $zip, $state, $country);  // $country: alpha-3 ISO-code (e. g. DEU)
+			$addressString = $this->formatAddress(',', $street, $city, $zip, $state, $country);  // $country: local country name
 			if(TYPO3_DLOG) {
 				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
 			}
