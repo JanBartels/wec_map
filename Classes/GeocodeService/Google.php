@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2016 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2018 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * parts from static_info_tables:
 *  (c) 2013 Stanislas Rolland <typo3(arobas)sjbr.ca>
