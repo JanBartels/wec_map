@@ -3,26 +3,53 @@
 	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-09-16T19:28:20Z" product-name="wec_map">
 		<header/>
 		<body>
+			<trans-unit id="mlang_tabs_tab" xml:space="preserve" approved="yes">
+				<source>WEC Map Admin</source>
+				<target>WEC-Kartenverwaltung</target>
+			</trans-unit>
+			<trans-unit id="mlang_labels_tabdescr" xml:space="preserve" approved="yes">
+				<source>Caching for address-&gt;lat/long lookups.</source>
+				<target>Abfragen der LÃ¤ngen- und Breitengrade zwischenspeichern.</target>
+			</trans-unit>
+
 			<trans-unit id="title" xml:space="preserve" approved="yes">
 				<source>WEC Map Admin</source>
 				<target>WEC-Kartenverwaltung</target>
 			</trans-unit>
-			<trans-unit id="function1" xml:space="preserve" approved="yes">
+			<trans-unit id="menu_geocode" xml:space="preserve" approved="yes">
 				<source>Geocode Admin</source>
 				<target>Geocode-Verwaltung</target>
 			</trans-unit>
-			<trans-unit id="function2" xml:space="preserve" approved="yes">
+			<trans-unit id="menu_apikey" xml:space="preserve" approved="yes">
 				<source>API Key Settings</source>
 				<target>Einstellungen API-Schlüssel</target>
 			</trans-unit>
-			<trans-unit id="function3" xml:space="preserve" approved="yes">
+			<trans-unit id="menu_batch" xml:space="preserve" approved="yes">
 				<source>Batch Geocode</source>
 				<target>Geocode-Stapelverarbeitung</target>
 			</trans-unit>
-			<trans-unit id="function4" xml:space="preserve" approved="yes">
+			<trans-unit id="menu_download" xml:space="preserve" approved="yes">
 				<source>Download JS-Files</source>
 				<target></target>
 			</trans-unit>
+
+			<trans-unit id="geocode" xml:space="preserve" approved="yes">
+				<source>Geocode Admin</source>
+				<target>Geocode-Verwaltung</target>
+			</trans-unit>
+			<trans-unit id="apikey" xml:space="preserve" approved="yes">
+				<source>API Key Settings</source>
+				<target>Einstellungen API-Schlüssel</target>
+			</trans-unit>
+			<trans-unit id="batch" xml:space="preserve" approved="yes">
+				<source>Batch Geocode</source>
+				<target>Geocode-Stapelverarbeitung</target>
+			</trans-unit>
+			<trans-unit id="download" xml:space="preserve" approved="yes">
+				<source>Download JS-Files</source>
+				<target></target>
+			</trans-unit>
+
 			<trans-unit id="editAddress" xml:space="preserve" approved="yes">
 				<source>Edit address</source>
 				<target>Adresse bearbeiten</target>
@@ -51,6 +78,10 @@
 				<source>Longitude</source>
 				<target>Längengrad</target>
 			</trans-unit>
+			<trans-unit id="Action" xml:space="preserve" approved="yes">
+				<source>Action</source>
+				<target>Aktion</target>
+			</trans-unit>
 			<trans-unit id="totalCachedAddresses" xml:space="preserve" approved="yes">
 				<source>Total cached addresses</source>
 				<target>Gesamte zwischengespeicherte Adressen</target>
@@ -59,32 +90,48 @@
 				<source>Delete all cached addresses!</source>
 				<target>Alle zwischengespeicherten Adressen löschen!</target>
 			</trans-unit>
+			
+			<trans-unit id="Domain" xml:space="preserve" approved="yes">
+				<source>Domain</source>
+				<target>Domäne</target>
+			</trans-unit>
+			<trans-unit id="serverKey" xml:space="preserve" approved="yes">
+				<source>Server Key</source>
+				<target>Server Key</target>
+			</trans-unit>
+			<trans-unit id="browserKey" xml:space="preserve" approved="yes">
+				<source>Browser Key</source>
+				<target>Browser Key</target>
+			</trans-unit>
+			<trans-unit id="staticKey" xml:space="preserve" approved="yes">
+				<source>Static API Key</source>
+				<target>Static API Key</target>
+			</trans-unit>
+			
 			<trans-unit id="alreadySavedDomains" xml:space="preserve" approved="yes">
-				<source>
-				
-				The Domains and API keys below have already been saved and are being used.
-				
-			</source>
+				<source>The Domains and API keys below have already been saved and are being used.			</source>
 				<target>Die untenstehenden Domänen und API-Schlüssel sind bereits gespeichert und werden verwendet.</target>
 			</trans-unit>
 			<trans-unit id="suggestedDomains" xml:space="preserve" approved="yes">
-				<source>
-				
-				Below is a suggested list of domains that you may want to add API keys for.
-				
-			</source>
+				<source>Below is a suggested list of domains that you may want to add API keys for.</source>
 				<target>Untenstehend ist ein Liste von Domänen, denen API-Schlüssel zugewiesen werden können.</target>
 			</trans-unit>
 			<trans-unit id="apiInstructions" xml:space="preserve" approved="yes">
 				<source>
-				<p>In order to use the WEC Map extension you must have a Google 
-				Maps API Key. You can sign up for this key at the 
-				<a href="https://console.developers.google.com" target="_new">
-				Google API Console (https://console.developers.google.com</a>).</p>
-				<p>Enter the API key below. For the browser API Key append the secret
-				for the Static Maps API separated by a comma.</p>
-			</source>
-				<target>Um die WEC-Kartenerweiterung benutzen zu können, wird ein Schlüssel für das Google-Maps-API benötigt. Sie können sich zur Generierung des Schlüssels unter &lt;a href=&quot;http://code.google.com/apis/maps/signup.html&quot; target=&quot;_new&quot;&gt;http://code.google.com/apis/maps/signup.html&lt;/a&gt; anmelden.</target>
+					<p>In order to use the WEC Map extension you must have a Google 
+					Maps API Key. You can sign up for this key at the 
+					<a href="https://console.developers.google.com" target="_new">
+					Google API Console (https://console.developers.google.com</a>).</p>
+					<p>Enter the API key below.</p>
+				</source>
+				<target>
+					<p>Um die WEC-Kartenerweiterung benutzen zu können, wird ein Schlüssel 
+					für das Google-Maps-API benötigt. Sie können sich zur Generierung des 
+					Schlüssels unter 
+					<a href="https://console.developers.google.com" target="_new">
+					https://console.developers.google.com</a> anmelden.</p>
+					<p>Geben Sie die API-Schlüssel unten ein.</p>
+					</target>
 			</trans-unit>
 			<trans-unit id="googleMapsBrowserApiKey" xml:space="preserve">
 				<source>Google Maps Browser API Key</source>
@@ -100,26 +147,33 @@
 			</trans-unit>
 			<trans-unit id="downloadInstructions" xml:space="preserve" approved="yes">
 				<source>
-				
-				wec_map uses some additional libraries which cannot be included for license reasons. 
-				If you want to host them on your own server, you can download them here. 
-				Please remember to change the settings of wec_map afterwards. 
-				
-			</source>
-				<target></target>
+					wec_map uses some additional libraries which cannot be included for license reasons. 
+					If you want to host them on your own server, you can download them here. 
+					Please remember to change the settings of wec_map afterwards. 
+				</source>
+				<target>
+					wec_map verwendet einige zusätzliche Bibliotheken, die aus lizenzrechtlichen Gründen nicht enthalten sind. 
+					Wenn Sie die Dateien auf Ihrem Server hosten wollen, können Sie sie hier herunterladen. 
+					Bitte denken Sie daran, die Einstellungen von wec_map anschließend zu ändern. 
+				</target>
 			</trans-unit>
 			<trans-unit id="download" xml:space="preserve" approved="yes">
 				<source>Download</source>
-				<target></target>
+				<target>Download</target>
 			</trans-unit>
 			<trans-unit id="downloadError" xml:space="preserve" approved="yes">
 				<source>Download error: </source>
-				<target></target>
+				<target>Downloadfehler: </target>
 			</trans-unit>
 			<trans-unit id="downloadSuccess" xml:space="preserve" approved="yes">
 				<source>Download successful: </source>
-				<target></target>
+				<target>Download erfolgreich: </target>
 			</trans-unit>
+			<trans-unit id="btn_download" xml:space="preserve" approved="yes">>
+				<source>Download</source>
+				<target>Download</target>
+			</trans-unit>
+
 			<trans-unit id="batchGeocode" xml:space="preserve" approved="yes">
 				<source>Batch Geocode</source>
 				<target>Geocode-Stapelverarbeitung</target>

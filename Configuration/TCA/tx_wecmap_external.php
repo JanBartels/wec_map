@@ -34,7 +34,7 @@ return array(
 				        'link' => Array(
 				                'type' => 'popup',
 				                'title' => 'Link',
-				                'icon' => 'link_popup.gif',
+				                'icon' => 'actions-wizard-link',
 								'module' => [
 									'name' => 'wizard_link',
 								],
@@ -44,7 +44,7 @@ return array(
 									'blindLinkOptions' => 'folder, mail, page, spec, url'
 								)
 				        ),
-
+#"tx_wecmap_external['columns']['url']['config']['wizards']['link']" to "tx_wecmap_external['columns']['url']['config']['renderType'] = 'inputLink'".
 				)
 			),
 		),

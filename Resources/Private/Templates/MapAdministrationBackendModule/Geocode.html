@@ -1,0 +1,85 @@
+<f:layout name="MapAdministrationBackendModule/Header" />
+
+<f:section name="content">
+    <div>
+        <h2 class="uppercase">
+            <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:geocode">
+                Geocode
+            </f:translate>
+        </h2>
+
+		<f:if condition="{f:count(subject: addresses)}>0}">
+			<f:then>
+
+				<div>
+					<input id="recordSearchbox" type="text" placeholder="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:searchFilter', default: 'searchFilter')}" size="20"/>
+					<button id="resetSearchboxButton" style="display: none;">
+						<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:clearFilter">
+							clearFilter
+						</f:translate>
+					</button>
+				</div>
+
+
+				<table id="tx-wecmap-cache">
+					<thead>
+						<tr>
+							<th>
+								<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:address">
+									noRecords
+								</f:translate>
+							</th>
+							<th>
+								<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:latitude">
+									noRecords
+								</f:translate>
+							</th>
+							<th>
+								<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:longitude">
+									noRecords
+								</f:translate>
+							</th>
+							<th colspan="2">
+								<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:Actions">
+									Action
+								</f:translate>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<f:for each="{addresses}" as="address">
+							<tr>
+							<tr id="item_{address.address_hash}" data-cacheid="{address.address_hash}" class="address">
+								<td class="address">{address.address}</td>
+								<td class="latitude">{address.latitude}</td>
+								<td class="longitude">{address.longitude}</td>
+								<td class="editButton">
+									 <span class="editButton">iconEdit</span>
+									 <span class="saveButton" style="display: none;">iconSave</span>
+									 <span class="cancelButton" style="display: none;">iconCancel</span>
+								</td>
+								<td class="deleteButton"><span class="deleteButton">iconDelete</span></td>
+							</tr>
+						</f:for>
+					</tbody>
+				</table>
+
+				<p>
+					<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:totalCachedAddresses">
+						totalCachedAddresses
+					</f:translate>
+					<strong><span id="recordCount"><f:count>{addresses}</f:count></span></strong><span id="deleteCache">iconDelete</span>
+				</p>
+
+			</f:then>
+			<f:else>
+
+				<div id="noRecords">
+					<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:noRecords">
+						noRecords
+					</f:translate>
+				</div>
+			</f:else>
+		</f:if>
+    </div>
+</f:section>

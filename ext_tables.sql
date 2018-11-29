@@ -2,7 +2,7 @@
 -- Table structure for table `tx_wecmap_cache`
 --
 
-CREATE TABLE `tx_wecmap_cache` (
+CREATE TABLE tx_wecmap_cache (
   	address_hash varchar(50) NOT NULL default '',
   	address varchar(100) NOT NULL default '',
   	latitude double default '0',
@@ -11,7 +11,7 @@ CREATE TABLE `tx_wecmap_cache` (
 	PRIMARY KEY (address_hash)
 );
 
-CREATE TABLE `tx_wecmap_external` (
+CREATE TABLE tx_wecmap_external (
 	uid int(11) NOT NULL auto_increment,
 	pid int(11) DEFAULT '0' NOT NULL,
 	tstamp int(11) DEFAULT '0' NOT NULL,
@@ -21,4 +21,10 @@ CREATE TABLE `tx_wecmap_external` (
 	url tinytext NOT NULL,
 	
 	PRIMARY KEY (uid)
+);
+
+CREATE TABLE sys_domain (
+	browserKey char(50) DEFAULT '' NOT NULL,
+	staticKey char(50) DEFAULT '' NOT NULL,
+	serverKey char(50) DEFAULT '' NOT NULL
 );

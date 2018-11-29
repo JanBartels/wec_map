@@ -102,6 +102,18 @@
 			<trans-unit id="tx_wecmap_external.url" xml:space="preserve">
 				<source>URL</source>
 			</trans-unit>
+			<trans-unit id="sys_domain.browserKey" xml:space="preserve">
+				<source>Browser-Key</source>
+			</trans-unit>
+			<trans-unit id="sys_domain.staticKey" xml:space="preserve">
+				<source>Static-Key</source>
+			</trans-unit>
+			<trans-unit id="sys_domain.serverKey" xml:space="preserve">
+				<source>Server-Key</source>
+			</trans-unit>
+			<trans-unit id="sys_domain.GoogleAPI" xml:space="preserve">
+				<source>Google Maps API</source>
+			</trans-unit>
 			<trans-unit id="unit" xml:space="preserve">
 				<source>Unit: </source>
 			</trans-unit>

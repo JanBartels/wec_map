@@ -1,0 +1,48 @@
+<f:layout name="MapAdministrationBackendModule/Header" />
+
+<f:section name="content">
+    <div>
+        <h2 class="uppercase">
+            <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:download">
+                download
+            </f:translate>
+        </h2>
+
+		<f:if condition="results">
+		<p>
+			<f:for each="{results}" as="result">
+				<f:if condition="{result.Status}">
+					<f:then>
+						<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:downloadSuccess">
+							downloadSuccess
+						</f:translate>
+						{result.URL -> f:format.htmlentities()}
+					</f:then>
+					<f:else>
+						<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:downloadError">
+							downloadError
+						</f:translate>
+						{result.URL -> f:format.htmlentities()}
+					</f:else>
+				</f:if>
+				<br>
+			</f:for>
+		</p>
+		</f:if>
+
+		<p>
+			<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:downloadInstructions">
+				downloadInstructions
+			</f:translate>
+		</p>
+
+ 		<f:form action="download" name="download">
+ 	       <f:form.button type="submit" name="submit">
+ 	       	<f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:btn_download">
+                Download
+            </f:translate>
+           </f:form.button>
+ 	   </f:form>
+
+    </div>
+</f:section>

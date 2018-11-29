@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2013-2016 J. Bartels
+* (c) 2013-2018 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -40,155 +40,79 @@ namespace JBartels\WecMap\Utility;
  */
 class DomainMgr {
 
-	public $extKey = 'wec_map';
+	protected $extKey = 'wec_map';
+
 	/**
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
+     * @inject
 	 */
 	protected $objectManager;
 
-	function addKeyToUrl( $url, $key, $addSecret ) {
-		$apiKey = explode( ',', $key );
-		$url .= '&key=' .$apiKey[ 0 ];
-		if ( $apiKey[ 1 ] && $addSecret )
-			return $this->signurl( $url, $apiKey[ 1 ] );
+	public function addKeyToUrl( $url, $key, $secret = null ) {
+		$url .= '&key=' .$key;
+		if ( $Secret )
+			return $this->signurl( $url, $secret );
 		else
 			return $url;
 	}
 
-	function getBrowserKey($domain = null) {
-		$value = $this->getKey( $domain );
-		$values = explode( '&', $value );
-		return $values[ 0 ];
+    /**
+     * Returns the browserKey
+     *
+     * @param string $domain
+     *
+     * @return string $browserKey
+     */
+	public function getBrowserKey( $domain = null ) {
+		$domainRecord = $this->getDomainRecord( $domain );
+		if ( $domainRecord == null )
+			return "";
+		return $domainRecord->getBrowserKey();
 	}
 
-	function getServerKey($domain = null) {
-		$value = $this->getKey( $domain );
-		$values = explode( '&', $value );
-		return $values[ 1 ];
+	public function getServerKey( $domain = null ) {
+		$domainRecord = $this->getDomainRecord( $domain );
+		if ( $domainRecord == null )
+			return "";
+		return $domainRecord->getServerKey();
 	}
 
-	protected function getKey($domain = null) {
+	public function getStaticKey( $domain = null ) {
+		$domainRecord = $this->getDomainRecord( $domain );
+		if ( $domainRecord == null )
+			return "";
+		return $domainRecord->getStaticKey();
+	}
 
-		// check to see if this is an update from the old config schema and convert to the new
-		$isOld = $this->checkForOldConfig();
-
-		// get key from configuration
-		$keyConfig = \JBartels\WecMap\Utility\Backend::getExtConf('apiKey.google');
-
-		// if we are using the old config, return the old key this time. It will be changed for next time.
-		if($isOld) return $keyConfig;
-
+	protected function getDomainRecord( $domain = null ) {
 		// get current domain
-		if($domain == null)	$domain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
+		if( $domain == null )
+			$domain = $this->getRequestDomain();
 
-		// loop through all the domain->key pairs we have to find the right one
-		$found = false;
-		foreach( $keyConfig as $key => $value ) {
-			if($domain == $key) {
-				$found = true;
-				return $value;
+		// test all levels of domain
+		for ( $domainParts = explode ( '.', $domain ); $domainParts; array_shift( $domainParts ) )
+		{
+			$domainTest = implode( '.' , $domainParts );
+			$record = $this->getSingleDomain( $domainTest );
+			if ( $record != null ) {
+				return $record;
 			}
 		}
-
-		// if we didn't get an exact match, check for partials and guess
-		if(!$found) {
-			foreach( $keyConfig as $key => $value ) {
-
-				if(strpos($domain, $key) !== false) {
-					$found = true;
-					return $value;
-				}
-			}
-		} else {
-			return null;
-		}
-	}
-
-	function checkForOldConfig() {
-		global $TYPO3_CONF_VARS;
-
-		$keyConfig = \JBartels\WecMap\Utility\Backend::getExtConf('apiKey.google');
-		if(is_array($keyConfig)) return false;
-
-		$key = $keyConfig;
-		$domain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
-		$this->saveApiKey(array($domain => $key));
-
-		return true;
-	}
-
-	function processPost($post) {
-
-		$allDomains = $this->getAllDomains();
-
-		// prepare the two arrays we need in the loop
-		$extconfArray = array();
-		$returnArray = array();
-
-		// loop through all the pairs
-		for ( $i=0; array_key_exists( 'domain_' . $i, $post ); $i++ ) {
-
-			// get the domain and key
-			$curDomain = $post[ 'domain_' . $i];
-			$browserKey = $post[ 'browserkey_' . $i];
-			$serverKey = $post[ 'serverkey_' . $i];
-
-			// if there is no key, we don't want to save it in extconf
-			if(!( empty($browserKey) && empty($serverKey) ) && !empty($curDomain)) $extconfArray[$curDomain] = $browserKey . '&' . $serverKey;
-
-			// get all but manually added domains
-			$domains1 = $this->getRequestDomain();
-			$domains2 = $this->getDomainRecords();
-			$domains = array_keys(array_merge($domains1, $domains2));
-
-			// if there is no domain, or we want to delete a domain, we won't return it.
-			// we also make sure not to recommend domains that were just deleted but manually added before
-			if(!empty($curDomain) && !(!empty($allDomains[$curDomain]) && empty($browserKey) && empty($serverKey) && !in_array($curDomain, $domains))) $returnArray[$curDomain] = $browserKey . '&' . $serverKey;;
-
-
-		}
-
-		// save the domain->key pairs, even if empty
-		$this->saveApiKey($extconfArray);
-
-		// sort the array and reverse it so we show filled out records first, empty ones last
-		asort($returnArray);
-
-		return array_reverse($returnArray);
+		return null;
 	}
 
 	/*
-	 * Looks up the API key in extConf within localconf.php
-	 * @return		array		The Google Maps API keys.
-	 */
-	function getApiKeys() {
-
-		$apiKeys = \JBartels\WecMap\Utility\Backend::getExtConf('apiKey.google');
-
-		return $apiKeys;
-	}
-
-	/*
+	 * obsolete! Keep code as example for updater
+	 *
 	 * Saves the API key to extConf in localconf.php.
 	 * @param		string		The new Google Maps API Key.
 	 * @return		none
 	 */
-	function saveApiKey($dataArray) {
+	private function saveApiKey($dataArray) {
 		global $TYPO3_CONF_VARS;
 
 		$extConf = unserialize($TYPO3_CONF_VARS['EXT']['extConf'][$this->extKey]);
 		$extConf['apiKey.']['google'] = $dataArray;
-
-		// Instance of install tool
-		#$instObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('t3lib_install');
-		#$instObj->allowUpdateLocalConf = 1;
-		#$instObj->updateIdentity = $this->extKey;
-
-		// Get lines from localconf file
-		#$lines = $instObj->writeToLocalconf_control();
-
-		#$instObj->setValueInLocalconfFile($lines, '$TYPO3_CONF_VARS[\'EXT\'][\'extConf\'][\''.$this->extKey.'\']', serialize($extConf));
-		#$instObj->writeToLocalconf_control($lines);
 
         $this->objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
         $instObj = $this->objectManager->get(\TYPO3\CMS\Core\Configuration\ConfigurationManager::class);
@@ -199,111 +123,44 @@ class DomainMgr {
 	}
 
 	/**
-	 * Returns an assoc array with domains as key and api key as value
+	 * Returns domain record for domain
 	 *
-	 * @return array
+	 * @param string domain
+	 * @return JBartels\\WecMap\\Domain\\Model\\DomainModel
 	 **/
-	function getAllDomains() {
-
-		$domainRecords = $this->getDomainRecords();
-
-		// get domains entries from extconf
-		$extconfDomains = $this->getApiKeys();
-
-		// get domain from the current http request
-		$requestDomain = $this->getRequestDomain();
-
-		// Now combine all the records we got into one array with the domain as key and the api key as value
-		return $this->combineAndSort($domainRecords, $extconfDomains, $requestDomain);
+	protected function getSingleDomain( $domain ) {
+		// get domain record
+		$queryResult = $this->getRepository()->findByDomain( $domain );
+		$domainRecord = $queryResult->current();
+		if ( $domainRecord != FALSE )
+			return $domainRecord;
+		return null;
 	}
 
 	/**
-	 * Returns an assoc array with domain record domains as keys and api key as value
+	 * Returns domain record for domain
 	 *
-	 * @return array
+	 * @return JBartels\\WecMap\\Domain\\Repository\\DomainRepository
 	 **/
-	function getDomainRecords() {
-
+	protected function getRepository() {
 		// get domain records
-		$domainRecords = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('domainName', 'sys_domain', 'hidden=0');
-
-		$newArray = array();
-		foreach( $domainRecords as $key => $value ) {
-			$newArray[$value['domainName']] = '';
-		}
-
-		return $newArray;
+		return $this->objectManager->get( \JBartels\WecMap\Domain\Repository\DomainRepository::class );
 	}
+
 
 	/**
 	 * Returns the domain of the current http request
 	 *
-	 * @return array
+	 * @return string
 	 **/
-	function getRequestDomain() {
+	protected function getRequestDomain() {
 		// get domain from the current http request
 		$requestDomain = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST');
 
-		return array($requestDomain => '');
+		return $requestDomain;
 	}
 
-	/**
-	 * combine all the arrays, making each key unique and preferring the one that has a value,
-	 * then sort so that all empty values are last
-	 *
-	 * @return array
-	 **/
-	function combineAndSort($a1, $a2, $a3) {
-		if(!is_array($a1)) $a1 = array();
-		if(!is_array($a2)) $a2 = array();
-		if(!is_array($a3)) $a3 = array();
-
-		// combine the first and the second
-		$temp1 = array();
-		foreach( $a1 as $key => $value ) {
-			// if there is the same key in array2, check the values
-			if(array_key_exists($key, $a2)) {
-
-				// if a2 doesn't have a value, use a1's value
-				if(empty($a2[$key])) {
-					$temp1[$key] = $value;
-				} else {
-					$temp1[$key] = $a2[$key];
-				}
-			} else {
-				$temp1[$key] = $value;
-			}
-		}
-
-		$temp2 = array_merge($a2, $temp1);
-
-		// combine the temp and the third
-		$temp3 = array();
-		foreach( $temp2 as $key => $value ) {
-			// if there is the same key in array2, check the values
-			if(array_key_exists($key, $a3)) {
-
-				// if a3 doesn't have a value, use a1's value
-				if(empty($a3[$key])) {
-					$temp3[$key] = $value;
-				} else {
-					$temp3[$key] = $a3[$key];
-				}
-			} else {
-				$temp3[$key] = $value;
-			}
-		}
-
-		// merge the third into the second
-		$temp4 = array_merge($a3, $temp3);
-
-		// sort by value, reverse, and return
-		asort($temp4);
-
-		return array_reverse($temp4);
-	}
-
-	function signurl( $url, $privatekey )
+	protected function signurl( $url, $privatekey )
 	{
 		// sign only path and query without host and protocol
 		$url = parse_url( $url );
@@ -319,6 +176,11 @@ class DomainMgr {
 		return $url[ 'scheme' ] . "://" . $url[ 'host' ] . $url[ 'path' ] . "?" . $url[ 'query' ] . "&signature=" . urlencode( $encodedSignature );
 	}
 
+	public static function getInstance()
+	{
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Extbase\Object\ObjectManager::class);
+		return $objectManager->get( \JBartels\WecMap\Utility\DomainMgr::class );
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/wec_map/class.tx_wecmap_domainmgr.php'])	{

@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2016 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2018 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
 * (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
@@ -205,7 +205,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		$hasHeightWidth = $this->hasHeightWidth();
 
 		// make sure we have markers to display and an API key
-		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
+		$domainmgr = \JBartels\WecMap\Utility\DomainMgr::getInstance();
 		$browserKey = $domainmgr->getBrowserKey();
 
 		if ($hasThingsToDisplay && $hasHeightWidth && $browserKey ) {
@@ -225,7 +225,7 @@ class Map extends \JBartels\WecMap\MapService\Map {
 			$scheme = (\TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SSL') ? 'https://' : 'http://');
 			// get the correct API URL
 			$apiURL = $scheme . 'maps.googleapis.com/maps/api/js?language=' . $this->lang . '&libraries=places';
-			$apiURL = $domainmgr->addKeyToUrl( $apiURL, $browserKey, false );
+			$apiURL = $domainmgr->addKeyToUrl( $apiURL, $browserKey );
 
 			if(\JBartels\WecMap\Utility\Backend::getExtConf('useOwnJS'))
 			{
@@ -383,8 +383,8 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		} else {
 			$url = $scheme . 'maps.googleapis.com/maps/api/staticmap?size='.$this->width.'x'.$this->height.'&maptype='.$this->type.'&markers='.urlencode($markers);
 		}
-		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
-		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getBrowserKey(), true );
+		$domainmgr = \JBartels\WecMap\Utility\DomainMgr::getInstance();
+		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getBrowserKey(), $domainmgr->getStaticKey() );
 		return '<img class="tx-wecmap-api-staticmap" alt="'.$alt.'" src="' . $url .'" />';
 	}
 	/**

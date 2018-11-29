@@ -206,7 +206,7 @@ $pageRenderer = $GLOBALS['TBE_TEMPLATE']->getPageRenderer();
 	function apiKeyAdmin() {
 		global $TYPO3_CONF_VARS, $LANG;
 
-		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Utility\DomainMgr::class);
+		$domainmgr = \JBartels\WecMap\Utility\DomainMgr::getInstance();
 
 		$blankDomainValue = 'Enter domain....';
 

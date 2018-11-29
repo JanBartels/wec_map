@@ -1,0 +1,39 @@
+<!--f:be.container	includeCssFiles="{0: '{f:uri.resource(path:\'CSS/style.css\')}'}"-->
+<f:be.container>
+    <div class="typo3-fullDoc">
+        <div id="typo3-docheader">
+            <div class="typo3-docheader-functions">
+                <div class="left">
+                    <f:be.buttons.csh />
+                    <f:be.menus.actionMenu>
+                        <f:be.menus.actionMenuItem label="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:menu_geocode')}" controller="MapAdministrationBackendModule" action="geocode" />
+                        <f:be.menus.actionMenuItem label="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:menu_batch')}" controller="MapAdministrationBackendModule" action="batch" />
+                        <f:be.menus.actionMenuItem label="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:menu_download')}" controller="MapAdministrationBackendModule" action="download" />
+                        <f:be.menus.actionMenuItem label="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:menu_apikey')}" controller="MapAdministrationBackendModule" action="apikey" />
+                    </f:be.menus.actionMenu>
+                </div>
+                <div class="right">
+					<f:be.pagePath />
+					<f:be.pageInfo />
+                </div>
+            </div>
+
+			<div class="typo3-docheader-buttons">
+				<div class="left">
+				</div>
+				<div class="right">
+					<f:be.buttons.shortcut />
+				</div>
+			</div>
+        </div>
+        <div id="typo3-docbody">
+            <div id="typo3-inner-docbody" class="fe_tourdb-backend">
+                <h1>
+                    <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:title" />
+                </h1>
+                <f:render section="content" />
+            </div>
+        </div>
+    </div>
+
+</f:be.container>

@@ -309,6 +309,7 @@ class Backend {
 
 		$description = $lat.','.$long;
 
+		$apiKey = '';
 		/** @var \tx_wecmap_map_google $map */
 		$map =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\MapService\Google\Map::class, $apiKey, $width, $height);
 		$marker = $map->addMarkerByLatLong($lat, $long, $description );
@@ -322,7 +323,6 @@ class Backend {
 		$map->enableDirections(true);
 
 		$content = $map->drawMap();
-
 		return $content;
 	}
 

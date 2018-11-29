@@ -195,8 +195,8 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 		if ( $region )
 			$url .= '&region=' . urlencode( $region );
 
-		$domainmgr = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \JBartels\WecMap\Utility\DomainMgr::class );
-		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getServerKey(), false );
+		$domainmgr = \JBartels\WecMap\Utility\DomainMgr::getInstance();
+		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getServerKey() );
 
 		// request Google-service and parse JSON-response
 		if(TYPO3_DLOG) {
