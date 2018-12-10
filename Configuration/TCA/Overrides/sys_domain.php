@@ -42,7 +42,7 @@ $columns = array(
 // Make fields visible in the TCEforms:
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'sys_domain',
-    'browserKey, staticKey, serverKey',
+    '--div--;LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:sys_domain.GoogleAPITab, browserKey, staticKey, serverKey',
     '', // List of specific types to add the field list to. (If empty, all type entries are affected)
     '' // Insert fields before (default) or after one, or replace a field
 );

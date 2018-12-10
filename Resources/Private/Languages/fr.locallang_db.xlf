@@ -128,6 +128,10 @@
 				<source>WEC Map External Resource</source>
 				<target>WEC Map ressource externe</target>
 			</trans-unit>
+			<trans-unit id="sys_domain.GoogleAPITab" xml:space="preserve" approved="yes">>
+				<source>Google Maps API</source>
+				<target>Google Maps API</target>
+			</trans-unit>
 			<trans-unit id="tx_wecmap_external.title" xml:space="preserve" approved="yes">
 				<source>Title</source>
 				<target>Titre</target>

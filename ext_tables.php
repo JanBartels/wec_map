@@ -39,7 +39,7 @@ if (TYPO3_MODE == 'BE') {
 		'',			// Position
 		array(
             'MapAdministrationBackendModule' =>
-                'geocode,batch,download,apikey',
+				'geocode,batch,download,apikey,editCacheEntry,saveCacheEntry,closeCacheEntry,deleteCacheEntry,deleteCache',
 		),
 		array(
 			'access' => 'admin',

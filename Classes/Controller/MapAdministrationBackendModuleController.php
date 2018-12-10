@@ -116,6 +116,57 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
      */
     public function apikeyAction()
     {
+		// nothing to do. Just render the template
+    }
+
+    /**
+	 * action editCacheEntry
+	 *
+	 * @return void
+     */
+	public function editCacheEntryAction()
+    {
+    }
+
+    /**
+	 * action saveCacheEntry
+	 *
+	 * @return void
+     */
+	public function saveCacheEntryAction()
+    {
+    }
+
+    /**
+	 * action closeCacheEntry
+	 *
+	 * @return void
+     */
+	public function closeCacheEntryAction()
+    {
+    }
+
+    /**
+	 * action deleteCacheEntry
+	 *
+	 * @return void
+     */
+	public function deleteCacheEntryAction()
+    {
+		$hash = $this->request->getArgument('hash');
+		\JBartels\WecMap\Utility\Cache::deleteByUID( $hash );
+		$this->forward( 'geocode' );
+    }
+
+    /**
+	 * action deleteCache
+	 *
+	 * @return void
+     */
+	public function deleteCacheAction()
+    {
+		\JBartels\WecMap\Utility\Cache::deleteAll();
+		$this->forward( 'geocode' );
     }
 
 	/**
