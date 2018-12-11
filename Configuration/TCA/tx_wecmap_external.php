@@ -30,22 +30,19 @@ return array(
 				"type" => "input",
 				"size" => "32",
 				"max" => "128",
-				'wizards' => Array(
-				        'link' => Array(
-				                'type' => 'popup',
-				                'title' => 'Link',
-				                'icon' => 'actions-wizard-link',
-								'module' => [
-									'name' => 'wizard_link',
-								],
-				                'JSopenParams' => 'height=300,width=500,status=0,menubar=0,scrollbars=1',
-								'params' => Array(
-									'allowedExtensions' => 'kml, xml, kmz',
-									'blindLinkOptions' => 'folder, mail, page, spec, url'
-								)
-				        ),
-#"tx_wecmap_external['columns']['url']['config']['wizards']['link']" to "tx_wecmap_external['columns']['url']['config']['renderType'] = 'inputLink'".
-				)
+
+				'renderType' => 'inputLink',
+				'fieldControl' => Array(
+					'linkPopup' => Array(
+						'options' => Array(
+							'title' => 'Link',
+//							'title' => 'LLL:EXT:wec_map/...',
+							'allowedExtensions' => 'kml, xml, kmz',
+							'blindLinkOptions' => 'mail, page, spec, url',
+							'blindLinkFields' => 'class, params, target, title'
+						),
+					),
+				), 
 			),
 		),
 	),
