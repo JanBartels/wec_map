@@ -8,5 +8,41 @@
             </f:translate>
         </h2>
 
+        <p>
+            <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:batchInstructions">
+                batchInstructions
+            </f:translate>
+        </p>
+    
+        <p style="margin-top:1em;">
+            <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:batchTables">
+                batchTables
+            </f:translate>
+        </p>
+        <ul>
+            <f:for each="{tables}" as="table">
+                <li>{table.title} ({table.recordCount})</li>
+            </f:for>
+        </ul>
+    
+        <div id="status" style="margin-bottom: 5px; display:none;">
+            <div id="bar" style="width:300px; height:20px; border:1px solid black">
+                <div id="progress" style="width:0%; height:20px; background-color:green"></div>
+            </div>
+            <p>
+                <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:processedStart">
+                    processedStart
+                </f:translate>
+    
+                <span id="processed">0</span> 
+                <f:translate key="LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:processedMid">
+                    processedMid
+                </f:translate>
+                {totalAddresses}.
+            </p>
+        </div>
+    
+        <input id="startGeocoding" type="submit" value="{f:translate(key: 'LLL:EXT:wec_map/Resources/Private/Languages/Backend/MapAdministration/locallang.xlf:startGeocoding', default: 'start')}." />
+    
     </div>
 </f:section>

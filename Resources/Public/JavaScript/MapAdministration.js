@@ -160,7 +160,9 @@ define(['jquery'], function($) {
 		startGeocode: function() {
 			$( '#startGeocoding' ).hide();
 			$( '#status' ).show();
-		
+			$( '#bar' ).show();
+
+			var me = this;
 			$.ajax({
 				url: TYPO3.settings.ajaxUrls[ 'txwecmapM1::batchGeocode' ],
 				method: 'POST',
@@ -171,7 +173,9 @@ define(['jquery'], function($) {
 					$( '#progress' ).width( progress + '%' );
 					$( '#processed' ).html( processed );
 					if ( total > processed ) {
-						window.setTimeout( startGeocode, 1000 );
+						window.setTimeout( me.startGeocode, 1000 );
+					} else {
+						$( '#bar' ).hide();
 					}
 				}
 			} );

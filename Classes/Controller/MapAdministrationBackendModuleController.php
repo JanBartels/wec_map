@@ -38,7 +38,7 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 	 */
 	public function geocodeAction() {
 
-		$addresses = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_wecmap_cache','', 'address', 'address', $limit);
+		$addresses = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows( '*','tx_wecmap_cache','', 'address', 'address' );
 		$this->view->assign( 'addresses', $addresses );
 	}
 
@@ -49,35 +49,27 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 	 */
 	public function batchAction() {
 
-/*
-		$batchGeocode = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Module\MapAdministration\BatchGeocode::class, 1);
+		$batchGeocode = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\Utility\BatchGeocode::class);
 		$batchGeocode->addAllTables();
-		$totalAddresses = $batchGeocode->getRecordCount();
+		$totalAddresses = 0;
 
-		$content[] = '<h3>'.$LANG->getLL('batchGeocode').'</h3>';
-		$content[] = '<p>'.$LANG->getLL('batchInstructions').'</p>';
+		$tableNames = $batchGeocode->getTableNames();
+		$tables = [];
+		foreach( $tableNames as $tableName ) {
+			$recordCount = $batchGeocode->getTableRecordCount( $tableName );
+			$totalAddresses += $recordCount;
 
-		$content[] = '<p style="margin-top:1em;">'.$LANG->getLL('batchTables').'</p>';
-		$content[] = '<ul>';
-		foreach($GLOBALS['TCA'] as $tableName => $tableContents) {
-			if($tableContents['ctrl']['EXT']['wec_map']['isMappable']) {
-				$title = $LANG->sL($tableContents['ctrl']['title']);
-				$content[] = '<li>'.$title.'</li>';
-			}
+			$tables[] = [
+				table => $tableName,
+				title => $this->getLanguageService()->sL( $GLOBALS['TCA'][$tableName]['ctrl']['title'] ),
+				recordCount => $recordCount
+			];
 		}
-		$content[] = '</ul>';
 
-		$content[] = '<div id="status" style="margin-bottom: 5px; display:none;">';
-		$content[] =   '<div id="bar" style="width:300px; height:20px; border:1px solid black">';
-		$content[] =     '<div id="progress" style="width:0%; height:20px; background-color:red"></div>';
-		$content[] =   '</div>';
-		$content[] =   '<p>'.$LANG->getLL('processedStart').' <span id="processed">0</span> '.$LANG->getLL('processedMid').' '.$totalAddresses.'.</p>';
-		$content[] = '</div>';
+		$this->view->assign( 'totalAddresses', $totalAddresses );
+		$this->view->assign( 'tables', $tables );
 
-		$content[] = '<input id="startGeocoding" type="submit" value="'.$LANG->getLL('startGeocoding').'">';
-
-		return implode(chr(10), $content);
-
+/*		
 		// form submitted
         if($this->request->hasArgument('submit')) {
 			$this->view->assign('Mode', 'Importing');
