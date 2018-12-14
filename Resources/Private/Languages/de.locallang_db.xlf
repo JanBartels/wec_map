@@ -339,6 +339,10 @@
 				<source>Filter by FE user group (default: all)</source>
 				<target>Nach FE-Benutzergruppe filtern (standardmäßig alle angezeigt)</target>
 			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.userGroupsOrMode" xml:space="preserve" approved="yes">
+				<source>Combine FE user group by OR (default: AND)</source>
+				<target>FE-Benutzergruppen mit ODER verbinden (standardmäßig UND)</target>
+			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.zip" xml:space="preserve" approved="yes">
 				<source>ZIP</source>
 				<target>PLZ</target>

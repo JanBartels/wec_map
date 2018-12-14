@@ -138,6 +138,14 @@
 							</config>
 						</TCEforms>
 					</userGroups>
+					<userGroupsOrMode>
+						<TCEforms>
+							<label>LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:tt_content.pi_flexform.userGroupsOrMode</label>
+							<config>
+								<type>check</type>
+							</config>
+						</TCEforms>
+					</userGroupsOrMode>
 					<pid>
 						<TCEforms>
 							<label>LLL:EXT:lang/locallang_general.php:LGL.startingpoint</label>

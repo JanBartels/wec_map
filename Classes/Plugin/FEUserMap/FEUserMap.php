@@ -81,6 +81,9 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$userGroups = $this->pi_getFFvalue($piFlexForm, 'userGroups', 'default');
 		empty($userGroups) ? $userGroups = $this->cObj->stdWrap($conf['userGroups'], $conf['userGroups.']):null;
 
+		$userGroupsOrMode = $this->pi_getFFvalue($piFlexForm, 'userGroupsOrMode', 'default');
+		empty($userGroupsOrMode) ? $userGroupsOrMode = $this->cObj->stdWrap($conf['userGroupsOrMode'], $conf['userGroupsOrMode.']):false;
+
 		$pid = $this->pi_getFFvalue($piFlexForm, 'pid', 'default');
 		empty($pid) ? $pid = $this->cObj->stdWrap($conf['pid'], $conf['pid.']):null;
 
@@ -293,7 +296,7 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		// if a user group was set, make sure only those users from that group
 		// will be selected in the query
 		if($userGroups) {
-			$where .= \JBartels\WecMap\Utility\Shared::listQueryFromCSV('usergroup', $userGroups, 'fe_users');
+			$where .= \JBartels\WecMap\Utility\Shared::listQueryFromCSV('usergroup', $userGroups, 'fe_users', $userGroupsOrMode ? 'OR' : 'AND');
 		}
 
 		// if a storage folder pid was specified, filter by that

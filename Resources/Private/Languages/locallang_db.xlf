@@ -259,6 +259,9 @@
 			<trans-unit id="tt_content.pi_flexform.userGroup" xml:space="preserve">
 				<source>Filter by FE user group (default: all)</source>
 			</trans-unit>
+			<trans-unit id="tt_content.pi_flexform.userGroupsOrMode" xml:space="preserve">
+				<source>Combine FE user group by OR (default: AND)</source>
+			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.zip" xml:space="preserve">
 				<source>ZIP</source>
 			</trans-unit>

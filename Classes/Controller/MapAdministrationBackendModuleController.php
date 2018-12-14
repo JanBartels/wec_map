@@ -68,20 +68,6 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 
 		$this->view->assign( 'totalAddresses', $totalAddresses );
 		$this->view->assign( 'tables', $tables );
-
-/*		
-		// form submitted
-        if($this->request->hasArgument('submit')) {
-			$this->view->assign('Mode', 'Importing');
-			if ( $this->doImport() ) {
-				$this->view->assign('Result', '<strong style="color: red">DER IMPORT KONNTE NICHT DURCHGEFÜHRT WERDEN</strong>' );
-			} else {
-				$this->view->assign('Result', '<strong style="color: green">IMPORT DURCHGEFÜHRT</strong>' );
-			}
-        } else {
-			$this->view->assign('Mode', 'Displaying');
-        }
-*/
 	}
 
 	/**
