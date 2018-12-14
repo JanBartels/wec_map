@@ -23,7 +23,7 @@ if (TYPO3_MODE == 'BE') {
 		'',			// Position
 		array(
             'FeUserMapBackendModule' =>
-                'show,settings,alert',
+                'show,alert',
 		),
 		array(
 			'access' => 'admin',

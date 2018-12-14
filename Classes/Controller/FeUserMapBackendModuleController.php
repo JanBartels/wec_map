@@ -59,6 +59,7 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
         // check access and redirect accordingly
         $access = is_array($this->pageinfo) ? 1 : 0;
 
+/*        
         if ( $this->id > 0 && ( $access || $this->getBackendUser()->user['admin'] ) ) {
             //proceed normally
         } else {
@@ -66,6 +67,7 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
                 $this->redirect('alert', $this->request->getControllerName());
             }
         }
+*/        
     }
 
 	/**
@@ -74,14 +76,115 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 	 * @return void
 	 */
 	public function showAction() {
-	}
+        $languageService = $this->getLanguageService();
 
-	/**
-	 * action settings
-	 *
-	 * @return void
-	 */
-	public function settingsAction() {
+		/* Select all frontend users */
+		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', '');
+
+		$streetField  = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'street');
+		$cityField    = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'city');
+		$stateField   = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'state');
+		$zipField     = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'zip');
+		$countryField = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'country');
+
+		// create country and zip code array to keep track of which country and state we already added to the map.
+		// the point is to create only one marker per country on a higher zoom level to not
+		// overload the map with all the markers and do the same with zip codes.
+		$countries = array();
+        $cities = array();
+        $markers = array();
+		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
+
+			// add check for country and use different field if empty
+			// @TODO: make this smarter with TCA or something
+			if(empty($row[$countryField]) && $countryField == 'static_info_country') {
+				$countryField = 'country';
+			} else if(empty($row[$countryField]) && $countryField == 'country') {
+				$countryField = 'static_info_country';
+			}
+
+			/* Only try to add marker if there's a city */
+			if($row[$cityField] != '') {
+
+				// if we haven't added a marker for this country yet, do so.
+				if(!in_array($row[$countryField], $countries) && !empty($row[$countryField])) {
+
+					// add this country to the array
+					$countries[] = $row[$countryField];
+
+					// add a little info so users know what to do
+					$title = '<div class="title">' . $languageService->sL('LLL:EXT:wec_map/Resources/Private/Languages/Backend/FEUserMap/locallang.xlf:country_zoominfo_title') . '</div>';
+					$description = '<div class="description">'.sprintf( $languageService->sL('LLL:EXT:wec_map/Resources/Private/Languages/Backend/FEUserMap/locallang.xlf:country_zoominfo_desc'), $row[$countryField]).'</div>';
+
+					// add a marker for this country and only show it between zoom levels 0 and 2.
+                    $markers[] = array( 
+                        city => $row[$cityField],
+                        state => $row[$stateField],
+                        zip => $row[$zipField],
+                        country => $row[$countryField], 
+                        title => $title, 
+                        description => $description, 
+                        minzoom => 0, 
+                        maxzoom => 2
+                    );
+				}
+
+
+				// if we haven't added a marker for this zip code yet, do so.
+				if(!in_array($row[$cityField], $cities) && !empty($cityField)) {
+
+					// add this country to the array
+					$cities[] = $row[$cityField];
+
+					// add a little info so users know what to do
+					$title = '<div class="title">' . $languageService->sL('LLL:EXT:wec_map/Resources/Private/Languages/Backend/FEUserMap/locallang.xlf:area_zoominfo_title') . '</div>';
+					$description = '<div class="description">'. $languageService->sL('LLL:EXT:wec_map/Resources/Private/Languages/Backend/FEUserMap/locallang.xlf:area_zoominfo_desc').'</div>';
+
+					// add a marker for this country and only show it between zoom levels 3 and 7.
+                    $markers[] = array(
+                        city => $row[$cityField],
+                        state => $row[$stateField],
+                        zip => $row[$zipField],
+                        country => $row[$countryField], 
+                        title => $title, 
+                        description => $description, 
+                        minzoom => 3, 
+                        maxzoom => 7
+                    );
+				}
+
+				// make title and description
+				$title = '<div style="font-size: 110%; font-weight: bold;">'.$row['name'].'</div>';
+				$content = '<div>'.$row[$streetField].'<br />'.$row[$cityField].', '.$row[$stateField].' '.$row[$zipField].'<br />'. $row[$countryField].'</div>';
+
+
+				// add all the markers starting at zoom level 3 so we don't crowd the map right away.
+				// if private was checked, don't use address to geocode
+				if($private) {
+                    $markers[] = array(
+                        city => $row[$cityField],
+                        state => $row[$stateField],
+                        zip => $row[$zipField],
+                        country => $row[$countryField], 
+                        title => $title, 
+                        description => $content, 
+                        minzoom => 8 
+                    );
+				} else {
+                    $markers[] = array(
+                        street => $row[$streetField],
+                        city => $row[$cityField],
+                        state => $row[$stateField],
+                        zip => $row[$zipField],
+                        country => $row[$countryField], 
+                        title => $title, 
+                        description => $content, 
+                        minzoom => 8 
+                    );
+				}
+			}
+        }
+        $this->view->assign( 'markersByAddress', $markers );
 	}
 
 	/**

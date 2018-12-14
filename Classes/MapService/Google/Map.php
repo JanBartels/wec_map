@@ -620,7 +620,7 @@ function InitWecMapGoogleV3Labels() {
 	WecMap.labels.OSM_bike = '     . json_encode( $this->getLL('OSM-bike') )     .';
 	WecMap.labels.OSM_bike_alt = ' . json_encode( $this->getLL('OSM-bike-alt') ) .';
 	WecMap.labels.locale =  '      . json_encode( $this->lang ) . ';
-	// error messages
+	/* error messages */
 	WecMap.labels.INVALID_REQUEST = '        . json_encode( $this->getLL('INVALID_REQUEST') ) .';
 	WecMap.labels.MAX_WAYPOINTS_EXCEEDED = ' . json_encode( $this->getLL('MAX_WAYPOINTS_EXCEEDED') ) .';
 	WecMap.labels.NOT_FOUND = '              . json_encode( $this->getLL('NOT_FOUND') ) .';

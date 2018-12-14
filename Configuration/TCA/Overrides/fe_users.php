@@ -60,7 +60,11 @@ if(\JBartels\WecMap\Utility\Backend::getExtConf('geocodingStatus')) {
 
 	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('fe_users', $geocodeTCA, 1);
 	$GLOBALS['TCA']['fe_users']['interface']['showRecordFieldList'] .= ',tx_wecmap_geocode';
-	\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'tx_wecmap_geocode');
+	if(\JBartels\WecMap\Utility\Backend::getExtConf('feUserRecordMap'))
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', 'tx_wecmap_geocode');
+	else
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes('fe_users', '--div--;LLL:EXT:wec_map/Resources/Private/Languages/locallang_db.xlf:berecord_maplabel,tx_wecmap_geocode');
+
 }
 
 ?>
