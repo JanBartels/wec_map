@@ -80,37 +80,50 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 	 * @return	array		Array of rows of country records
 	 */
 	protected static function fetchCountries ($country, $iso2='', $iso3='', $isonr='') {
-		$rcArray = array();
-		$where = '';
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable('static_countries');
+        $queryBuilder->getRestrictions()
+            ->removeAll();
+        $statement = $queryBuilder
+            ->select('*')
+            ->from('static_countries');
 
-		$table = 'static_countries';
 		if ($country != '') {
-			$value = $GLOBALS['TYPO3_DB']->fullQuoteStr(trim('%'.$country.'%'),$table);
-			$where = 'cn_official_name_local LIKE '.$value.' OR cn_official_name_en LIKE '.$value.' OR cn_short_local LIKE '.$value;
+			$statement = $statement->where( $queryBuilder->logicalOr(
+				expr()->like(
+					'cn_official_name_local', 
+					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
+				),
+				expr()->like(
+					'cn_official_name_en', 
+					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
+				),
+				expr()->like(
+					'cn_short_local', 
+					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
+				)
+			) );
+		} else if ($isonr != '') {
+			$statement = $statement->where( $queryBuilder->eq(
+				'cn_iso_nr', 
+				$queryBuilder->createNamedParameter( trim( $isonr ) )
+			) );
+		} else if ($iso2 != '') {
+			$statement = $statement->where( $queryBuilder->eq(
+				'cn_iso_2', 
+				$queryBuilder->createNamedParameter( trim( $isonr ) )
+			) );
+		} else if ($iso3 !='') {
+			$statement = $statement->where( $queryBuilder->eq(
+				'cn_iso_3', 
+				$queryBuilder->createNamedParameter( trim( $isonr ) )
+			) );
+		} else {
+			$statement = $statement->where( $queryBuilder->eq( '1', '0' ) );
 		}
 
-		if ($isonr != '') {
-			$where = 'cn_iso_nr='.$GLOBALS['TYPO3_DB']->fullQuoteStr(trim($isonr),$table);
-		}
+		$rcArray = $statement->execute()->fetchAll();
 
-		if ($iso2 != '') {
-			$where = 'cn_iso_2='.$GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso2),$table);
-		}
-
-		if ($iso3 !='') {
-			$where = 'cn_iso_3='.$GLOBALS['TYPO3_DB']->fullQuoteStr(trim($iso3),$table);
-		}
-
-		if ($where != '') {
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
-
-			if ($res) {
-				while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-					$rcArray[] = $row;
-				}
-			}
-			$GLOBALS['TYPO3_DB']->sql_free_result($res);
-		}
 		return $rcArray;
 	}
 
@@ -141,23 +154,30 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 			} elseif ($countryCodeType == '3') {
 				$countryArray = self::fetchCountries('', '', $country, '');
 			} else {
-				global $TYPO3_DB;
-
-				$where = '';
-
-				$table = 'static_countries';
 				if ($country != '')	{
-					$value = $TYPO3_DB->fullQuoteStr(trim($country),$table);
-					$where = 'cn_official_name_local='.$value.' OR cn_official_name_en='.$value.' OR cn_short_local='.$value.' OR cn_short_en='.$value;
-
-					$res = $TYPO3_DB->exec_SELECTquery('*', $table, $where);
-
-					if ($res)	{
-						while ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res))	{
-							$countryArray[] = $row;
-						}
-					}
-					$GLOBALS['TYPO3_DB']->sql_free_result($res);
+					$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+					->getQueryBuilderForTable('static_countries');
+					$queryBuilder->getRestrictions()
+						->removeAll();
+					$statement = $queryBuilder
+						->select('*')
+						->from('static_countries')
+						->where( $queryBuilder->logicalOr(
+							expr()->eq(
+								'cn_official_name_local', 
+								$queryBuilder->createNamedParameter( trim( $country ) )
+							),
+							expr()->eq(
+								'cn_official_name_en', 
+								$queryBuilder->createNamedParameter( trim( $country ) )
+							),
+							expr()->eq(
+								'cn_short_local', 
+								$queryBuilder->createNamedParameter( trim( $country ) )
+							)
+						) )
+						->execute();
+					$countryArray = $statement->fetchAll();
 				}
 
 				if ( !is_array( $countryArray ) ) {

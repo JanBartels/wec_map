@@ -66,15 +66,19 @@ class Shared {
 
 
 	static function listQueryFromCSV($field, $values, $table, $mode = 'AND') {
+//		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+//			->getQueryBuilderForTable( $table );
+
 		$where = ' AND (';
 		$csv = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $values);
 		for ( $i=0; $i < count($csv); $i++ ) {
 			if($i >= 1) {
 				$where .= ' '. $mode .' ';
 			}
+//			$where .= $queryBuilder->expr()->inSet( $field, $queryBuilder->createNamedParameter( $csv[$i] ) );
 			$where .= $GLOBALS['TYPO3_DB']->listQuery($field, $csv[$i], $table);
 		}
-
+//		\TYPO3\CMS\Core\Utility\DebugUtility::debug($where, 'listQueryFromCSV' ); 
 		return $where.')';
 	}
 

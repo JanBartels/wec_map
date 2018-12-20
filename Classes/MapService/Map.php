@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2013-2015 Jan Bartels
+* (c) 2013-2018 Jan Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -376,8 +376,16 @@ class Map {
 		if(!$tca['isMappable']) return false;
 
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
-		$record = $record[0];
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable( $table );
+		$statement = $queryBuilder
+			->select('*')
+			->from( $table )
+			->where(
+				$queryBuilder->expr()->eq( 'uid', $queryBuilder->createNamedParameter( $uid, \PDO::PARAM_INT ) )
+			)
+			->execute();
+		$record = $statement->fetch();
 
 		if ( $tca['addressFields'] )
 		{

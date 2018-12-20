@@ -37,8 +37,8 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 	 * @return void
 	 */
 	public function geocodeAction() {
-
-		$addresses = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows( '*','tx_wecmap_cache','', 'address', 'address' );
+		// fetch all cached addresses
+		$addresses = \JBartels\WecMap\Utility\Cache::getAllAddresses();
 		$this->view->assign( 'addresses', $addresses );
 	}
 

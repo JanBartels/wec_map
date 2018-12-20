@@ -124,9 +124,13 @@ class BatchGeocode {
 			'country' => \JBartels\WecMap\Utility\Shared::getAddressField($table, 'country'),
 		);
 
-		$where = "1=1".\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($table);
-		$result =  $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', $table, $where);
-		while($row =  $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result)) {
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable( $table );
+        $statement = $queryBuilder
+            ->select('*')
+            ->from( $table )
+            ->execute();
+		while( $row = $statement->fetch() ) {
 			if($this->stopGeocoding()) {
 				return;
 			} else {
@@ -221,10 +225,13 @@ class BatchGeocode {
 	 * @return		integer		The count of all records with addresses.
 	 */
 	public function getTableRecordCount( $table ) {
-		$where = "1=1".\TYPO3\CMS\Backend\Utility\BackendUtility::deleteClause($table);
-		$result =  $GLOBALS['TYPO3_DB']->exec_SELECTquery('COUNT(*)', $table, $where);
-		$row =  $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
-		$recordCount = $row['COUNT(*)'];
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable( $table );
+		$recordCount = $queryBuilder
+		->count( '*' )
+		->from( $table )
+		->execute()
+		->fetchColumn(0);
 
 		return $recordCount;
 	}

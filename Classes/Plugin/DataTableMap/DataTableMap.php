@@ -157,10 +157,23 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 		// get kml urls for each included record
 		if ($kml > 0 ) {
-			$where = 'uid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($kml).')';
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url', 'tx_wecmap_external', $where);
-			foreach( $res as $key => $url ) {
-				$link = trim($url['url']);
+			$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+	            ->getQueryBuilderForTable('tx_wecmap_external');
+			$statement = $queryBuilder
+				->select('url')
+				->from('tx_wecmap_external')
+				->where(
+					$queryBuilder->expr()->in(
+						'uid',
+						$queryBuilder->createNamedParameter(
+							\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $kml, true),
+							Connection::PARAM_INT_ARRAY
+						)
+					)
+				)
+				->execute();
+			while( $record = $statement->fetch() ) {
+				$link = trim($record['url']);
 				$oldAbs = $GLOBALS['TSFE']->absRefPrefix;
 				$GLOBALS['TSFE']->absRefPrefix = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 				$linkConf = Array(

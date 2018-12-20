@@ -98,20 +98,8 @@ class  MapAdministrationBackendModule {
 	}
 
 	function ajaxListRecords(ServerRequestInterface $request, ResponseInterface $response) {
-		// Select rows:
-		$limit = null;
-		$displayRows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*','tx_wecmap_cache','', 'address', 'address', $limit);
-
-		$records = array();
-		foreach($displayRows as $row) {
-			$cells = array(
-				'address' => $row['address'],
-				'latitude' => $row['latitude'],
-				'longitude' => $row['longitude'],
-				'address_hash' => $row['address_hash']
-			);
-			$records[] = $cells;
-		}
+		// fetch all cached addresses
+		$records = \JBartels\WecMap\Utility\Cache::getAllAddresses();
 		$response->getBody()->write( json_encode( $records ) );
         return $response;
 	}

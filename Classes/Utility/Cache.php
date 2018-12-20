@@ -108,6 +108,27 @@ class Cache {
 
 
 	/**
+	 * Retrieve country info
+	 *
+	 * @param	string		The field of static_info_tables
+	 * @param	string		The country name.
+	 * @return	string
+	 */
+	static private function getStaticInfoTable( $field, $country ) {
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+		->getQueryBuilderForTable( 'static_countries' );
+		$statement = $queryBuilder
+			->select('cn_short_en')
+			->from( 'static_countries' )
+			->where(
+				$queryBuilder->expr()->eq( $field, $queryBuilder->createNamedParameter( $country ) )
+			)
+			->execute();
+		$record = $statement->fetch();
+		return $record['cn_short_en'];
+	}
+
+	/**
 	 * Performs basic normalize on the address compontents.  Should be called
 	 * before any function searches cached data by address name or inserts
 	 * values into the cache. All parameters are passed by reference and
@@ -133,6 +154,7 @@ class Cache {
 
 		// if length of country string is 3 or less, it's probably an abbreviation;
 		// make it all upper case then
+		$country = trim( $country );
 		if(strlen($country) < 4) {
 			$country = strtoupper($country);
 		} else {
@@ -147,20 +169,16 @@ class Cache {
 			// 2. check the length of the country and do lookup only if it's 2 or 3 characters
 			$length = strlen($country);
 			if($length == 2) {
-
 				// try to find a country with that two character code
-				$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('cn_short_en', 'static_countries', 'cn_iso_2='.$GLOBALS['TYPO3_DB']->fullQuoteStr($country,static_countries));
-				$newCountry = $rows[0]['cn_short_en'];
+				$newCountry = self::getStaticInfoTable( 'cn_iso_2', $country );
 				if(!empty($newCountry)) $country = $newCountry;
 			} else if ($length == 3) {
-				// try to find a country with that two character code
-				$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('cn_short_en', 'static_countries', 'cn_iso_3='.$GLOBALS['TYPO3_DB']->fullQuoteStr($country,static_countries));
-				$newCountry = $rows[0]['cn_short_en'];
+				// try to find a country with that three character code
+				$newCountry = self::getStaticInfoTable( 'cn_iso_3', $country );
 				if(!empty($newCountry)) $country = $newCountry;
 			} else {
-				// try to find a country with that two character code
-				$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('cn_short_en', 'static_countries', 'cn_short_local='.$GLOBALS['TYPO3_DB']->fullQuoteStr($country,static_countries));
-				$newCountry = $rows[0]['cn_short_en'];
+				// try to find a country with that short name
+				$newCountry = self::getStaticInfoTable( 'cn_short_local', $country );
 				if(!empty($newCountry)) $country = $newCountry;
 			}
 		}
@@ -219,8 +237,16 @@ class Cache {
 	 */
 	static function find($street, $city, $state, $zip, $country) {
 		$hash = self::hash($street, $city, $state, $zip, $country);
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'tx_wecmap_cache', ' address_hash="'.$hash.'"');
-		if ($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result)) {
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable('tx_wecmap_cache');
+        $statement = $queryBuilder
+            ->select('*')
+            ->from('tx_wecmap_cache')
+            ->where(
+                $queryBuilder->expr()->eq( 'address_hash', $queryBuilder->createNamedParameter( $hash ) )
+            )
+            ->execute();
+        if ( $row = $statement->fetch() ) {
 			$latlong = array('lat' => $row['latitude'], 'long' => $row['longitude']);
 			return $latlong;
 		} else {
@@ -245,18 +271,20 @@ class Cache {
 		/* Check if value is already in DB */
 		if (self::find($street,$city,$state,$zip,$country)) {
 			/* Update existing entry */
-			$latlong = array('latitude' => $lat, 'longitude' => $long);
-			$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', "address_hash='".self::hash($street, $city, $state, $zip, $country)."'", $latlong);
+			self::updateByUID(self::hash($street, $city, $state, $zip, $country), $lat, $long);
 		} else {
 			/* Insert new entry */
-			$insertArray = array();
-			$insertArray['address_hash'] = self::hash($street, $city, $state, $zip, $country);
-			$insertArray['address'] = $street.' '.$city.' '.$state.' '.$zip.' '.$country;
-			$insertArray['latitude'] = $lat;
-			$insertArray['longitude'] = $long;
-
-			/* Write address to cache table */
-			$result = $GLOBALS['TYPO3_DB']->exec_INSERTquery('tx_wecmap_cache', $insertArray);
+			$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+				->getQueryBuilderForTable( 'tx_wecmap_cache' );
+			$queryBuilder
+			->insert('tx_wecmap_cache')
+			->values([
+				'address_hash' => self::hash($street, $city, $state, $zip, $country),
+				'address' => $street.' '.$city.' '.$state.' '.$zip.' '.$country,
+				'latitude' => $lat,
+				'longitude' => $long
+				])
+			->execute();			
 		}
 	}
 
@@ -269,8 +297,16 @@ class Cache {
 	 * @return	none
 	 */
 	static function updateByUID($uid, $lat, $long) {
-		$latlong = array('latitude' => $lat, 'longitude' => $long);
-		$result = $GLOBALS['TYPO3_DB']->exec_UPDATEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache'), $latlong);
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable( 'tx_wecmap_cache' );
+		$queryBuilder
+			->update('tx_wecmap_cache')
+			->where(
+				$queryBuilder->expr()->eq('address_hash', $queryBuilder->createNamedParameter($uid)	)
+			)
+			->set('latitude', $lat)
+			->set('longitude', $long)
+			->execute();
 	}
 
 	/**
@@ -279,7 +315,14 @@ class Cache {
 	 * @return	none
 	 */
 	static function deleteByUID($uid) {
-		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', 'address_hash='.$GLOBALS['TYPO3_DB']->fullQuoteStr($uid, 'tx_wecmap_cache') );
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable( 'tx_wecmap_cache' );
+		$queryBuilder
+			->delete('tx_wecmap_cache')
+			->where(
+				$queryBuilder->expr()->eq('address_hash', $queryBuilder->createNamedParameter($uid))
+			)
+			->execute();		
 	}
 
 	/**
@@ -288,7 +331,9 @@ class Cache {
 	 * @return	none
 	 */
 	static function deleteAll() {
-		$result = $GLOBALS['TYPO3_DB']->exec_TRUNCATEquery('tx_wecmap_cache');
+		\TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getConnectionForTable('tx_wecmap_cache')
+        	->truncate('tx_wecmap_cache');
 	}
 
 	/**
@@ -302,7 +347,7 @@ class Cache {
 	 * @return	none
 	 */
 	static function delete($street, $city, $state, $zip, $country) {
-		$result = $GLOBALS['TYPO3_DB']->exec_DELETEquery('tx_wecmap_cache', "address_hash='".self::hash($street, $city, $state, $zip, $country)."'");
+		self::deleteByUID( self::hash($street, $city, $state, $zip, $country) );
 	}
 
 	/**
@@ -340,6 +385,23 @@ class Cache {
 
 		return $isEmptyAddress;
 	}
+
+
+	/**
+	 *  Get all cached addresses
+	 *
+	 * @return	array		addresses
+	 */
+	static function getAllAddresses() {
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable('tx_wecmap_cache');
+		$statement = $queryBuilder
+			->select('address', 'latitude', 'longitude', 'address_hash')
+			->from('tx_wecmap_cache')
+			->execute();
+		return $statement->fetchAll();
+	}
+
 }
 
 

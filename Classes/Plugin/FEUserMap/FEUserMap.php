@@ -156,10 +156,23 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 		// get kml urls for each included record
 		if(!empty($kml)) {
-			$where = 'uid IN ('.$GLOBALS['TYPO3_DB']->cleanIntList($kml).')';
-			$res = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('url', 'tx_wecmap_external', $where);
-			foreach( $res as $key => $url ) {
-				$link = trim($url['url']);
+			$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+	            ->getQueryBuilderForTable('tx_wecmap_external');
+			$statement = $queryBuilder
+				->select('url')
+				->from('tx_wecmap_external')
+				->where(
+					$queryBuilder->expr()->in(
+						'uid',
+						$queryBuilder->createNamedParameter(
+							\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $kml, true),
+							Connection::PARAM_INT_ARRAY
+						)
+					)
+				)
+				->execute();
+			while( $record = $statement->fetch() ) {
+				$link = trim($record['url']);
 				$oldAbs = $GLOBALS['TSFE']->absRefPrefix;
 				$GLOBALS['TSFE']->absRefPrefix = \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('TYPO3_SITE_URL');
 				$linkConf = Array(
@@ -170,6 +183,15 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 				$GLOBALS['TSFE']->absRefPrefix = $oldAbs;
 				$map->addKML($link);
 			}
+/*
+			$fileRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\FileRepository');
+			$pi_uid = $this->cObj->data['uid'];
+			$fileObjects = $fileRepository->findByRelation('tt_content', 'kmlFile', $pi_uid);
+			// get file object information
+			foreach ($fileObjects as $key => $value) {
+				$map->addKML( $value->getPublicUrl() );
+			}
+*/
 		}
 
 		// evaluate map controls based on configuration

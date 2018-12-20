@@ -59,7 +59,6 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
         // check access and redirect accordingly
         $access = is_array($this->pageinfo) ? 1 : 0;
 
-/*        
         if ( $this->id > 0 && ( $access || $this->getBackendUser()->user['admin'] ) ) {
             //proceed normally
         } else {
@@ -67,7 +66,6 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
                 $this->redirect('alert', $this->request->getControllerName());
             }
         }
-*/        
     }
 
 	/**
@@ -77,9 +75,6 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 	 */
 	public function showAction() {
         $languageService = $this->getLanguageService();
-
-		/* Select all frontend users */
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', '');
 
 		$streetField  = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'street');
 		$cityField    = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'city');
@@ -93,8 +88,18 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 		$countries = array();
         $cities = array();
         $markers = array();
-		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
 
+		/* Select all frontend users */
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable('fe_users');
+        $statement = $queryBuilder
+            ->select('*')
+            ->from('fe_users')
+            ->where(
+                $queryBuilder->expr()->eq( 'pid', $queryBuilder->createNamedParameter( $this->id ) )
+            )
+            ->execute();
+        while ( $row = $statement->fetch() ) {
 			// add check for country and use different field if empty
 			// @TODO: make this smarter with TCA or something
 			if(empty($row[$countryField]) && $countryField == 'static_info_country') {

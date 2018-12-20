@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2015 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2018 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
 * (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries
@@ -264,13 +264,18 @@ WecMap.addBubble( "' . $this->mapName . '", ' . $this->groupId . ', ' . $this->i
 					$zipField     = \JBartels\WecMap\Utility\Shared::getAddressField($table, 'zip');
 					$countryField = \JBartels\WecMap\Utility\Shared::getAddressField($table, 'country');
 
-
-					$select = $streetField.', '.$cityField.', '.$stateField.', '.$zipField.', '.$countryField;
-					$selectArray = \TYPO3\CMS\Core\Utility\GeneralUtility::trimExplode(',', $select, true);
-					$select = implode(',', $selectArray);
-
-					$rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows($select, 'fe_users', '`uid`='.intval($feuser_id));
-					return $rows[0][$streetField].', '.$rows[0][$cityField].', '.$rows[0][$stateField].' '.$rows[0][$zipField].', '.$rows[0][$countryField];
+					$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+						->getQueryBuilderForTable( 'fe_users' );
+					$statement = $queryBuilder
+						->select('*')
+						->from( 'fe_users' )
+						->where(
+							$queryBuilder->expr()->eq( 'uid', $queryBuilder->createNamedParameter( $feuser_id, \PDO::PARAM_INT ) )
+						)
+						->execute();
+					$row = $statement->fetch();
+		
+					return $row[$streetField].', '.$row[$cityField].', '.$row[$stateField].' '.$row[$zipField].', '.$row[$countryField];
 				}
 			} else {
 

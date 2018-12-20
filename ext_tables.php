@@ -18,7 +18,7 @@ if (TYPO3_MODE == 'BE') {
 	 */
 	\TYPO3\CMS\Extbase\Utility\ExtensionUtility::registerModule(
 		'JBartels.wec_map',
-		'tools',	 	// Make module a submodule of 'admin tools'
+		'web',	 	// Make module a submodule of 'web'
 		'FEUserMap',	// Submodule key
 		'',			// Position
 		array(

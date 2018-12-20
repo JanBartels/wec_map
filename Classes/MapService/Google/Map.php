@@ -465,8 +465,16 @@ class Map extends \JBartels\WecMap\MapService\Map {
 		$countryfield = \JBartels\WecMap\Utility\Shared::getAddressField($table, 'country');
 
 		// get address from db for this record
-		$record = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('*', $table, 'uid='.intval($uid));
-		$record = $record[0];
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable( $table );
+        $statement = $queryBuilder
+            ->select('*')
+            ->from( $table )
+            ->where(
+                $queryBuilder->expr()->eq( 'uid', $queryBuilder->createNamedParameter( $uid, \PDO::PARAM_INT ) )
+            )
+            ->execute();
+        $record = $statement->fetch();
 
 		$street = $record[$streetfield];
 		$city 	= $record[$cityfield];
