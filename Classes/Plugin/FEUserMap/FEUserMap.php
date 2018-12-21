@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2015 J. Bartels
+* (c) 2010-2018 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -311,44 +311,50 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$zipField     = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'zip');
 		$countryField = \JBartels\WecMap\Utility\Shared::getAddressField('fe_users', 'country');
 
-
-		// start where clause
-		$where = '1=1';
-
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable('fe_users');
+		$queryBuilder
+            ->select('*')
+            ->from('fe_users');
+			
 		// if a user group was set, make sure only those users from that group
 		// will be selected in the query
-		if($userGroups) {
-			$where .= \JBartels\WecMap\Utility\Shared::listQueryFromCSV('usergroup', $userGroups, 'fe_users', $userGroupsOrMode ? 'OR' : 'AND');
-		}
+		$whereUserGroups = $userGroups ? 
+			\JBartels\WecMap\Utility\Shared::getListQueryFromCSV( 'usergroup', $userGroups, $queryBuilder, $userGroupsOrMode ? 'OR' : 'AND') : 
+			NULL;
 
 		// if a storage folder pid was specified, filter by that
-		if($pid) {
-			$where .= \JBartels\WecMap\Utility\Shared::listQueryFromCSV('pid', $pid, 'fe_users', 'OR');
-		}
+		$wherePid = $pid ? 
+			\JBartels\WecMap\Utility\Shared::getListQueryFromCSV( 'pid', $pid, $queryBuilder, 'OR') : 
+			NULL;
+
+		// Build resulting WHERE-clause
+		$queryBuilder->where( $whereUserGroups, $wherePid );
 
 		// additional condition set by TypoScript
 		$additionalWhere = $this->cObj->stdWrap($conf['table.']['additionalWhere'], $conf['table.']['additionalWhere.']);
 		if ( $additionalWhere )
-			$where .= 'AND (' . $additionalWhere . ') ';
-
-		// filter out records that shouldn't be shown, e.g. deleted, hidden
-		$where .= $this->cObj->enableFields('fe_users');
+			$queryBuilder->andWhere( $additionalWhere );
 
 		// sorting
 		$orderBy = $this->cObj->stdWrap($conf['table.']['orderBy'], $conf['table.']['orderBy.']);
+		if ( $orderBy )
+			\JBartels\WecMap\Utility\Shared::setOrderBy( $queryBuilder, $orderBy );
 
 		// limit
 		$limit = $this->cObj->stdWrap($conf['table.']['limit'], $conf['table.']['limit.']);
-
-		/* Select all frontend users */
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery('*', 'fe_users', $where, '', $orderBy, $limit);
+		if ( $limit )
+			\JBartels\WecMap\Utility\Shared::setLimit( $queryBuilder, $limit );
 
 		// create country and zip code array to keep track of which country and state we already added to the map.
 		// the point is to create only one marker per country on a higher zoom level to not
 		// overload the map with all the markers, and do the same with zip codes.
 		$countries = array();
 		$cities = array();
-		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
+
+		/* Select all frontend users */
+		$statement = $queryBuilder->execute();
+        while ( $row = $statement->fetch() ) {
 
 			// add check for country and use different field if empty
 			// @TODO: make this smarter with TCA or something
@@ -391,14 +397,21 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 					// add a little info so users know what to do
 					$title = \JBartels\WecMap\Utility\Shared::render(array('name' => 'Info'), $title_conf);
 
-					$countWhere = $cityField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$cityField], 'fe_users' );
+					$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+						->getQueryBuilderForTable('fe_users');
+					$queryBuilder
+						->count('*')
+						->from('fe_users');
+						
+					// start where clause
+					$countWhere = [
+						$queryBuilder->expr()->eq( $cityField, $queryBuilder->createNamedParameter( $row[$cityField] ) )
+					];
 					if ( $zipField )
-						$countWhere .= ' AND ' . $zipField.'='. $GLOBALS['TYPO3_DB']->fullQuoteStr( $row[$zipField], 'fe_users' );
+						$countWhere[] = $queryBuilder->expr()->eq( $zipField, $queryBuilder->createNamedParameter( $row[$zipField] ) );
 					if ( $additionalWhere )
-						$countWhere .= 'AND (' . $additionalWhere . ') ';
-
-					$count = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('count(*)', 'fe_users', $countWhere);
-					$count = $count[0]['count(*)'];
+						$queryBuilder->andWhere( '(' . $additionalWhere . ')' );
+					$count = $queryBuilder->execute()->fetchColumn(0);
 
 					// extra processing if private is turned on
 					if($private) {

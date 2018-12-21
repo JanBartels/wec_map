@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2017 Jan Bartels, j.bartels@arcor.de
+* (c) 2010-2018 Jan Bartels, j.bartels@arcor.de
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)
@@ -396,7 +396,6 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			}
 		}
 
-		// $map->addKML('http://kml.lover.googlepages.com/my-vacation-photos.kml');
 		// gather all the content together
 		$content = array();
 		$content['map'] = $map->drawMap();
