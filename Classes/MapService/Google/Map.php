@@ -4,7 +4,7 @@
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
 * All rights reserved
-* (c) 2011-2018 Jan Bartels, j.bartels@arcor.de, Google API V3
+* (c) 2011-2019 Jan Bartels, j.bartels@arcor.de, Google API V3
 *
 * This file is part of the Web-Empowered Church (WEC)
 * (http://WebEmpoweredChurch.org) ministry of Christian Technology Ministries

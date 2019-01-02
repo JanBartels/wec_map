@@ -2,7 +2,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2014-2018 j.bartels
+* (c) 2014-2019 j.bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)

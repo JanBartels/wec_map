@@ -3,7 +3,7 @@
 * Copyright notice
 *
 * (c) 2005-2009 Christian Technology Ministries International Inc.
-* (c) 2010-2018 J. Bartels
+* (c) 2010-2019 J. Bartels
 * All rights reserved
 *
 * This file is part of the Web-Empowered Church (WEC)

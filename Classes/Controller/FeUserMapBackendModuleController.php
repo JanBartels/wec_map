@@ -6,7 +6,7 @@ namespace JBartels\WecMap\Controller;
  *
  *  Copyright notice
  *
- *  (c) 2018 Jan Bartels
+ *  (c) 2019 Jan Bartels
  *
  *  All rights reserved
  *
