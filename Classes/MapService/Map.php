@@ -190,10 +190,8 @@ class Map {
 	function setRadius($radius, $kilometers = false) {
 		$this->kilometers = $kilometers;
 		$this->radius = $radius;
-		if(TYPO3_DLOG) {
-			$kilometers ? $km = 'km':$km = 'miles';
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': setting radius '.$radius.' '.$km, 'wec_map_api');
-		}
+		$kilometers ? $km = 'km':$km = 'miles';
+		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': setting radius '.$radius.' '.$km, 'wec_map_api');
 	}
 
 	# haversine formula to calculate distance between two points
@@ -295,9 +293,7 @@ class Map {
 		if(!empty($this->radius)) {
 			$distance = $this->getDistance($this->lat, $this->long, $lat, $long);
 
-			if(TYPO3_DLOG) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Distance: '.$distance.' - Radius: '.$this->radius, 'wec_map_api');
-			}
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Distance: '.$distance.' - Radius: '.$this->radius, 'wec_map_api');
 
 			if(!empty($this->lat) && !empty($this->long) &&  $distance > $this->radius) {
 				return null;

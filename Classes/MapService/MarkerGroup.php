@@ -93,19 +93,15 @@ class MarkerGroup {
 		$markerObj->setMapName($this->mapName);
 		$markerObj->setGroupId($this->id);
 		$this->markers[] = &$markerObj;
-		// TODO: devlog start
-		if(TYPO3_DLOG) {
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': -----adding marker - start----', 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': id:'.$markerObj->getIndex(), 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': minzoom: '.$this->minzoom, 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': maxzoom: '. $this->maxzoom, 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': group: '. $this->id, 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': count: '.$this->markerCount, 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': title: '.implode(',', $markerObj->getTitle()), 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': desc: '.implode(',',$markerObj->getDescription()), 'wec_map_api');
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': -----adding marker - end----', 'wec_map_api');
-		}
-		// devlog end
+		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': -----adding marker - start----', 'wec_map_api', -1, array(
+			id => $markerObj->getIndex(),
+			minzoom => $this->minzoom,
+			maxzoom => $this->maxzoom,
+			group => $this->id,
+			count => $this->markerCount,
+			title => implode(',', $markerObj->getTitle()),
+			desc => implode(',',$markerObj->getDescription())
+		) );
 		$this->markerCount++;
 	}
 

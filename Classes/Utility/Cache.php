@@ -186,9 +186,7 @@ class Cache {
 		// if we still have no country, use the default one
 		if(empty($country)) {
 			$country = \JBartels\WecMap\Utility\Backend::getExtConf('defaultCountry');
-			if(TYPO3_DLOG) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Using default country: '.$country, 'wec_map_geocode');
-			}
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Using default country: '.$country, 'wec_map_geocode');
 		}
 	}
 

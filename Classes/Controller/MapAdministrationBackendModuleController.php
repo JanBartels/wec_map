@@ -26,6 +26,9 @@ namespace JBartels\WecMap\Controller;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * Backend Controller
  */
@@ -78,7 +81,7 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 	public function downloadAction() {
 		// form submitted
         if($this->request->hasArgument('submit')) {
-			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
+			$extConf = $this->getExtConf();
 			$results = [];
 			$results[] = $this->download( 'https://' . $extConf['mmURL'], 'markermanager.js' );
 			$results[] = $this->download( 'https://' . $extConf['ibURL'], 'infobubble.js' );
@@ -219,5 +222,16 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
     {
         return $GLOBALS['LANG'];
     }
+
+    /**
+     * @return array extConf
+     */
+	protected function getExtConf()
+    {
+		if ( \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 9000000)
+        	return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('wec_map');
+        else
+        	return unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
+	}
 
 }

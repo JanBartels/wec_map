@@ -30,6 +30,9 @@
 
 namespace JBartels\WecMap\Utility;
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * General purpose backend class for the WEC Map extension.  This class
  * provides user functions for displaying geocode status and maps within
@@ -423,13 +426,13 @@ class Backend {
 	 * @return	mixed	The value of the specified key.
 	 */
 	static function getExtConf($key) {
-		/* Make an instance of the Typoscript parser */
-		/** @var \TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser $tsParser */
-		$tsParser =  \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\Parser\TypoScriptParser::class);
+		if ( \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3_version) >= 9000000)
+        	$extConf = GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('wec_map');
+        else
+			$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
 
 		/* Unserialize the TYPO3_CONF_VARS and extract the value using the parser */
-		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['wec_map']);
-		$valueArray = $tsParser->getVal($key, $extConf);
+		$valueArray = $extConf[ $key ];
 
 		if (is_array($valueArray)) {
 			$returnValue = $valueArray[0];

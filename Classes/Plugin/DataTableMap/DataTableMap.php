@@ -420,9 +420,7 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 			$hookReference = null;
 			foreach ($hooks as $hookFunction)	{
 				\TYPO3\CMS\Core\Utility\GeneralUtility::callUserFunction($hookFunction, $hookParameters, $hookReference);
-				if(TYPO3_DLOG) {
-					\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
-				}
+				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': Called hook. Markers may have been changed.', 'wec_map_api', 2);
 			}
 		}
 	}

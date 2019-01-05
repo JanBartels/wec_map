@@ -13,9 +13,7 @@ class ShowMapViewHelper extends \TYPO3\CMS\Fluid\Core\ViewHelper\AbstractViewHel
 
 	protected function getUid( $mapName ) {
 		if (TYPO3_MODE == 'FE') {
-			/** @var $TypoScriptFrontendController TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController */
-			$TypoScriptFrontendController = $GLOBALS['TSFE'];
-			return $TypoScriptFrontendController->getUniqueId( $mapName );
+			return \TYPO3\CMS\Core\Utility\StringUtility::getUniqueId( mapName . '-' );
 		} else {
 			return $mapName;
 		}

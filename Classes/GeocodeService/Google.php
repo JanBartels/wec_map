@@ -185,9 +185,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 				}
 			}
 
-			if(TYPO3_DLOG) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: countryArray for '.$country, 'wec_map_geocode', -1, $countryArray);
-			}
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: countryArray for '.$country, 'wec_map_geocode', -1, $countryArray);
 
 			if ( is_array( $countryArray ) && count( $countryArray ) == 1 )
 			{
@@ -197,9 +195,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 
 			// format address accordingly
 			$addressString = $this->formatAddress(',', $street, $city, $zip, $state, $country);  // $country: local country name
-			if(TYPO3_DLOG) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
-			}
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
 		}
 
 		if ( !$addressString )
@@ -219,46 +215,46 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 		$url = $domainmgr->addKeyToUrl( $url, $domainmgr->getServerKey() );
 
 		// request Google-service and parse JSON-response
-		if(TYPO3_DLOG) {
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: URL '.$url, 'wec_map_geocode', -1 );
-		}
+		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: URL '.$url, 'wec_map_geocode', -1 );
 
 		$attempt = 1;
 		do {
 			$jsonstr = \TYPO3\CMS\Core\Utility\GeneralUtility::getURL($url);
 
 			$response_obj = json_decode( $jsonstr, true );
-			if(TYPO3_DLOG) {
-				\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
-			}
-				if ($response_obj['status'] == 'OVER_QUERY_LIMIT')
-					sleep(2);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$jsonstr, 'wec_map_geocode', -1, $response_obj);
+			if ($response_obj['status'] == 'OVER_QUERY_LIMIT')
+				sleep(2);
 
 			$attempt++;
 		} while ($attempt <= 3 && $response_obj['status'] == 'OVER_QUERY_LIMIT');
 
 		$latlong = array();
-		if(TYPO3_DLOG) {
-			$addressArray = array(
-				'street' => $street,
-				'city' => $city,
-				'state' => $state,
-				'zip' => $zip,
-				'country' => $country,
-				'region' => $region
-			);
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$addressString, 'wec_map_geocode', -1, $addressArray);
-		}
+		$addressArray = array(
+			'street' => $street,
+			'city' => $city,
+			'state' => $state,
+			'zip' => $zip,
+			'country' => $country,
+			'region' => $region
+		);
+		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$addressString, 'wec_map_geocode', -1, array(
+			'street' => $street,
+			'city' => $city,
+			'state' => $state,
+			'zip' => $zip,
+			'country' => $country,
+			'region' => $region
+		) );
 
 		if ( $response_obj['status'] == 'OK' )
 		{
 			/*
 			 * Geocoding worked!
 			 */
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 Answer successful', 'wec_map_geocode', -1 );
 			$latlong['lat'] = floatval( $response_obj['results'][0]['geometry']['location']['lat'] );
 			$latlong['long'] = floatval( $response_obj['results'][0]['geometry']['location']['lng'] );
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 Answer', 'wec_map_geocode', -1, $latlong);
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 Answer successful', 'wec_map_geocode', -1, $latlong);
 		}
 		else if (  $response_obj['status'] == 'REQUEST_DENIED'
 		        || $response_obj['status'] == 'INVALID_REQUEST'
@@ -268,7 +264,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 			 * Geocoder can't run at all, so disable this service and
 			 * try the other geocoders instead.
 			 */
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$response_obj['status'].': '.$addressString.'. Disabling.', 'wec_map_geocode', 3 );
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$response_obj['status'].': '.$addressString.'. Disabling.', 'wec_map_geocode', 3 );
 			$this->deactivateService();
 			$latlong = null;
 		}
@@ -278,7 +274,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 			 * Something is wrong with this address. Might work for other
 			 * addresses though.
 			 */
-			if (TYPO3_DLOG) \TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$response_obj['status'].': '.$addressString.'. Disabling.', 'wec_map_geocode', 2 );
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3: '.$response_obj['status'].': '.$addressString.'. Disabling.', 'wec_map_geocode', 2 );
 			$latlong = null;
 		}
 
@@ -322,12 +318,20 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 	 * @param string $extKey
 	 * @return array
 	 */
-	function loadTypoScriptForBEModule($extKey) {
-		list($page) = \TYPO3\CMS\Backend\Utility\BackendUtility::getRecordsByField('pages', 'pid', 0);
+	protected function loadTypoScriptForBEModule($extKey) {
+
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+			->getQueryBuilderForTable('pages');
+		$statement = $queryBuilder
+			->select('uid')
+			->from('pages')
+			->where($queryBuilder->expr()->eq('pid', 0))
+			->execute();
+		$page = $statement->fetch();
 		$pageUid = intval($page['uid']);
-		/** @var \TYPO3\CMS\Frontend\Page\PageRepository $sysPageObj */
-		$sysPageObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Frontend\Page\PageRepository::class);
-		$rootLine = $sysPageObj->getRootLine($pageUid);
+		/** @var \TYPO3\CMS\Core\Utility\RootlineUtility $rootlineUtility */
+		$rootlineUtility = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Utility\RootlineUtility::class, $pageUid);
+		$rootline = $rootlineUtility->get();
 		/** @var \TYPO3\CMS\Core\TypoScript\ExtendedTemplateService $TSObj */
 		$TSObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\ExtendedTemplateService::class);
 		$TSObj->tt_track = 0;
