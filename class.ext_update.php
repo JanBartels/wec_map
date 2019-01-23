@@ -35,7 +35,7 @@ class ext_update
      * Mapping for switchable controller actions
      * in FlexForms
      *
-     * @var array
+     * @var string
      */
     protected $mapControlSizeWhere = '%<field index="mapControlSize">%<value index="vDEF">%</value>%</field>%';
 
@@ -59,19 +59,27 @@ class ext_update
     public function access()
     {
         // Check for changed options in FlexForms
-		$where = sprintf(
-			'pi_flexform LIKE %s AND list_type LIKE "wec_map_pi%%"',
-			$this->getDatabaseConnection()->fullQuoteStr($this->mapControlSizeWhere, 'tt_content')
-		);
-		$amountOfRecords = $this->getDatabaseConnection()->exec_SELECTcountRows(
-			'*',
-			'tt_content',
-			$where
-		);
-		if ($amountOfRecords > 0) {
-			return true;
-		}
-        return false;
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+            ->getQueryBuilderForTable( 'tt_content' );
+        $queryBuilder
+            ->getRestrictions()->removeAll();
+        $count = $queryBuilder
+            ->count('*')
+			->from( 'tt_content' )
+			->where(
+                $queryBuilder->expr()->like(
+                    'pi_flexform',
+                    $queryBuilder->createNamedParameter( $this->mapControlSizeWhere )
+                ),
+                $queryBuilder->expr()->like(
+                    'list_type',
+                    $queryBuilder->createNamedParameter( 'wec_map_pi%%' )
+                )
+            )
+            ->execute()
+            ->fetchColumn(0);
+
+        return $count > 0;
     }
 
     /**
@@ -91,21 +99,29 @@ class ext_update
      */
     protected function migrateToNewZoomControlInFlexForms()
     {
-    	$count = 0;
-		$where = sprintf(
-			'pi_flexform LIKE %s AND list_type LIKE "wec_map_pi%%"',
-			$this->getDatabaseConnection()->fullQuoteStr($this->mapControlSizeWhere, 'tt_content')
-		);
-		$rows = $this->getDatabaseConnection()->exec_SELECTgetRows(
-			'uid, pi_flexform',
-			'tt_content',
-			$where
-		);
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+    		->getQueryBuilderForTable( 'tt_content' );
+        $queryBuilder
+            ->getRestrictions()->removeAll();
+        $statement = $queryBuilder
+            ->select('*')
+			->from( 'tt_content' )
+			->where(
+                $queryBuilder->expr()->like(
+                    'pi_flexform',
+                    $queryBuilder->createNamedParameter( $this->mapControlSizeWhere )
+                ),
+                $queryBuilder->expr()->like(
+                    'list_type',
+                    $queryBuilder->createNamedParameter( 'wec_map_pi%%' )
+                )
+            )
+            ->execute();
+        $count = 0;
+        while( $row = $statement->fetch() ) {            
+        	$flexformData = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
 
-		foreach ($rows as $key => $row) {
-			$flexformData = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
-
-			$mapControlSize = $flexformData['data']['mapControls']['lDEF']['mapControlSize']['vDEF'];
+            $mapControlSize = $flexformData['data']['mapControls']['lDEF']['mapControlSize']['vDEF'];
 			unset( $flexformData['data']['mapControls']['lDEF']['mapControlSize']);
 			switch ( $mapControlSize ) {
 			case 'large':
@@ -118,15 +134,19 @@ class ext_update
 				$flexformData['data']['mapControls']['lDEF']['showZoom']['vDEF']='0';
 				break;
 			}
-			$flexformData = $this->getFlexFormTools()->flexArray2Xml($flexformData, TRUE);
-
-			$this->getDatabaseConnection()->exec_UPDATEquery(
-				'tt_content',
-				'uid=' . (int)$row['uid'],
-				array(
-					'pi_flexform' => $flexformData
-				)
-			);
+            $flexformData = $this->getFlexFormTools()->flexArray2Xml($flexformData, TRUE);
+            
+            $queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+                ->getQueryBuilderForTable( 'tt_content' );
+            $queryBuilder
+                ->getRestrictions()->removeAll();
+            $queryBuilder
+                ->update('tt_content')
+                ->where(
+                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter( $row['uid'], \PDO::PARAM_INT ) )
+                )
+                ->set('pi_flexform', $flexformData )
+                ->execute();
 			$count++;
         }
         $this->messageArray[] = array(
@@ -163,16 +183,6 @@ class ext_update
             $flashMessageQueue->enqueue($flashMessage);
         }
         return $view->render();
-    }
-
-    /**
-     * Get TYPO3s Database Connection
-     *
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
-     */
-    protected function getDatabaseConnection()
-    {
-        return $GLOBALS['TYPO3_DB'];
     }
 
     /**
