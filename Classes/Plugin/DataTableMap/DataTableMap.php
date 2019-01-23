@@ -167,7 +167,7 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 						'uid',
 						$queryBuilder->createNamedParameter(
 							\TYPO3\CMS\Core\Utility\GeneralUtility::intExplode(',', $kml, true),
-							Connection::PARAM_INT_ARRAY
+							\TYPO3\CMS\Core\Database\Connection::PARAM_INT_ARRAY
 						)
 					)
 				)
@@ -252,7 +252,7 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 
 		if(!empty($pid)) {
 			$pidList = $this->pi_getPidList($pid, $recursive);
-			$pidWhere = 'pid IN (' . $GLOBALS['TYPO3_DB']->cleanIntList($pidList) . ')';
+			$pidWhere = 'pid IN (' . $pidList . ')';
 		} else {
 			$pidWhere = '1=1';
 		}

@@ -43,10 +43,19 @@ class DomainMgr {
 	protected $extKey = 'wec_map';
 
 	/**
-	 * @TYPO3\CMS\Extbase\Annotation\Inject
+	 * #  TYPO3\CMS\Extbase\Annotation\Inject
+	 * #inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
+
+	/**
+	* @param \TYPO3\CMS\Extbase\Object\ObjectManager $objectManager;
+	*/
+   	public function injectObjectManager(\TYPO3\CMS\Extbase\Object\ObjectManager $objectManager) 
+	{
+		$this->objectManager = $objectManager;
+   	}	
 
 	public function addKeyToUrl( $url, $key, $secret = null ) {
 		$url .= '&key=' .$key;
