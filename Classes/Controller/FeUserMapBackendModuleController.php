@@ -123,14 +123,14 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 
 					// add a marker for this country and only show it between zoom levels 0 and 2.
                     $markers[] = array( 
-                        city => $row[$cityField],
-                        state => $row[$stateField],
-                        zip => $row[$zipField],
-                        country => $row[$countryField], 
-                        title => $title, 
-                        description => $description, 
-                        minzoom => 0, 
-                        maxzoom => 2
+                        'city' => $row[$cityField],
+                        'state' => $row[$stateField],
+                        'zip' => $row[$zipField],
+                        'country' => $row[$countryField], 
+                        'title' => $title, 
+                        'description' => $description, 
+                        'minzoom' => 0, 
+                        'maxzoom' => 2
                     );
 				}
 
@@ -147,14 +147,14 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 
 					// add a marker for this country and only show it between zoom levels 3 and 7.
                     $markers[] = array(
-                        city => $row[$cityField],
-                        state => $row[$stateField],
-                        zip => $row[$zipField],
-                        country => $row[$countryField], 
-                        title => $title, 
-                        description => $description, 
-                        minzoom => 3, 
-                        maxzoom => 7
+                        'city' => $row[$cityField],
+                        'state' => $row[$stateField],
+                        'zip' => $row[$zipField],
+                        'country' => $row[$countryField], 
+                        'title' => $title, 
+                        'description' => $description, 
+                        'minzoom' => 3, 
+                        'maxzoom' => 7
                     );
 				}
 
@@ -167,24 +167,24 @@ class FeUserMapBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Controller
 				// if private was checked, don't use address to geocode
 				if($private) {
                     $markers[] = array(
-                        city => $row[$cityField],
-                        state => $row[$stateField],
-                        zip => $row[$zipField],
-                        country => $row[$countryField], 
-                        title => $title, 
-                        description => $content, 
-                        minzoom => 8 
+                        'city' => $row[$cityField],
+                        'state' => $row[$stateField],
+                        'zip' => $row[$zipField],
+                        'country' => $row[$countryField], 
+                        'title' => $title, 
+                        'description' => $content, 
+                        'minzoom' => 8 
                     );
 				} else {
                     $markers[] = array(
-                        street => $row[$streetField],
-                        city => $row[$cityField],
-                        state => $row[$stateField],
-                        zip => $row[$zipField],
-                        country => $row[$countryField], 
-                        title => $title, 
-                        description => $content, 
-                        minzoom => 8 
+                        'street' => $row[$streetField],
+                        'city' => $row[$cityField],
+                        'state' => $row[$stateField],
+                        'zip' => $row[$zipField],
+                        'country' => $row[$countryField], 
+                        'title' => $title, 
+                        'description' => $content, 
+                        'minzoom' => 8 
                     );
 				}
 			}
