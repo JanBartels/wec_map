@@ -63,9 +63,9 @@ class MapAdministrationBackendModuleController extends \TYPO3\CMS\Extbase\Mvc\Co
 			$totalAddresses += $recordCount;
 
 			$tables[] = [
-				table => $tableName,
-				title => $this->getLanguageService()->sL( $GLOBALS['TCA'][$tableName]['ctrl']['title'] ),
-				recordCount => $recordCount
+				'table' => $tableName,
+				'title' => $this->getLanguageService()->sL( $GLOBALS['TCA'][$tableName]['ctrl']['title'] ),
+				'recordCount' => $recordCount
 			];
 		}
 
