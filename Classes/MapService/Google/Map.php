@@ -196,8 +196,8 @@ class Map extends \JBartels\WecMap\MapService\Map {
 	function drawMap() {
 
 		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': starting map drawing', 'wec_map_api', array(
-			domain => \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST'),
-			maptype => $this->type
+			'domain' => \TYPO3\CMS\Core\Utility\GeneralUtility::getIndpEnv('HTTP_HOST'),
+			'maptype' => $this->type
 		) );
 
 		$hasThingsToDisplay = $this->hasThingsToDisplay();
@@ -773,7 +773,7 @@ WecMap.createMap("'. $this->mapName . '" );';
 	 **/
 	function js_initialOpenInfoWindow() {
 		$markers = reset($this->markers);
-		if (count($markers) == 1 && $this->showInfoOnLoad) {
+		if (count(array($markers)) == 1 && $this->showInfoOnLoad) {
 			foreach($this->groups as $key => $group) {
 				foreach( $group->markers as $marker ) {
 					return $marker->getInitialOpenInfoWindowJS();  // return 1st marker
