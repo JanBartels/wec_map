@@ -94,13 +94,13 @@ class MarkerGroup {
 		$markerObj->setGroupId($this->id);
 		$this->markers[] = &$markerObj;
 		\TYPO3\CMS\Core\Utility\GeneralUtility::devLog($this->mapName.': -----adding marker - start----', 'wec_map_api', -1, array(
-			id => $markerObj->getIndex(),
-			minzoom => $this->minzoom,
-			maxzoom => $this->maxzoom,
-			group => $this->id,
-			count => $this->markerCount,
-			title => implode(',', $markerObj->getTitle()),
-			desc => implode(',',$markerObj->getDescription())
+			'id' => $markerObj->getIndex(),
+			'minzoom' => $this->minzoom,
+			'maxzoom' => $this->maxzoom,
+			'group' => $this->id,
+			'count' => $this->markerCount,
+			'title' => implode(',', $markerObj->getTitle()),
+			'desc' => implode(',',$markerObj->getDescription())
 		) );
 		$this->markerCount++;
 	}
