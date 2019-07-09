@@ -876,7 +876,7 @@ WecMap.createMap("'. $this->mapName . '" );';
     function hasThingsToDisplay() {
         $valid = false;
 
-        if(sizeof($this->groups) > 0) {
+        if(is_array($this->groups) and sizeof($this->groups) > 0) {
             $validMarkers = false;
 			foreach( $this->groups as $key => $group ) {
 				if($group->hasMarkers()) {
