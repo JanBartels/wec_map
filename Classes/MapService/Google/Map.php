@@ -772,6 +772,8 @@ WecMap.createMap("'. $this->mapName . '" );';
 	 * @return string 	javascript
 	 **/
 	function js_initialOpenInfoWindow() {
+		if ( !is_array($this->markers) )
+			return '';
 		$markers = reset($this->markers);
 		if (count(array($markers)) == 1 && $this->showInfoOnLoad) {
 			foreach($this->groups as $key => $group) {
