@@ -90,15 +90,15 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 
 		if ($country != '') {
 			$statement = $statement->where( $queryBuilder->expr()->logicalOr(
-				expr()->like(
+				$queryBuilder->expr()->like(
 					'cn_official_name_local', 
 					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
 				),
-				expr()->like(
+				$queryBuilder->expr()->like(
 					'cn_official_name_en', 
 					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
 				),
-				expr()->like(
+				$queryBuilder->expr()->like(
 					'cn_short_local', 
 					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
 				)
@@ -195,7 +195,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 
 			// format address accordingly
 			$addressString = $this->formatAddress(',', $street, $city, $zip, $state, $country);  // $country: local country name
-			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( street => $street, city => $city, zip => $zip, state => $state, country => $country, addressString => $addressString ) );
+			\TYPO3\CMS\Core\Utility\GeneralUtility::devLog('Google V3 addressString', 'wec_map_geocode', -1, array( 'street' => $street, 'city' => $city, 'zip' => $zip, 'state' => $state, 'country' => $country, 'addressString' => $addressString ) );
 		}
 
 		if ( !$addressString )
@@ -336,7 +336,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 		$TSObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\TypoScript\ExtendedTemplateService::class);
 		$TSObj->tt_track = 0;
 		$TSObj->init();
-		$TSObj->runThroughTemplates($rootLine);
+		$TSObj->runThroughTemplates($rootline);
 		$TSObj->generateConfig();
 		return $TSObj->setup['plugin.'][$extKey . '.'];
 	}
