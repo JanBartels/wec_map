@@ -89,7 +89,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
             ->from('static_countries');
 
 		if ($country != '') {
-			$statement = $statement->where( $queryBuilder->expr()->logicalOr(
+			$statement = $statement->where( $queryBuilder->expr()->orX(
 				$queryBuilder->expr()->like(
 					'cn_official_name_local', 
 					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
@@ -119,7 +119,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 				$queryBuilder->createNamedParameter( trim( $isonr ) )
 			) );
 		} else {
-			$statement = $statement->where( $queryBuilder->expr()->eq( '1', '0' ) );
+			$statement = $statement->where( $queryBuilder->expr()->comparison( '1', $queryBuilder->expr()::EQ, '0' ) );
 		}
 
 		$rcArray = $statement->execute()->fetchAll();
@@ -162,7 +162,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 					$statement = $queryBuilder
 						->select('*')
 						->from('static_countries')
-						->where( $queryBuilder->expr()->logicalOr(
+						->where( $queryBuilder->expr()->orX(
 							$queryBuilder->expr()->eq(
 								'cn_official_name_local', 
 								$queryBuilder->createNamedParameter( trim( $country ) )
