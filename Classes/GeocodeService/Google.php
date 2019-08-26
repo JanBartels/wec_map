@@ -89,7 +89,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
             ->from('static_countries');
 
 		if ($country != '') {
-			$statement = $statement->where( $queryBuilder->logicalOr(
+			$statement = $statement->where( $queryBuilder->expr()->logicalOr(
 				expr()->like(
 					'cn_official_name_local', 
 					$queryBuilder->createNamedParameter( '%' . $queryBuilder->escapeLikeWildcards( trim( $country ) ) . '%' )
@@ -104,22 +104,22 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 				)
 			) );
 		} else if ($isonr != '') {
-			$statement = $statement->where( $queryBuilder->eq(
+			$statement = $statement->where( $queryBuilder->expr()->eq(
 				'cn_iso_nr', 
 				$queryBuilder->createNamedParameter( trim( $isonr ) )
 			) );
 		} else if ($iso2 != '') {
-			$statement = $statement->where( $queryBuilder->eq(
+			$statement = $statement->where( $queryBuilder->expr()->eq(
 				'cn_iso_2', 
 				$queryBuilder->createNamedParameter( trim( $isonr ) )
 			) );
 		} else if ($iso3 !='') {
-			$statement = $statement->where( $queryBuilder->eq(
+			$statement = $statement->where( $queryBuilder->expr()->eq(
 				'cn_iso_3', 
 				$queryBuilder->createNamedParameter( trim( $isonr ) )
 			) );
 		} else {
-			$statement = $statement->where( $queryBuilder->eq( '1', '0' ) );
+			$statement = $statement->where( $queryBuilder->expr()->eq( '1', '0' ) );
 		}
 
 		$rcArray = $statement->execute()->fetchAll();
@@ -162,16 +162,16 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 					$statement = $queryBuilder
 						->select('*')
 						->from('static_countries')
-						->where( $queryBuilder->logicalOr(
-							expr()->eq(
+						->where( $queryBuilder->expr()->logicalOr(
+							$queryBuilder->expr()->eq(
 								'cn_official_name_local', 
 								$queryBuilder->createNamedParameter( trim( $country ) )
 							),
-							expr()->eq(
+							$queryBuilder->expr()->eq(
 								'cn_official_name_en', 
 								$queryBuilder->createNamedParameter( trim( $country ) )
 							),
-							expr()->eq(
+							$queryBuilder->expr()->eq(
 								'cn_short_local', 
 								$queryBuilder->createNamedParameter( trim( $country ) )
 							)
