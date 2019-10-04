@@ -1,0 +1,13 @@
+config.tx_extbase.persistence.classes {
+    JBartels\WecMap\Domain\Model\Domain {
+        mapping {
+            tableName = sys_domain
+			columns {
+				domainName.mapOnProperty = domainName
+				browserKey.mapOnProperty = browserKey
+				serverKey.mapOnProperty = serverKey
+				staticKey.mapOnProperty = staticKey
+			}
+		}
+	}
+}

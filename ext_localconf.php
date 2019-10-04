@@ -14,6 +14,11 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript('wec_map', 'setup', 'plugin.tx_wecmap_pi3.userFunc = JBartels\\WecMap\\Plugin\\DataTableMap\\DataTableMap->main');
 
 /*
+** add extbase-setup
+*/
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScriptSetup('<INCLUDE_TYPOSCRIPT: source="FILE:EXT:wec_map/Configuration/TypoScript/extbase/setup.txt">');
+
+/*
 ** add New CE-wizard elements
 */
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPageTSConfig(
