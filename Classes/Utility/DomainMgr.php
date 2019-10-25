@@ -43,8 +43,6 @@ class DomainMgr {
 	protected $extKey = 'wec_map';
 
 	/**
-	 * #  TYPO3\CMS\Extbase\Annotation\Inject
-	 * #inject
 	 * @var \TYPO3\CMS\Extbase\Object\ObjectManager
 	 */
 	protected $objectManager;
