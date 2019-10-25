@@ -136,7 +136,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 	 * @param	string	The ZIP code.
 	 * @return	array		Array containing latitude and longitude.  If lookup failed, empty array is returned.
 	 */
-	function lookup($street, $city, $state, $zip, $country)	{
+	public function lookup($street, $city, $state, $zip, $country)	{
 
 		$addressString = '';
 		$region = '';
@@ -293,7 +293,7 @@ class Google extends \TYPO3\CMS\Core\Service\AbstractService {
 	 * @param	string		A zip code
 	 * @return	string		The formated address using the country address format (cn_address_format)
 	 */
-	function formatAddress ($delim, $streetAddress, $city, $zip, $subdivisionCode='', $countryCode='')	{
+	protected function formatAddress ($delim, $streetAddress, $city, $zip, $subdivisionCode='', $countryCode='')	{
 		/** @var \SJBR\StaticInfoTables\PiBaseApi $staticInfoObj */
 		$staticInfoObj = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\SJBR\StaticInfoTables\PiBaseApi::class);
 		if ($staticInfoObj->needsInit()) {
