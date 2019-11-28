@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" target-language="de" datatype="plaintext" original="messages" date="2015-09-16T17:58:18Z" product-name="wec_map">
+		<header/>
+		<body>
+			<trans-unit id="error_nothingToDisplay" xml:space="preserve" approved="yes">
+				<source>
+				There doesn't seem to be anything to display. Make sure the map is
+				configured correctly and there are users or markers set.
+			</source>
+				<target>Es scheint nichts anzuzeigen zu sein. Achten Sie darauf, dass die Karte ordnungsgemäß konfiguriert wurde und Benutzer und Markierungen festgelegt wurden.</target>
+			</trans-unit>
+			<trans-unit id="error_noHeightWidth" xml:space="preserve" approved="yes">
+				<source>
+				The map didn't have a height or width set. Make sure that height and width
+				are set correctly in either the Flexform or via TypoScript.
+			</source>
+				<target>Für die Karte wurde keine Höhe oder Breite festgelegt. Achten Sie darauf, dass Höhe und Breite entweder über Flexform oder TypoScript ordnungsgemäß festgelegt werden.</target>
+			</trans-unit>
+			<trans-unit id="error_noBrowserKey" xml:space="preserve">
+				<source>There's no API key configured for this domain. Make sure to set an API key.</source>
+				<target>Für diese Domain ist kein API-Key konfiguriert. Bitte setzen Sie einen API-Key.</target>
+			</trans-unit>
+			<trans-unit id="endaddress" xml:space="preserve" approved="yes">
+				<source>End Address</source>
+				<target>Zieladresse</target>
+			</trans-unit>
+			<trans-unit id="startaddress" xml:space="preserve" approved="yes">
+				<source>Start Address</source>
+				<target>Startadresse</target>
+			</trans-unit>
+			<trans-unit id="OSM" xml:space="preserve" approved="yes">
+				<source>OSM</source>
+				<target>OSM</target>
+			</trans-unit>
+			<trans-unit id="OSM-alt" xml:space="preserve" approved="yes">
+				<source>OpenStreetmap layer</source>
+				<target>OpenStreetmap anzeigen</target>
+			</trans-unit>
+			<trans-unit id="OSM-bike" xml:space="preserve" approved="yes">
+				<source>OSM-bike</source>
+				<target>OSM-bike</target>
+			</trans-unit>
+			<trans-unit id="OSM-bike-alt" xml:space="preserve" approved="yes">
+				<source>OpenCycleMap layer</source>
+				<target>OpenCycleMap anzeigen</target>
+			</trans-unit>
+			<trans-unit id="INVALID_REQUEST" xml:space="preserve" approved="yes">
+				<source>The DirectionsRequest provided was invalid.</source>
+				<target>Die Anfrage war ungültig.</target>
+			</trans-unit>
+			<trans-unit id="MAX_WAYPOINTS_EXCEEDED" xml:space="preserve" approved="yes">
+				<source>Too many DirectionsWaypoints were provided in the DirectionsRequest. The total allowed waypoints is 8, plus the origin and destination. Maps API for Business customers are allowed 23 waypoints, plus the origin, and destination.</source>
+				<target>Es wurden zu viele Wegpunkte in der Anfrage angegeben. Die maximale Anzahl an waypoints beträgt 8, plus Start- und Zielort. Kunden mit dem Google Maps API für Unternehmen können Anfragen mit bis zu 23 Wegpunkten ausführen.</target>
+			</trans-unit>
+			<trans-unit id="NOT_FOUND" xml:space="preserve" approved="yes">
+				<source>At least one of the origin, destination, or waypoints could not be geocoded.</source>
+				<target>Mindestens einer der Standorte, die in der Anfrage als Startort, Zielort oder Wegpunkt angegeben wurden, konnte nicht geocodiert werden.</target>
+			</trans-unit>
+			<trans-unit id="OK" xml:space="preserve" approved="yes">
+				<source>The response contains a valid DirectionsResult.</source>
+				<target>Die Antwort enthält ein gültiges Ergebnis.</target>
+			</trans-unit>
+			<trans-unit id="OVER_QUERY_LIMIT" xml:space="preserve" approved="yes">
+				<source>The webpage has gone over the requests limit in too short a period of time.</source>
+				<target>Der Dienst hat innerhalb des zulässigen Zeitraums zu viele Anfragen von der Anwendung erhalten.</target>
+			</trans-unit>
+			<trans-unit id="REQUEST_DENIED" xml:space="preserve" approved="yes">
+				<source>The webpage is not allowed to use the directions service.</source>
+				<target>Der Dienst hat die Verwendung des Routenplanerdiensts durch die Anwendung abgelehnt.</target>
+			</trans-unit>
+			<trans-unit id="UNKNOWN_ERROR" xml:space="preserve" approved="yes">
+				<source>A directions request could not be processed due to a server error. The request may succeed if you try again.</source>
+				<target>Eine Routenanfrage konnte aufgrund eines Serverfehlers nicht verarbeitet werden. Die Anfrage liefert möglicherweise ein Ergebnis, wenn Sie es erneut versuchen.</target>
+			</trans-unit>
+			<trans-unit id="ZERO_RESULTS" xml:space="preserve" approved="yes">
+				<source>No route could be found between the origin and destination.</source>
+				<target>Es konnte keine Route zwischen Start- und Zielort gefunden werden.</target>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

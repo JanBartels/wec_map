@@ -1,3 +1,5 @@
+# cat=basic; type=input; label=Default map provider: Default map provider (Google, Leaflet) to be used for display if not given explicitly
+MapProvider = Google
 # cat=basic; type=boolean; label=Enable map in FE user records
 feUserRecordMap = 0
 # cat=basic; type=boolean; label=Enable Geocoding Status
@@ -16,3 +18,7 @@ mmURL = cdn.rawgit.com/googlemaps/v3-utility-library/master/markermanager/src/ma
 ibURL = cdn.rawgit.com/googlemaps/js-info-bubble/gh-pages/src/infobubble.js
 # cat=basic; type=input; label=URL of OverlappingMarkerSpiderfier (without protocol-prefix)
 omURL = jawj.github.com/OverlappingMarkerSpiderfier/bin/oms.min.js
+# cat=basic; type=input; label=URL of leaflet CSS (without protocol-prefix)
+leafletCSS = unpkg.com/leaflet@1.5.1/dist/leaflet.css
+# cat=basic; type=input; label=URL of leaflet JS (without protocol-prefix)
+leafletJS = unpkg.com/leaflet@1.5.1/dist/leaflet.js

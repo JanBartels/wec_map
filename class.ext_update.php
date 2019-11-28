@@ -19,6 +19,8 @@ namespace JBartels\WecMap;
  */
 class ext_update
 {
+	const FOLDER_ContentUploads = '_migrated/wecmap_resources';
+
     /**
      * Array of flash messages (params) array[][status,title,message]
      *
@@ -32,12 +34,18 @@ class ext_update
     protected $flexFormTools;
 
     /**
-     * Mapping for switchable controller actions
-     * in FlexForms
+     * WHERE-clause for zoom in PI-Flexform
      *
      * @var string
      */
     protected $mapControlSizeWhere = '%<field index="mapControlSize">%<value index="vDEF">%</value>%</field>%';
+
+    /**
+     * WHERE-clause for kml in PI-Flexform
+     *
+     * @var string
+     */
+    protected $mapKmlWhere = '%<field index="kml">%<value index="vDEF">%</value>%</field>%';
 
     /**
      * Main update function called by the extension manager.
@@ -58,6 +66,19 @@ class ext_update
      */
     public function access()
     {
+        return $this->accessValueInFlexForms( $this->mapControlSizeWhere )
+            || $this->accessValueInFlexForms( $this->mapKmlWhere )
+            ;
+    }
+
+    /**
+     * Check if certain flexform-values are set in plugin
+     *
+     * @param string 
+     * @return bool
+     */
+    protected function accessValueInFlexForms( $flexformWhere )
+    {
         // Check for changed options in FlexForms
 		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
             ->getQueryBuilderForTable( 'tt_content' );
@@ -69,7 +90,7 @@ class ext_update
 			->where(
                 $queryBuilder->expr()->like(
                     'pi_flexform',
-                    $queryBuilder->createNamedParameter( $this->mapControlSizeWhere )
+                    $queryBuilder->createNamedParameter( $flexformWhere )
                 ),
                 $queryBuilder->expr()->like(
                     'list_type',
@@ -79,6 +100,29 @@ class ext_update
             ->execute()
             ->fetchColumn(0);
 
+
+$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+    ->getQueryBuilderForTable( 'tt_content' );
+$queryBuilder
+    ->getRestrictions()->removeAll();
+$sql = $queryBuilder
+    ->count('*')
+    ->from( 'tt_content' )
+    ->where(
+        $queryBuilder->expr()->like(
+            'pi_flexform',
+            $queryBuilder->createNamedParameter( $flexformWhere )
+        ),
+        $queryBuilder->expr()->like(
+            'list_type',
+            $queryBuilder->createNamedParameter( 'wec_map_pi%%' )
+        )
+    )
+    ->getSQL();
+
+\TYPO3\CMS\Core\Utility\DebugUtility::debug( $flexformWhere );
+\TYPO3\CMS\Core\Utility\DebugUtility::debug( $sql );
+\TYPO3\CMS\Core\Utility\DebugUtility::debug( $count );
         return $count > 0;
     }
 
@@ -90,6 +134,7 @@ class ext_update
     protected function processUpdates()
     {
         $this->migrateToNewZoomControlInFlexForms();
+        $this->migrateKMLToFALInFlexForms();
     }
 
     /**
@@ -151,7 +196,91 @@ class ext_update
         }
         $this->messageArray[] = array(
             \TYPO3\CMS\Core\Messaging\FlashMessage::OK,
-            'Migrating flexforms successful',
+            'Migrating mapControls successful',
+            'We have updated '.$count.' related tt_content records'
+        );
+    }
+
+        
+    /**
+     * Migrate old FlexForm values for kml-overlays to FAL
+     *
+     * @return void
+     */
+    protected function migrateKMLToFALInFlexForms()
+    {
+        # Set up FAL
+		$fileadminDirectory = rtrim($GLOBALS['TYPO3_CONF_VARS']['BE']['fileadminDir'], '/') . '/';
+		/** @var $storageRepository \TYPO3\CMS\Core\Resource\StorageRepository */
+		$storageRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\StorageRepository');
+		$storages = $storageRepository->findAll();
+		foreach ($storages as $storage) {
+			$storageRecord = $storage->getStorageRecord();
+			$configuration = $storage->getConfiguration();
+			$isLocalDriver = $storageRecord['driver'] === 'Local';
+			$isOnFileadmin = !empty($configuration['basePath']) && \TYPO3\CMS\Core\Utility\GeneralUtility::isFirstPartOfStr($configuration['basePath'], $fileadminDirectory);
+			if ($isLocalDriver && $isOnFileadmin) {
+				$storage = $storage;
+				break;
+			}
+		}
+		if (!isset($storage)) {
+			throw new \RuntimeException('Local default storage could not be initialized - might be due to missing sys_file* tables.');
+        }
+        # Create folder if neccessary
+		if (!$storage->hasFolder(self::FOLDER_ContentUploads)) {
+			$storage->createFolder(self::FOLDER_ContentUploads, $storage->getRootLevelFolder());
+		}
+
+        $fileFactory = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\ResourceFactory');
+		$fileIndexRepository = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Resource\\Index\\FileIndexRepository');
+		$targetDirectory = PATH_site . $fileadminDirectory . self::FOLDER_ContentUploads . '/';
+
+
+		$queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+    		->getQueryBuilderForTable( 'tt_content' );
+        $queryBuilder
+            ->getRestrictions()->removeAll();
+        $statement = $queryBuilder
+            ->select('*')
+			->from( 'tt_content' )
+			->where(
+                $queryBuilder->expr()->like(
+                    'pi_flexform',
+                    $queryBuilder->createNamedParameter( $this->mapKmlWhere )
+                ),
+                $queryBuilder->expr()->like(
+                    'list_type',
+                    $queryBuilder->createNamedParameter( 'wec_map_pi%%' )
+                )
+            )
+            ->execute();
+        $count = 0;
+return;        
+        while( $row = $statement->fetch() ) {            
+        	$flexformData = \TYPO3\CMS\Core\Utility\GeneralUtility::xml2array($row['pi_flexform']);
+
+            $uidExternalResource = $flexformData['data']['default']['lDEF']['kml']['vDEF'];
+			unset( $flexformData['data']['default']['lDEF']['kml']);
+			$flexformData['data']['default']['lDEF']['kmlfal']['vDEF']='4711';
+            $flexformData = $this->getFlexFormTools()->flexArray2Xml($flexformData, TRUE);
+
+            $queryBuilder = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance( \TYPO3\CMS\Core\Database\ConnectionPool::class )
+                ->getQueryBuilderForTable( 'tt_content' );
+            $queryBuilder
+                ->getRestrictions()->removeAll();
+            $queryBuilder
+                ->update('tt_content')
+                ->where(
+                    $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter( $row['uid'], \PDO::PARAM_INT ) )
+                )
+                ->set('pi_flexform', $flexformData )
+                ->execute();
+			$count++;
+        }
+        $this->messageArray[] = array(
+            \TYPO3\CMS\Core\Messaging\FlashMessage::OK,
+            'Migrating kml-resources successful',
             'We have updated '.$count.' related tt_content records'
         );
     }

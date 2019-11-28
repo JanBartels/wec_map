@@ -125,7 +125,7 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		empty($tables) ? $tables = $conf['tables']:null;
 		if (!empty($tables)) $tables = explode(',', $tables);
 
-		$kml = $this->pi_getFFvalue($piFlexForm, 'kml', 'default');
+		$kml = $this->pi_getFFvalue($piFlexForm, 'kmlfal', 'default');
 		empty($kml) ? $kml = $this->cObj->stdWrap($conf['kml'], $conf['kml.']):null;
 
 		$centerLat = $this->cObj->stdWrap($conf['centerLat'], $conf['centerLat.']);
@@ -152,8 +152,8 @@ class DataTableMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->mapName = $mapName;
 
 		/* Create the Map object */
-		/** @var \JBartels\WecMap\MapService\Google\Map $map */
-		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
+		/** @var \JBartels\WecMap\MapService\Map $map */
+		$map = \JBartels\WecMap\MapService\MapFactory::createMap( '', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// get kml urls for each included record
 		if ($kml > 0 ) {

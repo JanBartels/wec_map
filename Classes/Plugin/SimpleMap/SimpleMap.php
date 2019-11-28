@@ -147,8 +147,8 @@ class SimpleMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$description = $this->pi_getFFvalue($piFlexForm, 'description', 'default');
 
 		/* Create the map class and add markers to the map */
-		/** @var \JBartels\WecMap\MapService\Google\Map $map */
-		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
+		/** @var \JBartels\WecMap\MapService\Map $map */
+		$map = \JBartels\WecMap\MapService\MapFactory::createMap( '', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// evaluate config to see which map controls we need to show
 		if(  $mapControlSize == 'large'		// deprecated

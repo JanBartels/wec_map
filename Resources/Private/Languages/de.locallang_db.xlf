@@ -247,7 +247,7 @@
 				<source>Zoom level</source>
 				<target>Zoom level</target>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.kml" xml:space="preserve" approved="yes">
+			<trans-unit id="tt_content.pi_flexform.kmlfal" xml:space="preserve" approved="yes">
 				<source>KML to overlay</source>
 				<target>KML für Overlay</target>
 			</trans-unit>

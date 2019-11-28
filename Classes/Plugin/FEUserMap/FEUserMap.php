@@ -151,8 +151,8 @@ class FEUserMap extends \TYPO3\CMS\Frontend\Plugin\AbstractPlugin {
 		$this->mapName = $mapName;
 
 		/* Create the Map object */
-		/** @var \JBartels\WecMap\MapService\Google\Map $map */
-		$map = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\JBartels\WecMap\MapService\Google\Map::class, null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
+		/** @var \JBartels\WecMap\MapService\Map $map */
+		$map = \JBartels\WecMap\MapService\MapFactory::createMap( '', null, $width, $height, $centerLat, $centerLong, $zoomLevel, $mapName);
 
 		// get kml urls for each included record
 		if(!empty($kml)) {

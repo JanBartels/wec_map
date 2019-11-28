@@ -1,0 +1,21 @@
+.wecmap_tabbed_bubble_tab {
+	overflow: hidden;
+	border: 1px solid #ccc;
+	background-color: #f1f1f1;
+	cursor: pointer;
+}
+
+ button.wecmap_tabbed_bubble_tab:hover {
+	background-color: #ddd;
+}
+
+ button.wecmap_tabbed_bubble_tab.active {
+	background-color: #ccc;
+}
+
+.webmap_tabbed_bubble_content {
+	display: none;
+	padding: 6px 12px;
+	border: 1px solid #ccc;
+	border-top: none;
+}

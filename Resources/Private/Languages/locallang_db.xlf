@@ -190,7 +190,7 @@
 			<trans-unit id="tt_content.pi_flexform.zoomLevel" xml:space="preserve">
 				<source>Zoom level</source>
 			</trans-unit>
-			<trans-unit id="tt_content.pi_flexform.kml" xml:space="preserve">
+			<trans-unit id="tt_content.pi_flexform.kmlfal" xml:space="preserve">
 				<source>KML to overlay</source>
 			</trans-unit>
 			<trans-unit id="tt_content.pi_flexform.mapHeight" xml:space="preserve">
